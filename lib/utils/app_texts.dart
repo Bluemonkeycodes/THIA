@@ -1,0 +1,36 @@
+class AppTexts {
+  static const String noDataFound = "No Data Found";
+  static const String noConnection = "No Connection";
+  static const String tryAgain = "Try Again";
+  static const String search = "Search";
+  static const String loginWithGoogle = "Login with Google";
+  static const String johnDeo = "John Deo";
+  static const String high = "High";
+  static const String mid = "Mid";
+  static const String low = "Low";
+  static const String chat = "Chat";
+  static const String addTodo = "Add Todo";
+  static const String calendar = "Calendar";
+  static const String name = "Name";
+  static const String due = "Due";
+  static const String enterName = "Enter Name";
+  static const String enterDue = "Enter Due";
+  static const String enterDetails = "Enter Details";
+  static const String details = "Details";
+  static const String selectPriority = "Select Priority";
+  static const String save = "Save";
+  static const String priority = "Priority";
+  static const String profile = "Profile";
+  static const String notification = "Notification";
+  static const String theme = "Theme";
+  static const String rateUs = "Rate Us";
+  static const String support = "Support";
+  static const String shareApp = "Share App";
+  static const String aboutUs = "About us";
+  static const String logout = "Logout";
+  static const String estimatedTime = "Estimated Time";
+  static const String selectEstimatedTime = "Select Estimated Time";
+  static const String showsAssignments = "Shows Assignments";
+  static const String assignmentsAdded = "Assignments Added";
+  static const String otherPeoplesTodos = "Other Peoples Todos";
+}

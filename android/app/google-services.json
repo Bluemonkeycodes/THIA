@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "591438534892",
+    "project_id": "thia---flutter",
+    "storage_bucket": "thia---flutter.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:591438534892:android:aeb9d4b86ed2ce82052dc9",
+        "android_client_info": {
+          "package_name": "com.app.thia"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "591438534892-l7s2v05d00cf9ofb7ov686eh3on7tbo3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAoAIebGZvJYXAWoTttxUO1iG-BLdiDwDw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "591438534892-l7s2v05d00cf9ofb7ov686eh3on7tbo3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
