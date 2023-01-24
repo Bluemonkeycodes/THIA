@@ -32,5 +32,5 @@ class AppTexts {
   static const String selectEstimatedTime = "Select Estimated Time";
   static const String showsAssignments = "Shows Assignments";
   static const String assignmentsAdded = "Assignments Added";
-  static const String otherPeoplesTodos = "Other Peoples Todos";
+  static const String people = "People";
 }

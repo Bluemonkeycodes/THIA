@@ -43,7 +43,10 @@ class _ClassDetailsScreenState extends State<ClassDetailsScreen> {
         return StreamBuilder<Object>(
             stream: kHomeController.selectedTabIndex.stream,
             builder: (context, snapshot) {
-              return todoSection(showPlusButton: kHomeController.selectedTabIndex.value != 1 ? true : false);
+              return todoSection(
+                  showPlusButton: kHomeController.selectedTabIndex.value != 1
+                      ? true
+                      : false);
             });
       },
     );
@@ -52,11 +55,24 @@ class _ClassDetailsScreenState extends State<ClassDetailsScreen> {
   Widget topSection() {
     return Row(
       children: [
-        Expanded(child: tab(image: Assets.iconsShowAssignment, text: AppTexts.showsAssignments, index: 1)),
+        Expanded(
+            child: tab(
+                image: Assets.iconsShowAssignment,
+                text: AppTexts.showsAssignments,
+                index: 1)),
         widthBox(),
-        Expanded(child: tab(image: Assets.iconsAssignmentAdded, text: AppTexts.assignmentsAdded, index: 2)),
+        Expanded(
+            child: tab(
+                image: Assets.iconsAssignmentAdded,
+                text: AppTexts.assignmentsAdded,
+                index: 2)),
         widthBox(),
-        Expanded(child: tab(image: Assets.iconsOtherPeopleTodo, text: AppTexts.otherPeoplesTodos, index: 3, showCircle: true)),
+        Expanded(
+            child: tab(
+                image: Assets.iconsOtherPeopleTodo,
+                text: AppTexts.people,
+                index: 3,
+                showCircle: true)),
       ],
     );
   }
@@ -77,10 +93,13 @@ class _ClassDetailsScreenState extends State<ClassDetailsScreen> {
             child: Stack(
               children: [
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                   decoration: BoxDecoration(
                     border: Border.all(
-                      color: (index == kHomeController.selectedTabIndex.value) ? AppColors.borderColor : AppColors.grey,
+                      color: (index == kHomeController.selectedTabIndex.value)
+                          ? AppColors.borderColor
+                          : AppColors.grey,
                     ),
                     borderRadius: BorderRadius.circular(20),
                   ),
@@ -88,7 +107,9 @@ class _ClassDetailsScreenState extends State<ClassDetailsScreen> {
                     children: [
                       Image.asset(
                         image,
-                        color: (index == kHomeController.selectedTabIndex.value) ? AppColors.borderColor : AppColors.grey,
+                        color: (index == kHomeController.selectedTabIndex.value)
+                            ? AppColors.borderColor
+                            : AppColors.grey,
                         scale: 3.5,
                       ),
                       heightBox(),
@@ -98,8 +119,14 @@ class _ClassDetailsScreenState extends State<ClassDetailsScreen> {
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                         style: grey14w500.copyWith(
-                          color: (index == kHomeController.selectedTabIndex.value) ? AppColors.borderColor : AppColors.grey,
-                          fontWeight: (index == kHomeController.selectedTabIndex.value) ? FontWeight.w600 : FontWeight.w500,
+                          color:
+                              (index == kHomeController.selectedTabIndex.value)
+                                  ? AppColors.borderColor
+                                  : AppColors.grey,
+                          fontWeight:
+                              (index == kHomeController.selectedTabIndex.value)
+                                  ? FontWeight.w600
+                                  : FontWeight.w500,
                         ),
                       ),
                     ],
