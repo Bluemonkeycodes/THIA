@@ -58,13 +58,13 @@ class _ClassDetailsScreenState extends State<ClassDetailsScreen> {
         Expanded(
             child: tab(
                 image: Assets.iconsShowAssignment,
-                text: AppTexts.showsAssignments,
+                text: AppTexts.todos,
                 index: 1)),
         widthBox(),
         Expanded(
             child: tab(
                 image: Assets.iconsAssignmentAdded,
-                text: AppTexts.assignmentsAdded,
+                text: AppTexts.assignments,
                 index: 2)),
         widthBox(),
         Expanded(
@@ -93,6 +93,7 @@ class _ClassDetailsScreenState extends State<ClassDetailsScreen> {
             child: Stack(
               children: [
                 Container(
+                  width: MediaQuery.of(context).size.width / 3,
                   padding:
                       const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                   decoration: BoxDecoration(
@@ -134,8 +135,8 @@ class _ClassDetailsScreenState extends State<ClassDetailsScreen> {
                 ),
                 if (showCircle ?? false)
                   Positioned(
-                    top: 2,
-                    right: 2,
+                    top: 8,
+                    right: 8,
                     child: Container(
                       height: 8,
                       width: 8,
