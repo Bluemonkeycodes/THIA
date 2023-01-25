@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:thia/generated/assets.dart';
-import 'package:thia/modules/home_module/views/home_screen.dart';
 
+import '../../../utils/social_login.dart';
 import '../../../utils/utils.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -49,7 +48,8 @@ class _LoginScreenState extends State<LoginScreen> {
                   heightBox(height: 60),
                   GetButton(
                       ontap: () {
-                        Get.offAll(() => const HomeScreen());
+                        googleAuth();
+                        // Get.offAll(() => const HomeScreen());
                       },
                       padding: const EdgeInsets.symmetric(horizontal: 15),
                       backGroundColor: AppColors.white,

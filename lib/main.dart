@@ -21,7 +21,7 @@ Future pref() async {
 }
 
 Future<void> main() async {
-  pref();
+  await pref();
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   await FirebaseNotificationService.initializeService();

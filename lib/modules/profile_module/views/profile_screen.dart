@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:thia/generated/assets.dart';
 import 'package:thia/modules/auth/views/login_screen.dart';
+import 'package:thia/utils/social_login.dart';
 import 'package:thia/utils/utils.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -60,7 +61,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
           tile1(title: AppTexts.aboutUs, icon: Icons.help_outline),
           heightBox(),
           GetButton(
-            ontap: () {
+            ontap: () async {
+              try {
+                await googleSignIn.signOut();
+                await auth.signOut();
+              } catch (e) {
+                showLog(e);
+              }
+              setIsLogin(isLogin: false);
               Get.offAll(() => const LoginScreen());
             },
             margin: 15,

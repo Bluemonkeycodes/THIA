@@ -1,34 +1,57 @@
 {
   "project_info": {
-    "project_number": "591438534892",
-    "project_id": "thia---flutter",
-    "storage_bucket": "thia---flutter.appspot.com"
+    "project_number": "295288564239",
+    "project_id": "thia-c8ce0",
+    "storage_bucket": "thia-c8ce0.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:591438534892:android:aeb9d4b86ed2ce82052dc9",
+        "mobilesdk_app_id": "1:295288564239:android:f7c63476635644b79ad17a",
         "android_client_info": {
           "package_name": "com.app.thia"
         }
       },
       "oauth_client": [
         {
-          "client_id": "591438534892-l7s2v05d00cf9ofb7ov686eh3on7tbo3.apps.googleusercontent.com",
+          "client_id": "295288564239-6asu1tan153bs25cis4g0ik18qbfj6h0.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.app.thia",
+            "certificate_hash": "10cd2a3f29ad4e6b83bf50b72ff46b75a8bf0f60"
+          }
+        },
+        {
+          "client_id": "295288564239-8q8f0kkfo5tktd8o105le9bhrhr6ivur.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.app.thia",
+            "certificate_hash": "9c74da2e423555b2b62fe9c1c9544fb946082c6a"
+          }
+        },
+        {
+          "client_id": "295288564239-jnpc0onstpjsup56pgrnqk86v73sb0p9.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyAoAIebGZvJYXAWoTttxUO1iG-BLdiDwDw"
+          "current_key": "AIzaSyBMhVfO2eYKrwAzSCdf9lYAJ8MPGb3zkgM"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "591438534892-l7s2v05d00cf9ofb7ov686eh3on7tbo3.apps.googleusercontent.com",
+              "client_id": "295288564239-0rjk2c3ckg145ork7h2h5gusaes2iu48.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "295288564239-ipric7pib1stn6fi3efkjpis14o68ai1.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.app.thia"
+              }
             }
           ]
         }

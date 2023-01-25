@@ -3,21 +3,21 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>591438534892-7obsv73hspv6l1r84dnvbd5kf6glg37s.apps.googleusercontent.com</string>
+	<string>295288564239-ipric7pib1stn6fi3efkjpis14o68ai1.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.591438534892-7obsv73hspv6l1r84dnvbd5kf6glg37s</string>
+	<string>com.googleusercontent.apps.295288564239-ipric7pib1stn6fi3efkjpis14o68ai1</string>
 	<key>API_KEY</key>
-	<string>AIzaSyAeq2KPjbnxlc3lw2jbl6_5opIejjuNv5I</string>
+	<string>AIzaSyDWG3tAbqgTSv4IslN-xqGyTUwX3yaYnmY</string>
 	<key>GCM_SENDER_ID</key>
-	<string>591438534892</string>
+	<string>295288564239</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
 	<string>com.app.thia</string>
 	<key>PROJECT_ID</key>
-	<string>thia---flutter</string>
+	<string>thia-c8ce0</string>
 	<key>STORAGE_BUCKET</key>
-	<string>thia---flutter.appspot.com</string>
+	<string>thia-c8ce0.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -29,6 +29,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:591438534892:ios:b08566fbdc8fee65052dc9</string>
+	<string>1:295288564239:ios:f5d97d3f7a5114a29ad17a</string>
 </dict>
 </plist>
