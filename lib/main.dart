@@ -8,9 +8,10 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:responsive_framework/responsive_wrapper.dart';
-import 'package:responsive_framework/utils/scroll_behavior.dart';
+import 'package:responsive_framework/responsive_framework.dart';
+import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 import 'package:thia/modules/splash/splash_screen.dart';
+import 'package:thia/utils/common_stream_io.dart';
 import 'package:thia/utils/firebase_messaging_service.dart';
 import 'package:thia/utils/utils.dart';
 
@@ -26,14 +27,32 @@ Future<void> main() async {
   await Firebase.initializeApp();
   await FirebaseNotificationService.initializeService();
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
-  runApp(const MyApp());
+  final client = getClient();
+
+  String name = "name-1";
+  String userId = "id1";
+  String otherUserId = "id2";
+
+  await StreamApi.initUser(
+    client,
+    username: name,
+    urlImage: "https://png.pngtree.com/png-vector/20190710/ourmid/pngtree-user-vector-avatar-png-image_1541962.jpg",
+    id: userId,
+    token: getJwtToken(id: "id1", name: "name-1"),
+  );
+  runApp(MyApp(client: client));
   await runZonedGuarded(() async {}, (error, stackTrace) {
     FirebaseCrashlytics.instance.recordError(error, stackTrace);
   });
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+  const MyApp({
+    Key? key,
+    required this.client,
+  }) : super(key: key);
+
+  final StreamChatClient client;
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +62,49 @@ class MyApp extends StatelessWidget {
       // darkTheme: ThemeData(backgroundColor: AppColors.backgroundColor, brightness: Brightness.dark, canvasColor: AppColors.backgroundColor),
       themeMode: ThemeMode.light,
       builder: (context, widget) => ResponsiveWrapper.builder(
-        ClampingScrollWrapper.builder(context, widget!),
+        ClampingScrollWrapper.builder(
+          context,
+          StreamChat(
+            client: client,
+            child: widget,
+            streamChatThemeData: StreamChatThemeData(
+              channelListHeaderTheme: StreamChannelListHeaderThemeData(
+                avatarTheme: StreamAvatarThemeData(
+                  borderRadius: BorderRadius.circular(50),
+                ),
+                titleStyle: black18bold,
+              ),
+              textTheme: StreamTextTheme.light(
+                title: black18bold,
+                body: black12w500,
+              ),
+              channelPreviewTheme: StreamChannelPreviewThemeData(
+                subtitleStyle: black12w500,
+                titleStyle: black18bold,
+                unreadCounterColor: Colors.greenAccent,
+                lastMessageAtStyle: grey12w500,
+                avatarTheme: StreamAvatarThemeData(
+                  borderRadius: BorderRadius.circular(50),
+                ),
+              ),
+              channelHeaderTheme: StreamChannelHeaderThemeData(
+                titleStyle: black18bold,
+                avatarTheme: StreamAvatarThemeData(
+                  borderRadius: BorderRadius.circular(50),
+                ),
+                subtitleStyle: grey12w500,
+              ),
+              otherMessageTheme: StreamMessageThemeData(
+                messageBackgroundColor: AppColors.white,
+                messageTextStyle: black14w500,
+              ),
+              ownMessageTheme: StreamMessageThemeData(
+                messageBackgroundColor: AppColors.buttonColor,
+                messageTextStyle: white14w500,
+              ),
+            ),
+          ),
+        ),
         maxWidth: 1200,
         minWidth: 420,
         defaultScale: true,
@@ -64,7 +125,6 @@ class MyApp extends StatelessWidget {
         progressIndicatorTheme: ProgressIndicatorThemeData(color: Platform.isAndroid ? AppColors.buttonColor : null),
       ),
       home: const SplashScreen(),
-      // home: const HomeScreen(),
     );
   }
 }

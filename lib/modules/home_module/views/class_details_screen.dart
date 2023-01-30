@@ -28,7 +28,7 @@ class _ClassDetailsScreenState extends State<ClassDetailsScreen> {
           ),
         ],
       ),
-      bottomNavigationBar: commonBottomBar(),
+      bottomNavigationBar: commonBottomBar(context, true),
     );
   }
 

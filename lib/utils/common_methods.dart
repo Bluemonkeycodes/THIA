@@ -60,7 +60,7 @@ setObject(String key, value) {
 
 showLog(text) {
   if (kDebugMode) {
-    log((text ?? "").toString(), name: "Ravin Laheri");
+    log((text ?? "").toString());
   }
 }
 

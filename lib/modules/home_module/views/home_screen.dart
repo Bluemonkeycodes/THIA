@@ -28,7 +28,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
       ),
-      bottomNavigationBar: commonBottomBar(),
+      bottomNavigationBar: commonBottomBar(context, false),
     );
   }
 
@@ -41,7 +41,7 @@ class _HomeScreenState extends State<HomeScreen> {
         return heightBox(height: 25);
       },
       itemBuilder: (context, index) {
-        return classRoomCard();
+        return classRoomCard(context);
       },
     );
   }

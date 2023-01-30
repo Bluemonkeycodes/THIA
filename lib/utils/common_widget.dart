@@ -5,13 +5,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:readmore/readmore.dart';
+import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 import 'package:thia/generated/assets.dart';
-import 'package:thia/modules/chat_module/views/messages_screen.dart';
 import 'package:thia/modules/home_module/views/class_details_screen.dart';
 import 'package:thia/services/api_service_call.dart';
+import 'package:thia/utils/common_stream_io.dart';
 import 'package:thia/utils/utils.dart';
 
-import '../modules/chat_module/views/chat_list_screen.dart';
+import '../modules/chat_module/views/stream_chat_page.dart';
 import '../modules/home_module/views/add_todo_screen.dart';
 import '../modules/home_module/views/calender_screen.dart';
 
@@ -426,7 +427,7 @@ Widget bottomNavigationBarItem({required IconData iconData, required Function() 
   );
 }
 
-Widget classRoomCard() {
+Widget classRoomCard(BuildContext context) {
   return InkWell(
     onTap: () {
       Get.to(() => const ClassDetailsScreen());
@@ -466,9 +467,41 @@ Widget classRoomCard() {
                       ),
                     ),
                     InkWell(
-                      onTap: () {
+                      onTap: () async {
                         // hideKeyBoard(context);
-                        Get.to(() => MessagesScreen());
+
+                        // Navigator.of(context).push(MaterialPageRoute(
+                        //   builder: (context) {
+                        //     return StreamChannel(channel: channel, child: ChannelPage(channel: channel));
+                        //   },
+                        // ));
+                        /*  final client = StreamChat.of(context).client;
+
+                        // await client.connectUser(User(id: StreamConfig.idPeter), StreamConfig.tokenPeter);
+
+                        String name = "xyz";
+                        String classId = "xyz";
+                        List<String> userList = ["id1", "id-1", "id2"];
+                        Channel channel = await StreamApi.createChannel(
+                          client,
+                          type: "messaging",
+                          name: name,
+                          id: classId,
+                          image:
+                              "https://images.unsplash.com/photo-1506869640319-fe1a24fd76dc?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8Z3JvdXB8ZW58MHx8MHx8&auto=format&fit=crop&w=900&q=60",
+                          idMembers: userList,
+                        );
+
+                        await StreamApi.watchChannel(client, type: "messaging", id: classId);
+                        Get.to(() => StreamChannel(channel: channel, child: ChannelPage(channel: channel)));*/
+                        await chatButtonClick(
+                          context,
+                          name: "xyz",
+                          id: "xyz",
+                          image: "",
+                          userIdList: ["id1", "id-1", "id2"],
+                          isGroup: true,
+                        );
                       },
                       child: const Icon(Icons.chat_bubble_outline, color: AppColors.borderColor),
                     ),
@@ -481,6 +514,28 @@ Widget classRoomCard() {
       ),
     ),
   );
+}
+
+Future<void> chatButtonClick(
+  BuildContext context, {
+  required String name,
+  required String id,
+  required String image,
+  required List<String> userIdList,
+  required bool isGroup,
+}) async {
+  final client = StreamChat.of(context).client;
+  Channel channel = await StreamApi.createChannel(
+    client,
+    type: "messaging",
+    name: name,
+    id: id,
+    image: image.isEmpty ? "https://www.pngkey.com/png/detail/950-9501315_katie-notopoulos-katienotopoulos-i-write-about-tech-user.png" : image,
+    idMembers: userIdList,
+  );
+
+  await StreamApi.watchChannel(client, type: "messaging", id: id);
+  Get.to(() => StreamChannel(channel: channel, child: ChannelPage(channel: channel)));
 }
 
 Widget todoSection({
@@ -517,12 +572,7 @@ Widget todoSection({
       ),
       Container(
         height: 10,
-        decoration: const BoxDecoration(
-            color: AppColors.red,
-            borderRadius: BorderRadius.only(
-              topRight: Radius.circular(15),
-              topLeft: Radius.circular(15),
-            )),
+        decoration: const BoxDecoration(color: AppColors.red, borderRadius: BorderRadius.only(topRight: Radius.circular(15), topLeft: Radius.circular(15))),
       ),
     ],
   );
@@ -563,7 +613,7 @@ Widget tile({required String title, required String desc, bool? showPlusIcon}) {
   );
 }
 
-Widget commonBottomBar() {
+Widget commonBottomBar(BuildContext context, bool isFromDetails) {
   return Container(
     height: 75.0,
     decoration: BoxDecoration(
@@ -577,8 +627,38 @@ Widget commonBottomBar() {
         bottomNavigationBarItem(
             iconData: Icons.chat_bubble_outline,
             name: AppTexts.chat,
-            onTap: () {
-              Get.to(() => const ChatListScreen());
+            onTap: () async {
+              final client = StreamChat.of(context).client;
+
+              String name = "name-1";
+              String userId = "id1";
+              String otherUserId = "id-1";
+              await StreamApi.createChannel(
+                client,
+                type: "messaging",
+                name: "$userId-$otherUserId",
+                id: "$userId-$otherUserId",
+                image: "https://png.pngtree.com/png-vector/20190710/ourmid/pngtree-user-vector-avatar-png-image_1541962.jpg",
+                idMembers: [userId, otherUserId],
+              );
+
+              await StreamApi.watchChannel(client, type: "messaging", id: "$userId-$otherUserId");
+              if (isFromDetails) {
+                await chatButtonClick(
+                  context,
+                  name: "xyz",
+                  id: "xyz",
+                  image: "",
+                  userIdList: ["id1", "id-1", "id2"],
+                  isGroup: true,
+                );
+              } else {
+                Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) {
+                    return StreamChat(client: client, child: const ChannelListPage());
+                  },
+                ));
+              }
             }),
         bottomNavigationBarItem(
             iconData: CupertinoIcons.add,

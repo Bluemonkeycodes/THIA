@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
 import '../../generated/assets.dart';
 import '../../utils/utils.dart';
@@ -22,9 +21,19 @@ class _SplashScreenState extends State<SplashScreen> {
 
     Future.delayed(const Duration(seconds: 3)).then((value) {
       if (isLogin) {
-        Get.offAll(() => const HomeScreen());
+        Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(
+          builder: (context) {
+            return const HomeScreen();
+          },
+        ), (route) => false);
+        // Get.offAll(() => const HomeScreen());
       } else {
-        Get.offAll(() => const LoginScreen());
+        Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(
+          builder: (context) {
+            return const LoginScreen();
+          },
+        ), (route) => false);
+        // Get.offAll(() => const LoginScreen());
       }
     });
   }
