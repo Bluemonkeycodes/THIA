@@ -30,7 +30,7 @@ class AppTexts {
   static const String logout = "Logout";
   static const String estimatedTime = "Estimated Time";
   static const String selectEstimatedTime = "Select Estimated Time";
-  static const String showsAssignments = "Shows Assignments";
-  static const String assignmentsAdded = "Assignments Added";
-  static const String otherPeoplesTodos = "Other Peoples Todos";
+  static const String todos = "Todos";
+  static const String assignments = "Assignments";
+  static const String people = "People";
 }
