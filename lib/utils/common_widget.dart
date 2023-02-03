@@ -4,14 +4,16 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:googleapis/classroom/v1.dart';
 import 'package:readmore/readmore.dart';
+import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 import 'package:thia/generated/assets.dart';
-import 'package:thia/modules/chat_module/views/messages_screen.dart';
 import 'package:thia/modules/home_module/views/class_details_screen.dart';
 import 'package:thia/services/api_service_call.dart';
+import 'package:thia/utils/common_stream_io.dart';
 import 'package:thia/utils/utils.dart';
 
-import '../modules/chat_module/views/chat_list_screen.dart';
+import '../modules/chat_module/views/stream_chat_page.dart';
 import '../modules/home_module/views/add_todo_screen.dart';
 import '../modules/home_module/views/calender_screen.dart';
 
@@ -255,7 +257,7 @@ Widget noDataFoundWidget({String? message}) {
       children: [
         Image.asset(Assets.imagesNoDataFound, scale: 3.5),
         heightBox(),
-        Text(message ?? AppTexts.noDataFound, style: white24w700),
+        Text(message ?? AppTexts.noDataFound, style: black24w700),
       ],
     ),
   );
@@ -426,10 +428,11 @@ Widget bottomNavigationBarItem({required IconData iconData, required Function() 
   );
 }
 
-Widget classRoomCard() {
+Widget classRoomCard(BuildContext context, Course? data) {
   return InkWell(
     onTap: () {
-      Get.to(() => const ClassDetailsScreen());
+      showLog("class data ===> $data");
+      Get.to(() => ClassDetailsScreen(data: data));
     },
     child: Container(
       padding: const EdgeInsets.all(15),
@@ -447,28 +450,37 @@ Widget classRoomCard() {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text",
+                  data?.name ?? "",
                   maxLines: 3,
                   overflow: TextOverflow.ellipsis,
                   style: black18w600.copyWith(fontWeight: FontWeight.w700),
                 ),
-                heightBox(),
+                // heightBox(height: 5),
                 const Divider(color: AppColors.borderColor, thickness: 1.3),
-                heightBox(height: 8),
+                // heightBox(height: 5),
                 Row(
                   children: [
                     Expanded(
                       child: Text(
-                        AppTexts.johnDeo,
+                        data?.section ?? "",
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: grey14w500,
                       ),
                     ),
                     InkWell(
-                      onTap: () {
-                        // hideKeyBoard(context);
-                        Get.to(() => MessagesScreen());
+                      onTap: () async {
+                        hideKeyBoard(context);
+                        await chatButtonClick(
+                          context,
+                          name: data?.name ?? "",
+                          id: data?.id ?? "",
+                          image: "",
+                          //TODO: send only current user's id.
+                          // It will work as if user is not in the group then user will join automatically and if user is in the group then it can chat as normal.
+                          userIdList: ["id1", "id-1", "id2"],
+                          isGroup: true,
+                        );
                       },
                       child: const Icon(Icons.chat_bubble_outline, color: AppColors.borderColor),
                     ),
@@ -483,59 +495,93 @@ Widget classRoomCard() {
   );
 }
 
+Future<void> chatButtonClick(
+  BuildContext context, {
+  required String name,
+  required String id,
+  required String image,
+  required List<String> userIdList,
+  required bool isGroup,
+}) async {
+  final client = StreamChat.of(context).client;
+  Channel channel = await StreamApi.createChannel(
+    client,
+    type: "messaging",
+    name: name,
+    id: id,
+    image: image.isEmpty ? "https://www.pngkey.com/png/detail/950-9501315_katie-notopoulos-katienotopoulos-i-write-about-tech-user.png" : image,
+    idMembers: userIdList,
+  );
+
+  await StreamApi.watchChannel(client, type: "messaging", id: id);
+  Get.to(() => StreamChannel(channel: channel, child: ChannelPage(channel: channel)));
+}
+
 Widget todoSection({
   bool? showPlusButton,
+  bool? showPriorityBar,
   bool? showDate = true,
+  CourseWork? data,
+  required Course subject,
 }) {
   return Stack(
     fit: StackFit.loose,
     children: [
       Container(
-        padding: const EdgeInsets.all(10),
+        padding: const EdgeInsets.all(10).copyWith(top: (showPriorityBar ?? false) ? null : 0),
         decoration: BoxDecoration(
           gradient: AppColors.purpleGradient,
-          borderRadius: BorderRadius.circular(15).copyWith(
-            topLeft: const Radius.circular(10),
-            topRight: const Radius.circular(10),
-          ),
+          borderRadius: BorderRadius.circular(15).copyWith(topLeft: const Radius.circular(10), topRight: const Radius.circular(10)),
         ),
         child: Column(
           children: [
             heightBox(),
-            tile(title: "Name :", desc: "John Deo", showPlusIcon: showPlusButton),
+            tile(title: "Name :", desc: data?.title ?? "John Deo", showPlusIcon: showPlusButton, data: data, subject: subject),
             if (showDate ?? false) heightBox(),
-            if (showDate ?? false) tile(title: "Due :", desc: "30 March 2022"),
+            if (showDate ?? false)
+              tile(
+                  title: "Due :",
+                  desc: (data == null || data.dueDate == null)
+                      ? "30 March 2022"
+                      : (dateFormatter("${data.dueDate?.year}-${data.dueDate?.month}-${data.dueDate?.day}") ?? "30 March 2022").toString(),
+                  subject: subject),
             heightBox(),
             tile(
                 title: "Details :",
-                desc:
-                    "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley."),
+                desc: (data?.description) ??
+                    "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley.",
+                subject: subject),
             heightBox(),
-            tile(title: "Estimated Time :", desc: "3:00 Hour ⏳"),
+            // tile(title: "Estimated Time :", desc: data == null ? "3:00 Hour ⏳" : "${data.dueTime?.hours}:${data.dueTime?.minutes} hours ⏳"),
+            tile(
+                title: "Estimated Time :",
+                desc: data == null
+                    ? "3:00 Hour ⏳"
+                    : "${(timeFormatter(DateTime((data.dueDate?.year ?? 0), (data.dueDate?.month ?? 0), (data.dueDate?.day ?? 0), (data.dueTime?.hours ?? 0), (data.dueTime?.minutes ?? 0)).toString()))} ⏳",
+                subject: subject),
           ],
         ),
       ),
-      Container(
-        height: 10,
-        decoration: const BoxDecoration(
-            color: AppColors.red,
-            borderRadius: BorderRadius.only(
-              topRight: Radius.circular(15),
-              topLeft: Radius.circular(15),
-            )),
-      ),
+      if (showPriorityBar ?? false)
+        Container(
+          height: 10,
+          decoration: const BoxDecoration(color: AppColors.red, borderRadius: BorderRadius.only(topRight: Radius.circular(15), topLeft: Radius.circular(15))),
+        ),
     ],
   );
 }
 
-Widget tile({required String title, required String desc, bool? showPlusIcon}) {
+Widget tile({
+  required String title,
+  required String desc,
+  required Course subject,
+  bool? showPlusIcon,
+  CourseWork? data,
+}) {
   return Row(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
-      Text(
-        title,
-        style: white16w600,
-      ),
+      Text(title, style: white16w600),
       widthBox(),
       Expanded(
         child: ReadMoreText(
@@ -551,19 +597,28 @@ Widget tile({required String title, required String desc, bool? showPlusIcon}) {
         ),
       ),
       if (showPlusIcon ?? false)
-        const Align(
+        Align(
           alignment: Alignment.topRight,
-          child: Icon(
-            Icons.add_circle_outline_sharp,
-            color: AppColors.white,
-            size: 20,
+          child: InkWell(
+            onTap: () {
+              Get.to(() => AddTodoScreen(
+                    data: data,
+                    fromBottomBar: false,
+                    subject: subject,
+                  ));
+            },
+            child: const Icon(
+              Icons.add_circle_outline_sharp,
+              color: AppColors.white,
+              size: 20,
+            ),
           ),
         ),
     ],
   );
 }
 
-Widget commonBottomBar() {
+Widget commonBottomBar(BuildContext context, bool isFromDetails) {
   return Container(
     height: 75.0,
     decoration: BoxDecoration(
@@ -577,14 +632,46 @@ Widget commonBottomBar() {
         bottomNavigationBarItem(
             iconData: Icons.chat_bubble_outline,
             name: AppTexts.chat,
-            onTap: () {
-              Get.to(() => const ChatListScreen());
+            onTap: () async {
+              final client = StreamChat.of(context).client;
+
+              String name = "name-1";
+              String userId = "id1";
+              String otherUserId = "id-1";
+              await StreamApi.createChannel(
+                client,
+                type: "messaging",
+                name: "$userId-$otherUserId",
+                id: "$userId-$otherUserId",
+                image: "https://png.pngtree.com/png-vector/20190710/ourmid/pngtree-user-vector-avatar-png-image_1541962.jpg",
+                idMembers: [userId, otherUserId],
+              );
+
+              await StreamApi.watchChannel(client, type: "messaging", id: "$userId-$otherUserId");
+              if (isFromDetails) {
+                await chatButtonClick(
+                  context,
+                  name: "xyz",
+                  id: "xyz",
+                  image: "",
+                  userIdList: ["id1", "id-1", "id2"],
+                  isGroup: true,
+                );
+              } else {
+                Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) {
+                    return StreamChat(client: client, child: const ChannelListPage());
+                  },
+                ));
+              }
             }),
         bottomNavigationBarItem(
             iconData: CupertinoIcons.add,
             name: AppTexts.addTodo,
             onTap: () {
-              Get.to(() => const AddTodoScreen());
+              Get.to(() => const AddTodoScreen(
+                    fromBottomBar: true,
+                  ));
             }),
         bottomNavigationBarItem(
             iconData: CupertinoIcons.calendar,

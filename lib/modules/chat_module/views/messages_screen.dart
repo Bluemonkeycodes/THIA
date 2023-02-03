@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:thia/generated/assets.dart';
 import 'package:thia/utils/utils.dart';
@@ -32,7 +31,7 @@ class _MessagesScreenState extends State<MessagesScreen> {
                       // width: 250,
                       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 7),
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10).copyWith(bottomRight: Radius.circular(0)),
+                        borderRadius: BorderRadius.circular(10).copyWith(bottomRight: const Radius.circular(0)),
                         gradient: AppColors.purpleGradient,
                       ),
                       child: Text("Hello, how are you...", style: white14w500),
@@ -47,9 +46,9 @@ class _MessagesScreenState extends State<MessagesScreen> {
             children: [
               widthBox(),
               Container(
-                padding: EdgeInsets.all(7),
+                padding: const EdgeInsets.all(7),
                 decoration: BoxDecoration(gradient: AppColors.purpleGradient, borderRadius: BorderRadius.circular(10)),
-                child: Icon(
+                child: const Icon(
                   Icons.photo_outlined,
                   color: AppColors.white,
                 ),
@@ -60,7 +59,7 @@ class _MessagesScreenState extends State<MessagesScreen> {
               ),
               widthBox(),
               Container(
-                padding: EdgeInsets.all(7),
+                padding: const EdgeInsets.all(7),
                 decoration: BoxDecoration(gradient: AppColors.purpleGradient, borderRadius: BorderRadius.circular(10)),
                 child: Image.asset(
                   Assets.iconsSendIcon,

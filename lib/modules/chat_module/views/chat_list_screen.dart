@@ -29,7 +29,7 @@ class _ChatListScreenState extends State<ChatListScreen> {
           return InkWell(
             onTap: () {
               hideKeyBoard(context);
-              Get.to(() => MessagesScreen());
+              Get.to(() => const MessagesScreen());
             },
             child: Padding(
               padding: const EdgeInsets.all(10),

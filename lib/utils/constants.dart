@@ -6,6 +6,8 @@ class PrefConstants {
   static const String isLogin = "isLogin";
   static const String isGuest = "isGuest";
   static const String fcmTokenPref = "fcmTokenPref";
+  static const String httpClient = "httpClient";
+  static const String httpClientData = "httpClientData";
   static const String bookMarkList = "bookMarkList";
   static const String isSocialLogin = "isSocialLogin";
   static const String rememberMe = "rememberMe";

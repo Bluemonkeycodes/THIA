@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:thia/generated/assets.dart';
 import 'package:thia/modules/profile_module/views/profile_screen.dart';
 
 import '../../../utils/utils.dart';
@@ -14,36 +13,52 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   @override
+  void initState() {
+    super.initState();
+    kHomeController.getClassList();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.all(20).copyWith(top: 40, bottom: 0),
-        child: Column(
-          children: [
-            topSection(),
-            heightBox(height: 30),
-            prioritySection(),
-            heightBox(),
-            Expanded(child: cardSection()),
-          ],
+      body: RefreshIndicator(
+        color: AppColors.buttonColor,
+        onRefresh: () async {
+          kHomeController.getClassList();
+        },
+        child: Padding(
+          padding: const EdgeInsets.all(20).copyWith(top: 40, bottom: 0),
+          child: Column(
+            children: [
+              topSection(),
+              heightBox(height: 30),
+              prioritySection(),
+              heightBox(),
+              Expanded(child: cardSection()),
+            ],
+          ),
         ),
       ),
-      bottomNavigationBar: commonBottomBar(),
+      bottomNavigationBar: commonBottomBar(context, false),
     );
   }
 
   Widget cardSection() {
-    return ListView.separated(
-      itemCount: 10,
-      shrinkWrap: true,
-      padding: const EdgeInsets.only(bottom: 10),
-      separatorBuilder: (context, index) {
-        return heightBox(height: 25);
-      },
-      itemBuilder: (context, index) {
-        return classRoomCard();
-      },
-    );
+    return StreamBuilder<Object>(
+        stream: kHomeController.courseModel.stream,
+        builder: (context, snapshot) {
+          return ListView.separated(
+            itemCount: kHomeController.courseModel.value.courses?.length ?? 0,
+            shrinkWrap: true,
+            padding: const EdgeInsets.only(bottom: 10),
+            separatorBuilder: (context, index) {
+              return heightBox(height: 25);
+            },
+            itemBuilder: (context, index) {
+              return classRoomCard(context, kHomeController.courseModel.value.courses?[index]);
+            },
+          );
+        });
   }
 
   Widget prioritySection() {
@@ -85,21 +100,20 @@ class _HomeScreenState extends State<HomeScreen> {
             children: [
               Text(appName, style: grey14w700),
               heightBox(),
-              Text(AppTexts.johnDeo, style: black24w700),
+              Text(/*googleSignIn.currentUser?.displayName ??*/ "John Deo", style: black24w700),
             ],
           ),
         ),
-        ClipRRect(
-          borderRadius: BorderRadius.circular(10),
-          child: InkWell(
-            onTap: () {
-              Get.to(() => const ProfileScreen());
-            },
-            child: SizedBox(
-              height: 40,
-              width: 40,
-              child: Image.asset(Assets.imagesDummyProfileImage, fit: BoxFit.cover),
-            ),
+        InkWell(
+          onTap: () {
+            Get.to(() => const ProfileScreen());
+          },
+          child: getNetworkImage(
+            url: /*googleSignIn.currentUser?.photoUrl ??*/
+                "https://images.unsplash.com/photo-1669993427100-221137cc7513?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHx0b3BpYy1mZWVkfDYxfHRvd0paRnNrcEdnfHxlbnwwfHx8fA%3D%3D&auto=format&fit=crop&w=900&q=60",
+            height: 40,
+            width: 40,
+            borderRadius: 10,
           ),
         ),
       ],

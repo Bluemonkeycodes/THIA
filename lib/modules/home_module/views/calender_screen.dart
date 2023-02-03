@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:googleapis/classroom/v1.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 import 'package:thia/utils/utils.dart';
 
@@ -41,7 +42,7 @@ class _CalenderScreenState extends State<CalenderScreen> {
               return heightBox(height: 12);
             },
             itemBuilder: (context, index) {
-              return todoSection(showDate: false);
+              return todoSection(showDate: false, showPriorityBar: true, subject: Course());
             },
           )
         ],

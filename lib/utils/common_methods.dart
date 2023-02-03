@@ -60,7 +60,7 @@ setObject(String key, value) {
 
 showLog(text) {
   if (kDebugMode) {
-    log((text ?? "").toString(), name: "Ravin Laheri");
+    log((text ?? "").toString());
   }
 }
 
@@ -101,7 +101,7 @@ passwordValidation(String value, {bool? isConfirm, String? oldValue}) {
 
 dateFormatter(String? dateTime, {String? dateFormat}) {
   final DateTime now = DateTime.now();
-  DateFormat formatter = DateFormat(dateFormat ?? 'yyyy-MM-dd');
+  DateFormat formatter = DateFormat(dateFormat ?? 'dd MMM yyyy');
   final String formatted;
   if (isNotEmptyString(dateTime)) {
     // 'yyyy-MM-dd'
