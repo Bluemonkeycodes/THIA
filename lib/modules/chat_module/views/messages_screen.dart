@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:thia/generated/assets.dart';
 import 'package:thia/utils/utils.dart';

@@ -38,9 +38,12 @@ dependencies:
   readmore: ^2.2.0
   syncfusion_flutter_datepicker: ^20.4.44
 
-  google_sign_in: ^5.4.3
+#  google_sign_in: ^5.4.3
   stream_chat_flutter: ^5.2.0
   dart_jsonwebtoken: ^2.6.4
+
+  googleapis: ^10.0.0
+  extension_google_sign_in_as_googleapis_auth: ^2.0.7
 
   firebase_auth: ^4.2.5
   firebase_crashlytics: ^3.0.3

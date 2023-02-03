@@ -11,6 +11,7 @@ Widget GetDropDown({
   Color? filledColor,
   EdgeInsetsGeometry? padding,
   double? borderRadius,
+  double? menuHeight,
   Border? border,
   TextStyle? textStyle,
   Color? iconColor,
@@ -41,6 +42,7 @@ Widget GetDropDown({
               },
               hint: Text(hint, style: grey14w500),
               dropdownColor: AppColors.white,
+              menuMaxHeight: menuHeight,
               items: selectionData.map<DropdownMenuItem<String>>((String value) {
                 return DropdownMenuItem<String>(
                   value: value,

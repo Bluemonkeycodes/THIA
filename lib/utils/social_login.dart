@@ -1,14 +1,40 @@
+import 'dart:convert';
+
+import 'package:extension_google_sign_in_as_googleapis_auth/extension_google_sign_in_as_googleapis_auth.dart';
 import 'package:firebase_auth/firebase_auth.dart' as f_auth;
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:googleapis_auth/auth_io.dart';
+import 'package:thia/main.dart';
 import 'package:thia/services/api_service_call.dart';
 import 'package:thia/utils/utils.dart';
 
 import '../modules/home_module/views/home_screen.dart';
 
 f_auth.User? user;
-final GoogleSignIn googleSignIn = GoogleSignIn();
+final GoogleSignIn googleSignIn = GoogleSignIn(
+  scopes: [
+    'https://www.googleapis.com/auth/classroom.courses.readonly',
+    'https://www.googleapis.com/auth/classroom.courses',
+    "https://www.googleapis.com/auth/classroom.course-work.readonly",
+    "https://www.googleapis.com/auth/classroom.student-submissions.students.readonly",
+    "https://www.googleapis.com/auth/classroom.coursework.students.readonly",
+    "https://www.googleapis.com/auth/classroom.student-submissions.me.readonly",
+    "https://www.googleapis.com/auth/classroom.coursework.me.readonly",
+    "https://www.googleapis.com/auth/classroom.coursework.students",
+    " https://www.googleapis.com/auth/classroom.coursework.me",
+  ],
+  // clientId: "295288564239-8q8f0kkfo5tktd8o105le9bhrhr6ivur.apps.googleusercontent.com",
+);
 f_auth.FirebaseAuth auth = f_auth.FirebaseAuth.instance;
+
+AccessCredentials getAuthJsonData() {
+  return AccessCredentials.fromJson(jsonDecode(getPreference.read(PrefConstants.httpClientData)));
+}
+
+setAuthJsonData(AccessCredentials val) {
+  getPreference.write(PrefConstants.httpClientData, jsonEncode(val));
+}
 
 googleAuth() async {
   try {
@@ -18,7 +44,6 @@ googleAuth() async {
     showLog(e);
   }
   final GoogleSignInAccount? googleSignInAccount = await googleSignIn.signIn();
-
   if (googleSignInAccount != null) {
     final GoogleSignInAuthentication googleSignInAuthentication = await googleSignInAccount.authentication;
 
@@ -33,7 +58,12 @@ googleAuth() async {
       if (user != null) {
         showProgressDialog();
         setIsLogin(isLogin: true);
-        Get.offAll(() => const HomeScreen());
+
+        await googleSignIn.authenticatedClient().then((value) {
+          setAuthJsonData(value?.credentials ?? AccessCredentials(AccessToken("", "", DateTime.now()), "refreshToken", []));
+          showLog("1111 ===> ${getPreference.read(PrefConstants.httpClient)}");
+          Get.offAll(() => const HomeScreen());
+        });
 
         //TODO: call api here...
         // Api().call(
