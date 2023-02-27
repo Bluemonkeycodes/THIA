@@ -34,7 +34,7 @@ Widget GetDropDown({
               iconSize: 22,
               elevation: 16,
               borderRadius: BorderRadius.circular(12),
-              style: textStyle ?? black16w500.copyWith(fontSize: 15),
+              style: textStyle ?? black16w500.copyWith(fontSize: 14),
               underline: Container(height: 0, color: Colors.transparent),
               onChanged: (String? newValue) {
                 // selectedValue = newValue!;

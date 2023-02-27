@@ -9,8 +9,11 @@ class AppTexts {
   static const String mid = "Mid";
   static const String low = "Low";
   static const String chat = "Chat";
+  static const String edit = "Edit";
+  static const String delete = "Delete";
   static const String addTodo = "Add Todo";
   static const String calendar = "Calendar";
+  static const String complete = "Complete";
   static const String name = "Name";
   static const String course = "Course";
   static const String due = "Due";
@@ -21,6 +24,7 @@ class AppTexts {
   static const String selectPriority = "Select Priority";
   static const String save = "Save";
   static const String priority = "Priority";
+  static const String visibility = "Visibility";
   static const String profile = "Profile";
   static const String notification = "Notification";
   static const String theme = "Theme";
@@ -30,8 +34,14 @@ class AppTexts {
   static const String aboutUs = "About us";
   static const String logout = "Logout";
   static const String estimatedTime = "Estimated Time";
+  static const String subTodo = "Sub Todo";
   static const String selectEstimatedTime = "Select Estimated Time";
   static const String todos = "Todos";
-  static const String assignments = "Assignments";
+  static const String classWork = "Classwork";
   static const String people = "People";
+  static const String noTodoFound = "No Todo";
+  static const String noUser = "No User";
+  static const String noClassWork = "No ClassWork";
+  static const String noClass = "No Class";
+  static const String allTodo = "All Todos";
 }

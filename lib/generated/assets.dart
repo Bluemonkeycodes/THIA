@@ -15,6 +15,7 @@ class Assets {
   static const String imagesCardImage = 'assets/images/card_image.png';
   static const String imagesDummyProfileImage = 'assets/images/dummy_profile_image.png';
   static const String imagesFeedback = 'assets/images/feedback.png';
+  static const String imagesLogo = 'assets/images/logo.png';
   static const String imagesNoDataFound = 'assets/images/no_data_found.png';
   static const String imagesSplash = 'assets/images/splash.png';
 }

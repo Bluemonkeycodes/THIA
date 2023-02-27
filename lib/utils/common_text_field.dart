@@ -117,11 +117,12 @@ Widget GetTextField({
             cursorColor: cursorColor ?? AppColors.black,
             obscureText: passwordVisible,
             textInputAction: inputAction,
-            style: textStyle ?? black14w400,
+            style: textStyle ?? black14w500,
             cursorWidth: 1,
 
             inputFormatters: inputFormatter,
             decoration: InputDecoration(
+              errorStyle: red12w500.copyWith(color: AppColors.red),
               errorMaxLines: errorMaxLines ?? 1,
               filled: isFilled ?? true,
               fillColor: filledColor ?? AppColors.white.withOpacity(0.06),

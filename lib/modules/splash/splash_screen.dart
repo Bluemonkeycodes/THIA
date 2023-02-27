@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:thia/utils/social_login.dart';
 
 import '../../generated/assets.dart';
 import '../../utils/utils.dart';
@@ -21,21 +23,22 @@ class _SplashScreenState extends State<SplashScreen> {
 
     Future.delayed(const Duration(seconds: 3)).then((value) {
       if (isLogin) {
-        Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(
-          builder: (context) {
-            return const HomeScreen();
-          },
-        ), (route) => false);
-        // Get.offAll(() => const HomeScreen());
+        Get.offAll(() => const HomeScreen());
       } else {
-        Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(
-          builder: (context) {
-            return const LoginScreen();
-          },
-        ), (route) => false);
-        // Get.offAll(() => const LoginScreen());
+        Get.offAll(() => const LoginScreen());
       }
+      // decideStartingPage();
     });
+  }
+
+  Future<dynamic> decideStartingPage() async {
+    bool isUserSignedIn = await googleSignIn.isSignedIn();
+
+    if (isUserSignedIn == true) {
+      Get.offAll(() => const HomeScreen());
+    } else {
+      Get.offAll(() => const LoginScreen());
+    }
   }
 
   @override

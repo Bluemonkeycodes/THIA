@@ -42,29 +42,29 @@ class _ChannelListPageState extends State<ChannelListPage> {
           separatorBuilder: (context, values, index) {
             return Divider(endIndent: 10, indent: 10, color: AppColors.black.withOpacity(0.35));
           },
-          itemBuilder: (context, items, index, defaultWidget) {
-            return Padding(
-              padding: const EdgeInsets.all(5),
-              child: defaultWidget.copyWith(
-                leading: ClipRRect(
-                  borderRadius: BorderRadius.circular(50),
-                  child: Container(
-                    clipBehavior: Clip.hardEdge,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(50),
-                      border: Border.all(color: AppColors.buttonColor, width: 3),
-                    ),
-                    child: getNetworkImage(
-                      url: items[index].image ?? "",
-                      borderRadius: 50,
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                ),
-                title: Text(items[index].name ?? "", style: black18bold),
-              ),
-            );
-          },
+          // itemBuilder: (context, items, index, defaultWidget) {
+          //   return Padding(
+          //     padding: const EdgeInsets.all(5),
+          //     child: defaultWidget.copyWith(
+          //       leading: ClipRRect(
+          //         borderRadius: BorderRadius.circular(50),
+          //         child: Container(
+          //           clipBehavior: Clip.hardEdge,
+          //           decoration: BoxDecoration(
+          //             borderRadius: BorderRadius.circular(50),
+          //             border: Border.all(color: AppColors.buttonColor, width: 3),
+          //           ),
+          //           child: getNetworkImage(
+          //             url: items[index].image ?? "",
+          //             borderRadius: 50,
+          //             fit: BoxFit.cover,
+          //           ),
+          //         ),
+          //       ),
+          //       title: Text(items[index].name ?? "", style: black18bold),
+          //     ),
+          //   );
+          // },
           controller: _listController,
           onChannelTap: (channel) async {
             Navigator.of(context).push(MaterialPageRoute(
@@ -81,10 +81,7 @@ class _ChannelListPageState extends State<ChannelListPage> {
 }
 
 class ChannelPage extends StatefulWidget {
-  const ChannelPage({
-    Key? key,
-    required this.channel,
-  }) : super(key: key);
+  const ChannelPage({Key? key, required this.channel}) : super(key: key);
   final Channel channel;
 
   @override
@@ -93,9 +90,18 @@ class ChannelPage extends StatefulWidget {
 
 class _ChannelPageState extends State<ChannelPage> {
   @override
-  Widget build(BuildContext context) {
-    showLog("current user 1111 ===> ${StreamChat.of(context).currentUser}");
+  void initState() {
+    super.initState();
 
+    // WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+    //   Future.delayed(const Duration(seconds: 2)).then((value) {
+    //     setState(() {});
+    //   });
+    // });
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: const StreamChannelHeader(),
       body: Column(

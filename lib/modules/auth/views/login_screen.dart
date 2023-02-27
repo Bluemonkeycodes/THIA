@@ -48,7 +48,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   heightBox(height: 60),
                   GetButton(
                       ontap: () {
-                        googleAuth();
+                        googleAuth(context);
                         // Get.offAll(() => const HomeScreen());
                       },
                       padding: const EdgeInsets.symmetric(horizontal: 15),

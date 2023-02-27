@@ -9,11 +9,14 @@ import 'package:readmore/readmore.dart';
 import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 import 'package:thia/generated/assets.dart';
 import 'package:thia/modules/home_module/views/class_details_screen.dart';
+import 'package:thia/modules/home_module/views/todo_details_screen.dart';
 import 'package:thia/services/api_service_call.dart';
 import 'package:thia/utils/common_stream_io.dart';
 import 'package:thia/utils/utils.dart';
 
 import '../modules/chat_module/views/stream_chat_page.dart';
+import '../modules/home_module/model/calender_task_list_model.dart';
+import '../modules/home_module/model/task_detail_model.dart';
 import '../modules/home_module/views/add_todo_screen.dart';
 import '../modules/home_module/views/calender_screen.dart';
 
@@ -186,7 +189,7 @@ Widget getNetworkImage({
         },
         errorWidget: (context, url, error) {
           return Image.asset(
-            ((height ?? 45) >= 100 || (width ?? 45.0) >= 100) ? Assets.imagesAppLogo : Assets.imagesAppLogo,
+            ((height ?? 45) >= 100 || (width ?? 45.0) >= 100) ? Assets.imagesLogo : Assets.imagesLogo,
             fit: errorFit ?? (((height ?? 45) >= 100 || (width ?? 45.0) >= 100) ? BoxFit.contain : BoxFit.cover),
           );
         },
@@ -411,7 +414,13 @@ commonAlertDialog({
   }
 }
 
-Widget bottomNavigationBarItem({required IconData iconData, required Function() onTap, required String name}) {
+Widget bottomNavigationBarItem({
+  required IconData iconData,
+  required Function() onTap,
+  required String name,
+  Color? iconColor,
+  TextStyle? textStyle,
+}) {
   return InkWell(
     onTap: onTap,
     child: Column(
@@ -419,10 +428,13 @@ Widget bottomNavigationBarItem({required IconData iconData, required Function() 
       children: [
         Icon(
           iconData,
-          color: AppColors.borderColor,
+          color: iconColor ?? AppColors.borderColor,
         ),
         heightBox(height: 5),
-        Text(name, style: blue16w500)
+        Text(
+          name,
+          style: textStyle ?? blue16w500,
+        )
       ],
     ),
   );
@@ -431,7 +443,6 @@ Widget bottomNavigationBarItem({required IconData iconData, required Function() 
 Widget classRoomCard(BuildContext context, Course? data) {
   return InkWell(
     onTap: () {
-      showLog("class data ===> $data");
       Get.to(() => ClassDetailsScreen(data: data));
     },
     child: Container(
@@ -471,18 +482,22 @@ Widget classRoomCard(BuildContext context, Course? data) {
                     InkWell(
                       onTap: () async {
                         hideKeyBoard(context);
-                        await chatButtonClick(
-                          context,
-                          name: data?.name ?? "",
-                          id: data?.id ?? "",
-                          image: "",
-                          //TODO: send only current user's id.
-                          // It will work as if user is not in the group then user will join automatically and if user is in the group then it can chat as normal.
-                          userIdList: ["id1", "id-1", "id2"],
-                          isGroup: true,
-                        );
+                        if (data?.teacherFolder == null) {
+                          await chatButtonClick(
+                            context,
+                            name: data?.name ?? "",
+                            id: data?.id ?? "",
+                            image: "",
+                            userIdList: [(kHomeController.userData.value.userId ?? "").toString()],
+                          );
+                        } else {
+                          showSnackBar(title: ApiConfig.error, message: "Teachers are not allowed to chat with whole classroom.");
+                        }
                       },
-                      child: const Icon(Icons.chat_bubble_outline, color: AppColors.borderColor),
+                      child: Icon(
+                        Icons.chat_bubble_outline,
+                        color: data?.teacherFolder == null ? AppColors.borderColor : AppColors.grey,
+                      ),
                     ),
                   ],
                 ),
@@ -501,23 +516,29 @@ Future<void> chatButtonClick(
   required String id,
   required String image,
   required List<String> userIdList,
-  required bool isGroup,
 }) async {
   final client = StreamChat.of(context).client;
-  Channel channel = await StreamApi.createChannel(
-    client,
-    type: "messaging",
-    name: name,
-    id: id,
-    image: image.isEmpty ? "https://www.pngkey.com/png/detail/950-9501315_katie-notopoulos-katienotopoulos-i-write-about-tech-user.png" : image,
-    idMembers: userIdList,
-  );
-
-  await StreamApi.watchChannel(client, type: "messaging", id: id);
-  Get.to(() => StreamChannel(channel: channel, child: ChannelPage(channel: channel)));
+  await StreamApi.watchChannel(client, type: "messaging", id: id).then((value) async {
+    await StreamApi.createChannel(
+      client,
+      type: "messaging",
+      name: name,
+      id: id,
+      image: image.isEmpty ? "https://www.pngkey.com/png/detail/950-9501315_katie-notopoulos-katienotopoulos-i-write-about-tech-user.png" : image,
+      idMembers: userIdList,
+    ).then(
+      (channel) async {
+        await StreamApi.watchChannel(client, type: "messaging", id: id).then((value) async {
+          return await Future.delayed(const Duration(seconds: 1)).then((value) {
+            return Get.to(() => StreamChannel(channel: channel, child: ChannelPage(channel: channel)));
+          });
+        });
+      },
+    );
+  });
 }
 
-Widget todoSection({
+Widget assignmentCard({
   bool? showPlusButton,
   bool? showPriorityBar,
   bool? showDate = true,
@@ -536,29 +557,48 @@ Widget todoSection({
         child: Column(
           children: [
             heightBox(),
-            tile(title: "Name :", desc: data?.title ?? "John Deo", showPlusIcon: showPlusButton, data: data, subject: subject),
+            tile(
+              title: "Name :",
+              desc: data?.title ?? "",
+              showPlusIcon: showPlusButton,
+              data: TodoModel(
+                classID: data?.courseId ?? "",
+                name: data?.title ?? "",
+                details: data?.description ?? "",
+                duedate: DateTime.parse((DateTime(
+                  data?.dueDate?.year ?? DateTime.now().year,
+                  data?.dueDate?.month ?? DateTime.now().month,
+                  data?.dueDate?.day ?? DateTime.now().day,
+                )).toString())
+                    .toString(),
+                time: (("${data?.dueTime?.hours ?? 0}" ":" "${data?.dueTime?.minutes ?? 0}" ":" "${data?.dueTime?.seconds ?? 0}")).toString(),
+              ),
+              // subject: subject,
+            ),
             if (showDate ?? false) heightBox(),
             if (showDate ?? false)
               tile(
-                  title: "Due :",
-                  desc: (data == null || data.dueDate == null)
-                      ? "30 March 2022"
-                      : (dateFormatter("${data.dueDate?.year}-${data.dueDate?.month}-${data.dueDate?.day}") ?? "30 March 2022").toString(),
-                  subject: subject),
+                title: "Due :",
+                desc:
+                    (data == null || data.dueDate == null) ? "NA" : (dateFormatter("${data.dueDate?.year}-${data.dueDate?.month}-${data.dueDate?.day}") ?? "").toString(),
+                // subject: subject,
+              ),
             heightBox(),
             tile(
-                title: "Details :",
-                desc: (data?.description) ??
-                    "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley.",
-                subject: subject),
+              title: "Details :",
+              desc: (data?.description) ?? "",
+              // subject: subject,
+            ),
             heightBox(),
             // tile(title: "Estimated Time :", desc: data == null ? "3:00 Hour ⏳" : "${data.dueTime?.hours}:${data.dueTime?.minutes} hours ⏳"),
             tile(
-                title: "Estimated Time :",
-                desc: data == null
-                    ? "3:00 Hour ⏳"
-                    : "${(timeFormatter(DateTime((data.dueDate?.year ?? 0), (data.dueDate?.month ?? 0), (data.dueDate?.day ?? 0), (data.dueTime?.hours ?? 0), (data.dueTime?.minutes ?? 0)).toString()))} ⏳",
-                subject: subject),
+              title: "Estimated Time :",
+              desc: (data == null || data.dueTime == null)
+                  ? "NA"
+                  : "${(printDuration(parseDuration((("${data.dueTime?.hours ?? 0}" ":" "${data.dueTime?.minutes ?? 0}" ":" "${data.dueTime?.seconds ?? 0}")).toString())))} ⏳",
+              // : "${(timeFormatter(DateTime((data.dueDate?.year ?? 0), (data.dueDate?.month ?? 0), (data.dueDate?.day ?? 0), (data.dueTime?.hours ?? 0), (data.dueTime?.minutes ?? 0)).toString()))} ⏳",
+              // subject: subject,
+            ),
           ],
         ),
       ),
@@ -571,27 +611,196 @@ Widget todoSection({
   );
 }
 
+Widget todoCard({
+  bool? showPlusButton,
+  // bool? showPriorityBar,
+  bool? showDate = true,
+  TodoModel? data,
+  Function()? onTap,
+  bool? showSubTask,
+  TaskDetailModel? taskDetailModel,
+  // required Course subject,
+}) {
+  return InkWell(
+    onTap: onTap ??
+        () {
+          Get.to(() => TodoDetailsScreen(data: data ?? TodoModel()));
+        },
+    child: Stack(
+      fit: StackFit.loose,
+      children: [
+        Container(
+          padding: const EdgeInsets.all(10).copyWith(top: null),
+          decoration: BoxDecoration(
+            gradient: AppColors.purpleGradient,
+            borderRadius: BorderRadius.circular(15).copyWith(topLeft: const Radius.circular(10), topRight: const Radius.circular(10)),
+          ),
+          child: Column(
+            children: [
+              heightBox(),
+              tile(
+                title: "Name :",
+                desc: data?.name ?? "",
+                showPlusIcon: showPlusButton,
+                data: data,
+                // subject: subject,
+              ),
+              if (showDate ?? false) heightBox(),
+              if (showDate ?? false)
+                tile(
+                  title: "Due :",
+                  desc: (data == null || data.duedate == null) ? "NA" : (dateFormatter(((DateTime.parse(data.duedate ?? "").toString()).toString()))),
+                  // subject: subject,
+                ),
+              heightBox(),
+              tile(
+                title: "Details :",
+                desc: (data?.details) ?? "",
+                // subject: subject,
+              ),
+              heightBox(),
+              // tile(title: "Estimated Time :", desc: data == null ? "3:00 Hour ⏳" : "${data.dueTime?.hours}:${data.dueTime?.minutes} hours ⏳"),
+
+              //TODO: set due time below
+              tile(
+                title: "Estimated Time :",
+                desc: data?.time == null ? "00 Hour ⏳" : "${(printDuration(parseDuration(data?.time ?? "")))} ⏳",
+                // subject: subject,
+              ),
+
+              if (data?.createdBy != null)
+                Column(
+                  children: [
+                    heightBox(),
+                    tile(
+                      title: "Created By :",
+                      desc: data?.createdBy ?? "",
+                      // subject: subject,
+                    ),
+                  ],
+                ),
+
+              if (showSubTask == true)
+                StreamBuilder<Object>(
+                    stream: kHomeController.taskDetailModel.stream,
+                    builder: (context, snapshot) {
+                      return kHomeController.taskDetailModel.value.data?.subTask?.isNotEmpty == true
+                          ? Column(
+                              children: [
+                                heightBox(),
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      child: tile(
+                                        title: "SubTasks ",
+                                        desc: "",
+                                        // subject: subject,
+                                      ),
+                                    ),
+                                    Text(
+                                      "Completed",
+                                      style: white14w500,
+                                    ),
+                                  ],
+                                ),
+                                heightBox(),
+                                ListView.builder(
+                                    shrinkWrap: true,
+                                    physics: const NeverScrollableScrollPhysics(),
+                                    itemCount: kHomeController.taskDetailModel.value.data?.subTask?.length ?? 0,
+                                    itemBuilder: (context, index) {
+                                      return Row(
+                                        children: [
+                                          Text(
+                                            "\u2022  ",
+                                            style: white16w600,
+                                          ),
+                                          Expanded(
+                                            child: Text(
+                                              "${kHomeController.taskDetailModel.value.data?.subTask?[index]?.name} ",
+                                              style: white12w600,
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            height: 24.0,
+                                            width: 24.0,
+                                            child: Checkbox(
+                                                checkColor: AppColors.white,
+                                                side: MaterialStateBorderSide.resolveWith(
+                                                  (states) => const BorderSide(width: 1.5, color: Colors.white),
+                                                ),
+                                                activeColor: Colors.transparent,
+                                                value: kHomeController.taskDetailModel.value.data?.subTask?[index]?.iscomplete ?? false,
+                                                onChanged: (val) {
+                                                  if (kHomeController.taskDetailModel.value.data?.subTask?[index]?.iscomplete != true) {
+                                                    kHomeController
+                                                        .setSubTaskComplete(kHomeController.taskDetailModel.value.data?.subTask?[index]?.subtaskid.toString() ?? "", () {
+                                                      kHomeController.taskDetailModel.value.data?.subTask?[index]?.setComplete(val ?? false);
+                                                      kHomeController.taskDetailModel.refresh();
+                                                    });
+                                                  }
+                                                }),
+                                          )
+                                        ],
+                                      );
+                                    })
+                              ],
+                            )
+                          : const SizedBox();
+                    }),
+            ],
+          ),
+        ),
+        // if (showPriorityBar ?? false)
+        Container(
+          height: 10,
+          decoration: BoxDecoration(
+            color: data?.priority == 1
+                ? AppColors.red
+                : data?.priority == 2
+                    ? AppColors.orange
+                    : AppColors.yellow,
+            borderRadius: const BorderRadius.only(topRight: Radius.circular(15), topLeft: Radius.circular(15)),
+          ),
+        ),
+        if (data?.isCompleted ?? false)
+          Positioned(
+            top: 15,
+            right: 15,
+            child: Text(
+              "Completed",
+              style: white14w500.copyWith(color: Colors.greenAccent),
+            ),
+          ),
+      ],
+    ),
+  );
+}
+
 Widget tile({
   required String title,
   required String desc,
-  required Course subject,
+  // required Course subject,
   bool? showPlusIcon,
-  CourseWork? data,
+  TodoModel? data,
+  TextStyle? titleStyle,
+  TextStyle? descStyle,
+  TextStyle? moreStyle,
 }) {
   return Row(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
-      Text(title, style: white16w600),
+      Text(title, style: titleStyle ?? white16w600),
       widthBox(),
       Expanded(
         child: ReadMoreText(
           desc,
           trimLines: 3,
-          style: white14w500,
+          style: descStyle ?? white14w500,
           colorClickableText: Colors.greenAccent,
           trimMode: TrimMode.Line,
-          moreStyle: white14w700.copyWith(fontWeight: FontWeight.w800),
-          lessStyle: white14w700.copyWith(fontWeight: FontWeight.w800),
+          moreStyle: moreStyle ?? white14w700.copyWith(fontWeight: FontWeight.w800),
+          lessStyle: moreStyle ?? white14w700.copyWith(fontWeight: FontWeight.w800),
           trimCollapsedText: 'Show more',
           trimExpandedText: ' Show less',
         ),
@@ -604,13 +813,13 @@ Widget tile({
               Get.to(() => AddTodoScreen(
                     data: data,
                     fromBottomBar: false,
-                    subject: subject,
+                    // subject: subject,
                   ));
             },
             child: const Icon(
               Icons.add_circle_outline_sharp,
               color: AppColors.white,
-              size: 20,
+              size: 24,
             ),
           ),
         ),
@@ -618,7 +827,7 @@ Widget tile({
   );
 }
 
-Widget commonBottomBar(BuildContext context, bool isFromDetails) {
+Widget commonBottomBar(BuildContext context, bool isFromDetails, {Course? subject}) {
   return Container(
     height: 75.0,
     decoration: BoxDecoration(
@@ -632,46 +841,32 @@ Widget commonBottomBar(BuildContext context, bool isFromDetails) {
         bottomNavigationBarItem(
             iconData: Icons.chat_bubble_outline,
             name: AppTexts.chat,
+            iconColor: subject?.teacherFolder == null ? AppColors.borderColor : AppColors.grey,
+            textStyle: blue16w500.copyWith(color: subject?.teacherFolder == null ? AppColors.borderColor : AppColors.grey),
             onTap: () async {
-              final client = StreamChat.of(context).client;
+              if (subject?.teacherFolder == null) {
+                final client = StreamChat.of(context).client;
 
-              String name = "name-1";
-              String userId = "id1";
-              String otherUserId = "id-1";
-              await StreamApi.createChannel(
-                client,
-                type: "messaging",
-                name: "$userId-$otherUserId",
-                id: "$userId-$otherUserId",
-                image: "https://png.pngtree.com/png-vector/20190710/ourmid/pngtree-user-vector-avatar-png-image_1541962.jpg",
-                idMembers: [userId, otherUserId],
-              );
-
-              await StreamApi.watchChannel(client, type: "messaging", id: "$userId-$otherUserId");
-              if (isFromDetails) {
-                await chatButtonClick(
-                  context,
-                  name: "xyz",
-                  id: "xyz",
-                  image: "",
-                  userIdList: ["id1", "id-1", "id2"],
-                  isGroup: true,
-                );
+                if (isFromDetails) {
+                  await chatButtonClick(
+                    context,
+                    name: subject?.name ?? "",
+                    id: subject?.id ?? "",
+                    image: "",
+                    userIdList: [(kHomeController.userData.value.userId ?? "").toString()],
+                  );
+                } else {
+                  Get.to(() => StreamChat(client: client, child: const ChannelListPage()));
+                }
               } else {
-                Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) {
-                    return StreamChat(client: client, child: const ChannelListPage());
-                  },
-                ));
+                showSnackBar(title: ApiConfig.error, message: "Teachers are not allowed to chat with whole classroom.");
               }
             }),
         bottomNavigationBarItem(
             iconData: CupertinoIcons.add,
             name: AppTexts.addTodo,
             onTap: () {
-              Get.to(() => const AddTodoScreen(
-                    fromBottomBar: true,
-                  ));
+              Get.to(() => AddTodoScreen(fromBottomBar: !isFromDetails, subject: subject));
             }),
         bottomNavigationBarItem(
             iconData: CupertinoIcons.calendar,

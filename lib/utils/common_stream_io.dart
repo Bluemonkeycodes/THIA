@@ -1,10 +1,8 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:dart_jsonwebtoken/dart_jsonwebtoken.dart';
 import 'package:stream_chat_flutter/stream_chat_flutter.dart';
-import 'package:thia/utils/common_methods.dart';
 
 class StreamConfig {
-  static const String apikey = "4jwj4zgux2fp";
+  // static const String apikey = "4jwj4zgux2fp";
+  static const String apikey = "aw46bmah6fne";
 
   static const String tokenEmily =
       'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiYTUiLCJuYW1lIjoicHJhc2hhbnQiLCJpYXQiOjE1MTYyMzkwMjJ9.U-Nf-L_WOZebyB1JAtcy0ri3F5jDbAAON-UbMbYtejU';
@@ -52,9 +50,9 @@ class StreamApi {
       'members': idMembers,
     });
 
-    await channel.create();
-
-    channel.watch();
+    // await channel.create();
+    await channel.watch();
+    await channel.addMembers(idMembers);
     return channel;
   }
 
@@ -74,23 +72,22 @@ StreamChatClient getClient() {
   return StreamChatClient(StreamConfig.apikey, logLevel: Level.INFO);
 }
 
-String getJwtToken({
-  required String id,
-  required String name,
-}) {
-  // Create a json web token
-// Pass the payload to be sent in the form of a map
-  final jwt = JWT(
-    // Payload
-    {'user_id': id, "name": name, "iat": Timestamp.fromDate(DateTime.now())},
-    issuer: 'https://github.com/jonasroussel/dart_jsonwebtoken',
-  );
-
-// Sign it (default with HS256 algorithm)
-  String token = jwt.sign(SecretKey("fdwj77zfamwwu49a7urkvrpfp3j7aanw5gyhajvyxkeqe2vuwvnccecsmcqtkmgv"));
-
-  showLog('JWT token ===> $token\n');
-  return "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiaWQyIiwibmFtZSI6Im5hbWUtMiIsImlhdCI6MTUxNjIzOTAyMn0.Y12Os3zH2jdcqCcOfSGH_dTwrAFd-wy-i57uUGrBlFU";
-  return "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiaWQxIiwibmFtZSI6Im5hbWUtMSIsImlhdCI6MTUxNjIzOTAyMn0.gZXGmRs4HWjcORbik09A4UIC7YtPwngQQNYaYCioB6k";
-  // return token;
-}
+// String getJwtToken({
+//   required String id,
+//   required String name,
+// }) {
+//   // Create a json web token
+// // Pass the payload to be sent in the form of a map
+//   final jwt = JWT(
+//     // Payload
+//     {'user_id': id, "name": name, "iat": Timestamp.fromDate(DateTime.now())},
+//     issuer: 'https://github.com/jonasroussel/dart_jsonwebtoken',
+//   );
+//
+// // Sign it (default with HS256 algorithm)
+//   String token = jwt.sign(SecretKey("fdwj77zfamwwu49a7urkvrpfp3j7aanw5gyhajvyxkeqe2vuwvnccecsmcqtkmgv"));
+//
+//   showLog('JWT token ===> $token\n');
+//   return "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiaWQyIiwibmFtZSI6Im5hbWUtMiIsImlhdCI6MTUxNjIzOTAyMn0.Y12Os3zH2jdcqCcOfSGH_dTwrAFd-wy-i57uUGrBlFU";
+//   // return token;
+// }

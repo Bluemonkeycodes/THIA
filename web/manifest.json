@@ -1,6 +1,6 @@
 {
-    "name": "thia_new",
-    "short_name": "thia_new",
+    "name": "thia",
+    "short_name": "thia",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

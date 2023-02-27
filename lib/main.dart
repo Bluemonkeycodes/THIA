@@ -29,7 +29,7 @@ Future<void> main() async {
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
   final client = getClient();
 
-  String name = "name-1";
+/*  String name = "name-1";
   String userId = "id1";
   String otherUserId = "id2";
 
@@ -39,7 +39,7 @@ Future<void> main() async {
     urlImage: "https://png.pngtree.com/png-vector/20190710/ourmid/pngtree-user-vector-avatar-png-image_1541962.jpg",
     id: userId,
     token: getJwtToken(id: "id1", name: "name-1"),
-  );
+  );*/
   runApp(MyApp(client: client));
   await runZonedGuarded(() async {}, (error, stackTrace) {
     FirebaseCrashlytics.instance.recordError(error, stackTrace);
@@ -47,10 +47,7 @@ Future<void> main() async {
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({
-    Key? key,
-    required this.client,
-  }) : super(key: key);
+  const MyApp({Key? key, required this.client}) : super(key: key);
 
   final StreamChatClient client;
 
@@ -61,6 +58,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       // darkTheme: ThemeData(backgroundColor: AppColors.backgroundColor, brightness: Brightness.dark, canvasColor: AppColors.backgroundColor),
       themeMode: ThemeMode.light,
+
       builder: (context, widget) => ResponsiveWrapper.builder(
         ClampingScrollWrapper.builder(
           context,
@@ -96,11 +94,11 @@ class MyApp extends StatelessWidget {
               ),
               otherMessageTheme: StreamMessageThemeData(
                 messageBackgroundColor: AppColors.white,
-                messageTextStyle: black14w500,
+                messageTextStyle: black16w500,
               ),
               ownMessageTheme: StreamMessageThemeData(
                 messageBackgroundColor: AppColors.buttonColor,
-                messageTextStyle: white14w500,
+                messageTextStyle: white16w500,
               ),
             ),
           ),
@@ -121,7 +119,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         highlightColor: Colors.transparent,
         splashColor: Colors.transparent,
-        fontFamily: GoogleFonts.abhayaLibre().fontFamily,
+        fontFamily: GoogleFonts.inter().fontFamily,
         progressIndicatorTheme: ProgressIndicatorThemeData(color: Platform.isAndroid ? AppColors.buttonColor : null),
       ),
       home: const SplashScreen(),

@@ -58,7 +58,8 @@ TextStyle grey16w800 = getStyle(color: AppColors.grey, fontSize: 14, fontWeight:
 TextStyle grey24 = getStyle(color: AppColors.grey, fontSize: 24, fontWeight: FontWeight.normal, decoration: TextDecoration.none);
 TextStyle grey24w700 = getStyle(color: AppColors.grey, fontSize: 24, fontWeight: FontWeight.w700, decoration: TextDecoration.none);
 TextStyle grey22w700 = getStyle(color: AppColors.grey, fontSize: 22, fontWeight: FontWeight.w700, decoration: TextDecoration.none);
-TextStyle greyUnderline14w500 = getStyle(color: AppColors.grey, fontSize: 14, fontWeight: FontWeight.w500, decoration: TextDecoration.underline, decorationColor: AppColors.grey);
+TextStyle greyUnderline14w500 =
+    getStyle(color: AppColors.grey, fontSize: 14, fontWeight: FontWeight.w500, decoration: TextDecoration.underline, decorationColor: AppColors.grey);
 
 /// black text
 TextStyle black26W700 = getStyle(color: AppColors.textColor, fontSize: 26, decoration: TextDecoration.none, fontWeight: FontWeight.w700);
@@ -91,7 +92,8 @@ TextStyle black16w800 = getStyle(color: AppColors.textColor, fontSize: 14, fontW
 TextStyle black24 = getStyle(color: AppColors.textColor, fontSize: 24, fontWeight: FontWeight.normal, decoration: TextDecoration.none);
 TextStyle black24w700 = getStyle(color: AppColors.textColor, fontSize: 24, fontWeight: FontWeight.w700, decoration: TextDecoration.none);
 TextStyle black22w700 = getStyle(color: AppColors.textColor, fontSize: 22, fontWeight: FontWeight.w700, decoration: TextDecoration.none);
-TextStyle blackUnderline14w500 = getStyle(color: AppColors.textColor, fontSize: 14, fontWeight: FontWeight.w500, decoration: TextDecoration.underline, decorationColor: AppColors.textColor);
+TextStyle blackUnderline14w500 =
+    getStyle(color: AppColors.textColor, fontSize: 14, fontWeight: FontWeight.w500, decoration: TextDecoration.underline, decorationColor: AppColors.textColor);
 // blue text
 TextStyle blue26W700 = getStyle(color: AppColors.buttonColor, fontSize: 26, decoration: TextDecoration.none, fontWeight: FontWeight.w700);
 TextStyle blue14 = getStyle(color: AppColors.buttonColor, fontSize: 12, decoration: TextDecoration.none);
@@ -123,7 +125,8 @@ TextStyle blue16w800 = getStyle(color: AppColors.buttonColor, fontSize: 14, font
 TextStyle blue24 = getStyle(color: AppColors.buttonColor, fontSize: 24, fontWeight: FontWeight.normal, decoration: TextDecoration.none);
 TextStyle blue24w700 = getStyle(color: AppColors.buttonColor, fontSize: 24, fontWeight: FontWeight.w700, decoration: TextDecoration.none);
 TextStyle blue22w700 = getStyle(color: AppColors.buttonColor, fontSize: 22, fontWeight: FontWeight.w700, decoration: TextDecoration.none);
-TextStyle blueUnderline14w500 = getStyle(color: AppColors.buttonColor, fontSize: 14, fontWeight: FontWeight.w500, decoration: TextDecoration.underline, decorationColor: AppColors.buttonColor);
+TextStyle blueUnderline14w500 =
+    getStyle(color: AppColors.buttonColor, fontSize: 14, fontWeight: FontWeight.w500, decoration: TextDecoration.underline, decorationColor: AppColors.buttonColor);
 
 /// primary text
 TextStyle primary8w600 = getStyle(color: AppColors.primaryColor, fontSize: 8, fontWeight: FontWeight.w600, decoration: TextDecoration.none);
@@ -149,7 +152,10 @@ TextStyle primary16w600 = getStyle(color: AppColors.primaryColor, fontSize: 16, 
 TextStyle primary14w600 = getStyle(color: AppColors.primaryColor, fontSize: 14, fontWeight: FontWeight.w600, decoration: TextDecoration.none);
 TextStyle primary16w800 = getStyle(color: AppColors.primaryColor, fontSize: 14, fontWeight: FontWeight.w800, decoration: TextDecoration.none);
 TextStyle primary24 = getStyle(color: AppColors.primaryColor, fontSize: 24, fontWeight: FontWeight.normal, decoration: TextDecoration.none);
-TextStyle primaryUnderline14w500 = getStyle(color: AppColors.primaryColor, fontSize: 14, fontWeight: FontWeight.w500, decoration: TextDecoration.underline, decorationColor: AppColors.primaryColor);
+TextStyle primaryUnderline14w500 =
+    getStyle(color: AppColors.primaryColor, fontSize: 14, fontWeight: FontWeight.w500, decoration: TextDecoration.underline, decorationColor: AppColors.primaryColor);
+
+TextStyle red12w500 = getStyle(color: AppColors.red, fontSize: 12, decoration: TextDecoration.none, fontWeight: FontWeight.w500);
 
 TextStyle getStyle({
   Color? color,
