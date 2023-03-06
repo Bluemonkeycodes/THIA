@@ -41,8 +41,13 @@ class _AddTodoScreenState extends State<AddTodoScreen> {
       kHomeController.subTodoTaskList.clear();
       nameController.text = widget.data?.name ?? "";
       detailsController.text = widget.data?.details ?? "";
-      selectedDate.value = DateTime.parse(widget.data?.duedate ?? "");
-      selectedTime.value = parseDuration(widget.data?.time ?? "");
+
+      try {
+        selectedDate.value = DateTime.parse(widget.data?.duedate ?? "");
+        selectedTime.value = parseDuration(widget.data?.time ?? "");
+      } catch (e) {
+        showLog("e ===> ${widget.data?.duedate}");
+      }
 
       if (widget.data?.priority == 1) {
         kHomeController.selectedPriority.value = "High";
@@ -127,17 +132,17 @@ class _AddTodoScreenState extends State<AddTodoScreen> {
                                     style: const TextStyle(fontSize: 15.0, fontWeight: FontWeight.w500, color: AppColors.black),
                                     underline: Container(color: Colors.transparent),
                                     onChanged: (Course? newValue) {
-                                      kHomeController.selectedCourse.value = newValue!;
+                                      kHomeController.selectedCourse.value = newValue ?? Course();
                                     },
                                     hint: Text("Select ${AppTexts.course}", style: grey14w500.copyWith(fontWeight: FontWeight.w400)),
                                     dropdownColor: AppColors.white,
-                                    items: kHomeController.courseModel.value.courses?.map<DropdownMenuItem<Course>>((value) {
+                                    items: kHomeController.courseModel.value.courses
+                                        ?.where((element) => element.courseState == "ACTIVE")
+                                        .toList()
+                                        .map<DropdownMenuItem<Course>>((value) {
                                       return DropdownMenuItem<Course>(
                                         value: value,
-                                        child: Text(
-                                          value.name ?? "",
-                                          style: black14w500,
-                                        ),
+                                        child: Text(value.name ?? "", style: black14w500),
                                       );
                                     }).toList(),
                                   );
@@ -158,8 +163,8 @@ class _AddTodoScreenState extends State<AddTodoScreen> {
 
             heightBox(height: 15),
             GetTextField(
-                hintText: AppTexts.enterName,
-                title: AppTexts.name,
+                hintText: AppTexts.enterTitle,
+                title: AppTexts.title,
                 outlineInputBorder: border,
                 textEditingController: nameController,
                 validationFunction: (val) {
@@ -215,13 +220,14 @@ class _AddTodoScreenState extends State<AddTodoScreen> {
                 }),
             heightBox(height: 15),
             GetTextField(
-                hintText: AppTexts.enterDetails,
-                title: AppTexts.details,
-                outlineInputBorder: border,
-                textEditingController: detailsController,
-                validationFunction: (val) {
-                  return emptyFieldValidation(val);
-                }),
+              hintText: AppTexts.enterDetails,
+              title: AppTexts.details,
+              outlineInputBorder: border,
+              textEditingController: detailsController,
+              // validationFunction: (val) {
+              //   return emptyFieldValidation(val);
+              // },
+            ),
             heightBox(height: 15),
             Text(AppTexts.priority, style: black16w500),
             heightBox(),
@@ -392,7 +398,8 @@ class _AddTodoScreenState extends State<AddTodoScreen> {
                             children: [
                               Expanded(
                                 child: GetTextField(
-                                  hintText: "",
+                                  hintText: "Enter sub todo detail",
+                                  isReadOnly: kHomeController.subTodoTaskList[index].iscomplete == true ? true : false,
                                   textEditingController: TextEditingController(text: kHomeController.subTodoTaskList[index].name),
                                   validationFunction: (val) {
                                     return emptyFieldValidation(val);
@@ -408,7 +415,15 @@ class _AddTodoScreenState extends State<AddTodoScreen> {
                               ),
                               IconButton(
                                   onPressed: () {
-                                    kHomeController.subTodoTaskList.remove(kHomeController.subTodoTaskList[index]);
+                                    if (kHomeController.subTodoTaskList[index].iscomplete != true) {
+                                      if (kHomeController.subTodoTaskList[index].subtaskid != null) {
+                                        kHomeController.callDeleteSubTodoApi(kHomeController.subTodoTaskList[index].subtaskid.toString(), () {
+                                          kHomeController.subTodoTaskList.remove(kHomeController.subTodoTaskList[index]);
+                                        });
+                                      } else {
+                                        kHomeController.subTodoTaskList.remove(kHomeController.subTodoTaskList[index]);
+                                      }
+                                    }
                                   },
                                   padding: EdgeInsets.zero,
                                   iconSize: 28.0,
@@ -416,9 +431,9 @@ class _AddTodoScreenState extends State<AddTodoScreen> {
                                     maxHeight: 28.0,
                                     maxWidth: 28.0,
                                   ),
-                                  icon: const Icon(
-                                    Icons.delete_outline_outlined,
-                                    color: AppColors.red,
+                                  icon: Icon(
+                                    kHomeController.subTodoTaskList[index].iscomplete == true ? Icons.check_circle : Icons.delete_outline_outlined,
+                                    color: kHomeController.subTodoTaskList[index].iscomplete == true ? Colors.green : AppColors.red,
                                   )),
                             ],
                           ),
@@ -447,7 +462,8 @@ class _AddTodoScreenState extends State<AddTodoScreen> {
                               : 3,
                       "duedate": selectedDate.value.toLocal().toIso8601String(),
                       "time": selectedTime.value.toString(),
-                      "subTasks": kHomeController.subTodoTaskList.map((element) => element.toJson()).toList()
+                      "subTasks": kHomeController.subTodoTaskList.map((element) => element.toJson()).toList(),
+                      "isSubtask": kHomeController.subTodoTaskList.isNotEmpty ? true : false,
                     };
 
                     if (widget.isFromEdit == true) {

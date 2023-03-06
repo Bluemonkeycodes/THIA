@@ -255,17 +255,18 @@ showErrorMessage({required String message, required bool isRecall, required Func
 
 void showProgressDialog({bool isLoading = true, Color? loaderColor}) {
   isLoading = true;
-  if (!(get_x.Get.isDialogOpen ?? true)) {
-    get_x.Get.dialog(
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Center(child: CircularProgressIndicator(color: loaderColor ?? AppColors.buttonColor)),
-          ],
-        ),
-        barrierColor: Colors.black12,
-        barrierDismissible: false);
+  if ((get_x.Get.isDialogOpen ?? false) || get_x.Get.isSnackbarOpen) {
+    return;
   }
+  get_x.Get.dialog(
+      Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Center(child: CircularProgressIndicator(color: loaderColor ?? AppColors.buttonColor)),
+        ],
+      ),
+      barrierColor: Colors.black12,
+      barrierDismissible: false);
 }
 
 void hideProgressDialog({bool isLoading = true, bool isProgressShow = true, bool isHideLoader = true}) {

@@ -91,7 +91,9 @@ class _TodoDetailsScreenState extends State<TodoDetailsScreen> {
                 Dialog(
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
                   child: getDeleteDialog(ontapYes: () {
-                    kHomeController.deleteTask((widget.data.taskID ?? 0).toString(), () {
+                    kHomeController.deleteTask((widget.data.taskID ?? 0).toString(), () async {
+                      await kHomeController.getPriorityCount(showLoader: false);
+
                       Navigator.of(context).popUntil((route) => route.isFirst);
                       showSnackBar(title: ApiConfig.success, message: "To-Do successfully deleted.");
                     });

@@ -2,6 +2,7 @@
 class Assets {
   Assets._();
 
+  static const String assetsNoDataFound = 'assets/no_data_found.json';
   static const String iconsAssignmentAdded = 'assets/icons/assignment_added.png';
   static const String iconsDrawerIcon = 'assets/icons/drawer_icon.png';
   static const String iconsDummyCategoryIcon = 'assets/icons/dummy_category_icon.png';

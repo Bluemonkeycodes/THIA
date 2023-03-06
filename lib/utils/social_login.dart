@@ -106,69 +106,81 @@ googleAuth(BuildContext context) async {
   } catch (e) {
     showLog(e);
   }
-  final GoogleSignInAccount? googleSignInAccount = await googleSignIn.signIn();
-  if (googleSignInAccount != null) {
-    final GoogleSignInAuthentication googleSignInAuthentication = await googleSignInAccount.authentication;
+  if (await checkInternet()) {
+    final GoogleSignInAccount? googleSignInAccount = await googleSignIn.signIn().onError((error, stackTrace) {
+      showLog(error);
+    });
+    if (googleSignInAccount != null) {
+      final GoogleSignInAuthentication googleSignInAuthentication = await googleSignInAccount.authentication;
 
-    final f_auth.AuthCredential credential = f_auth.GoogleAuthProvider.credential(
-      accessToken: googleSignInAuthentication.accessToken,
-      idToken: googleSignInAuthentication.idToken,
-    );
+      final f_auth.AuthCredential credential = f_auth.GoogleAuthProvider.credential(
+        accessToken: googleSignInAuthentication.accessToken,
+        idToken: googleSignInAuthentication.idToken,
+      );
 
-    try {
-      final f_auth.UserCredential userCredential = await auth.signInWithCredential(credential);
-      user = userCredential.user;
+      try {
+        final f_auth.UserCredential userCredential = await auth.signInWithCredential(credential);
+        user = userCredential.user;
 
-      if (user != null) {
-        showProgressDialog(loaderColor: AppColors.white);
-        // loginSuccess();
-        Api().call(
-          params: {
-            "firstname": user?.displayName ?? "",
-            "lastname": "",
-            "email": user?.email ?? "",
-            "phonenumber": user?.phoneNumber ?? "",
-            "profileUrl": user?.photoURL ?? "",
-            "usertypeid": 1,
-            "googleID": user?.uid ?? "",
-            "active": 1
-          },
-          loaderColor: AppColors.white,
-          url: ApiConfig.login,
-          success: (Map<String, dynamic> response) async {
-            hideProgressDialog();
-            LoginModel loginModel = LoginModel.fromJson(response);
-            kHomeController.userData.value = LoginModelDataData.fromJson(loginModel.data?.data?.toJson() ?? {});
-            setObject(PrefConstants.userDetails, loginModel.data?.data ?? {});
-            getPreference.write(PrefConstants.loginToken, loginModel.data?.token ?? "");
+        if (user != null) {
+          showProgressDialog(loaderColor: AppColors.white);
+          // loginSuccess();
+          Api().call(
+            params: {
+              "firstname": user?.displayName ?? "",
+              "lastname": "",
+              "email": user?.email ?? "",
+              "phonenumber": user?.phoneNumber ?? "",
+              "profileUrl": user?.photoURL ?? "",
+              "usertypeid": 1,
+              "googleID": user?.uid ?? "",
+              "active": 1
+            },
+            loaderColor: AppColors.white,
+            url: ApiConfig.login,
+            success: (Map<String, dynamic> response) async {
+              hideProgressDialog();
+              LoginModel loginModel = LoginModel.fromJson(response);
+              kHomeController.userData.value = LoginModelDataData.fromJson(loginModel.data?.data?.toJson() ?? {});
+              setObject(PrefConstants.userDetails, loginModel.data?.data ?? {});
+              getPreference.write(PrefConstants.loginToken, loginModel.data?.token ?? "");
 
-            // String name = "name-1";
-            // String userId = "id1";
-            // String otherUserId = "id2";
-            await googleSignIn.authenticatedClient().then((value) {
-              AccessCredentials accessCredentials = value?.credentials ?? AccessCredentials(AccessToken("", "", DateTime.now()), "refreshToken", []);
-              setAuthJsonData(accessCredentials);
-              showLog("1111 ===> ${getPreference.read(PrefConstants.httpClient)}");
-              setIsLogin(isLogin: true);
-              refreshToken(() {});
-              Get.offAll(() => const HomeScreen());
-            });
-          },
-          error: (Map<String, dynamic> response) {
-            hideProgressDialog();
-            showSnackBar(title: ApiConfig.error, message: response["message"] ?? "");
-          },
-          isProgressShow: true,
-          methodType: MethodType.post,
-        );
-        hideProgressDialog();
+              // String name = "name-1";
+              // String userId = "id1";
+              // String otherUserId = "id2";
+              await googleSignIn.authenticatedClient().then((value) {
+                AccessCredentials accessCredentials = value?.credentials ?? AccessCredentials(AccessToken("", "", DateTime.now()), "refreshToken", []);
+                setAuthJsonData(accessCredentials);
+                showLog("1111 ===> ${getPreference.read(PrefConstants.httpClient)}");
+                setIsLogin(isLogin: true);
+                refreshToken(() {});
+                Get.offAll(() => const HomeScreen());
+              });
+            },
+            error: (Map<String, dynamic> response) {
+              hideProgressDialog();
+              showSnackBar(title: ApiConfig.error, message: response["message"] ?? "");
+            },
+            isProgressShow: true,
+            methodType: MethodType.post,
+          );
+          hideProgressDialog();
+        }
+      } on f_auth.FirebaseAuthException catch (e) {
+        if (e.code == 'account-exists-with-different-credential') {
+        } else if (e.code == 'invalid-credential') {}
+      } catch (e) {
+        e.toString();
       }
-    } on f_auth.FirebaseAuthException catch (e) {
-      if (e.code == 'account-exists-with-different-credential') {
-      } else if (e.code == 'invalid-credential') {}
-    } catch (e) {
-      e.toString();
+    } else {
+      if (await checkInternet()) {
+        showSnackBar(title: appName, message: somethingWrong);
+      } else {
+        showSnackBar(title: appName, message: "No Internet Available");
+      }
     }
+  } else {
+    showSnackBar(title: appName, message: "No Internet Available");
   }
 }
 

@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:get/get.dart';
 import 'package:googleapis/classroom/v1.dart';
 import 'package:googleapis_auth/googleapis_auth.dart' as g_apis;
@@ -45,7 +47,6 @@ class HomeController extends GetxController {
         apiCallCount.value++;
         if (apiCallCount.value < 2) {
           getClassList();
-
         }
       });
       showLog("ERROR :::: $error $stackTrace");
@@ -313,17 +314,17 @@ class HomeController extends GetxController {
     );
   }
 
-  setSubTaskComplete(String id, Function() callBack) {
+  setSubTaskComplete(String id, int trueOrFalse, Function() callBack, {bool? showLoader}) {
     Api().call(
       params: {},
-      url: ApiConfig.setSubTaskComplete + id,
+      url: ApiConfig.setSubTaskComplete + id + "/" + (trueOrFalse.toString()),
       success: (Map<String, dynamic> response) async {
         callBack();
       },
       error: (Map<String, dynamic> response) {
         showSnackBar(title: ApiConfig.error, message: response["message"] ?? "");
       },
-      isProgressShow: true,
+      isProgressShow: showLoader ?? true,
       methodType: MethodType.post,
     );
   }
@@ -378,6 +379,7 @@ class HomeController extends GetxController {
   /// TASK DETAIL API CALL
   Rx<TaskDetailModel> taskDetailModel = TaskDetailModel().obs;
   RxBool taskDetailLoader = false.obs;
+
   callTaskDetailApi(String id, Function() callBack) {
     taskDetailLoader.value = true;
     Api().call(
@@ -395,5 +397,55 @@ class HomeController extends GetxController {
       isProgressShow: false,
       methodType: MethodType.get,
     );
+  }
+
+  /// DELETE SUB TODO API
+  callDeleteSubTodoApi(String id, Function() callBack) {
+    taskDetailLoader.value = true;
+    Api().call(
+      params: {},
+      url: ApiConfig.deleteSubTaskDetail + id,
+      success: (Map<String, dynamic> response) async {
+        // taskDetailLoader.value = false;
+        // taskDetailModel.value = TaskDetailModel.fromJson(response);
+        callBack();
+      },
+      error: (Map<String, dynamic> response) {
+        // taskDetailLoader.value = false;
+        showSnackBar(title: ApiConfig.error, message: response["message"] ?? "");
+      },
+      isProgressShow: true,
+      methodType: MethodType.delete,
+    );
+  }
+
+  List<String> groupPlaceholderImageList = [
+    "https://i.imgur.com/rJoCrHP.png",
+    "https://i.imgur.com/JYxDAVB.png",
+    "https://i.imgur.com/30L5oye.png",
+    "https://i.imgur.com/LOXrlDd.png",
+    "https://i.imgur.com/ReSxSJU.png",
+    "https://i.imgur.com/v44m8FQ.png",
+    "https://i.imgur.com/75ZAkmV.png",
+    "https://i.imgur.com/9P6MkaZ.png",
+    "https://i.imgur.com/V19x17E.png",
+    "https://i.imgur.com/iX6vU0Y.png",
+    "https://i.imgur.com/5qHoXCr.png",
+    "https://i.imgur.com/soxkWsT.png",
+    "https://i.imgur.com/Vv56v4q.png",
+    "https://i.imgur.com/grk0qrl.png",
+    "https://i.imgur.com/NxOIwIh.png",
+    "https://i.imgur.com/Iswd2Cf.png",
+    "https://i.imgur.com/zbxJ2gj.png",
+    "https://i.imgur.com/0hZuUCB.png",
+    "https://i.imgur.com/jwtqHAo.png",
+    "https://i.imgur.com/2jGMCBY.png",
+    "https://i.imgur.com/tlZ028Y.png",
+  ];
+
+  String getGroupPlaceHolder() {
+    final random = Random();
+    showLog("random image ===> ${groupPlaceholderImageList[random.nextInt(groupPlaceholderImageList.length)]}");
+    return groupPlaceholderImageList[random.nextInt(groupPlaceholderImageList.length)];
   }
 }

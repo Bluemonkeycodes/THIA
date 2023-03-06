@@ -15,9 +15,11 @@ class AppTexts {
   static const String calendar = "Calendar";
   static const String complete = "Complete";
   static const String name = "Name";
+  static const String title = "Title";
   static const String course = "Course";
   static const String due = "Due";
   static const String enterName = "Enter Name";
+  static const String enterTitle = "Enter Title";
   static const String selectDue = "Select due date";
   static const String enterDetails = "Enter Details";
   static const String details = "Details";

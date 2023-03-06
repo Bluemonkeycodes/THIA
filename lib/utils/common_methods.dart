@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:thia/utils/utils.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -85,6 +86,16 @@ launchURL(String url, {bool forceWeb = false}) async {
     showSnackBar(message: "could not launch $url", title: ApiConfig.error);
     // throw 'Could not launch $url';
   }
+}
+
+Future<void> onShare(BuildContext context, {required title, subject}) async {
+  final box = context.findRenderObject() as RenderBox?;
+
+  await Share.share(
+    title,
+    subject: subject,
+    sharePositionOrigin: box!.localToGlobal(Offset.zero) & box.size,
+  );
 }
 
 passwordValidation(String value, {bool? isConfirm, String? oldValue}) {

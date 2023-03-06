@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:googleapis/classroom/v1.dart';
+import 'package:lottie/lottie.dart';
 import 'package:readmore/readmore.dart';
 import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 import 'package:thia/generated/assets.dart';
@@ -258,9 +259,10 @@ Widget noDataFoundWidget({String? message}) {
     child: Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Image.asset(Assets.imagesNoDataFound, scale: 3.5),
+        // Image.asset(Assets.imagesNoDataFound, scale: 3.5),
+        Lottie.asset(Assets.assetsNoDataFound, height: 175, repeat: false),
         heightBox(),
-        Text(message ?? AppTexts.noDataFound, style: black24w700),
+        Text(message ?? AppTexts.noDataFound, style: black24w700.copyWith(color: const Color(0xffa3a3eb))),
       ],
     ),
   );
@@ -494,9 +496,12 @@ Widget classRoomCard(BuildContext context, Course? data) {
                           showSnackBar(title: ApiConfig.error, message: "Teachers are not allowed to chat with whole classroom.");
                         }
                       },
-                      child: Icon(
-                        Icons.chat_bubble_outline,
-                        color: data?.teacherFolder == null ? AppColors.borderColor : AppColors.grey,
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Icon(
+                          Icons.chat_bubble_outline,
+                          color: data?.teacherFolder == null ? AppColors.borderColor : AppColors.grey,
+                        ),
                       ),
                     ),
                   ],
@@ -512,30 +517,35 @@ Widget classRoomCard(BuildContext context, Course? data) {
 
 Future<void> chatButtonClick(
   BuildContext context, {
-  required String name,
+  String? name,
   required String id,
-  required String image,
+  String? image,
   required List<String> userIdList,
 }) async {
+  showProgressDialog();
   final client = StreamChat.of(context).client;
-  await StreamApi.watchChannel(client, type: "messaging", id: id).then((value) async {
-    await StreamApi.createChannel(
-      client,
-      type: "messaging",
-      name: name,
-      id: id,
-      image: image.isEmpty ? "https://www.pngkey.com/png/detail/950-9501315_katie-notopoulos-katienotopoulos-i-write-about-tech-user.png" : image,
-      idMembers: userIdList,
-    ).then(
-      (channel) async {
-        await StreamApi.watchChannel(client, type: "messaging", id: id).then((value) async {
-          return await Future.delayed(const Duration(seconds: 1)).then((value) {
-            return Get.to(() => StreamChannel(channel: channel, child: ChannelPage(channel: channel)));
-          });
+  // await StreamApi.watchChannel(client, type: "messaging", id: id).whenComplete(() async {
+  await StreamApi.createChannel(
+    client,
+    type: "messaging",
+    name: name,
+    id: id,
+    image: (image?.isEmpty ?? false) ? kHomeController.getGroupPlaceHolder() : image,
+    // image: (image?.isEmpty ?? false) ? "https://www.pngkey.com/png/detail/950-9501315_katie-notopoulos-katienotopoulos-i-write-about-tech-user.png" : image,
+    idMembers: userIdList,
+  ).then(
+    (channel) async {
+      // await Future.delayed(const Duration(seconds: 1));
+      await StreamApi.watchChannel(client, type: "messaging", id: id).then((value) async {
+        return await Future.delayed(const Duration(seconds: 1)).then((value) {
+          hideProgressDialog();
+          return Get.to(() => StreamChannel(channel: channel, child: ChannelPage(channel: channel)));
         });
-      },
-    );
-  });
+      });
+      hideProgressDialog();
+    },
+  );
+  // });
 }
 
 Widget assignmentCard({
@@ -718,7 +728,7 @@ Widget todoCard({
                                           Expanded(
                                             child: Text(
                                               "${kHomeController.taskDetailModel.value.data?.subTask?[index]?.name} ",
-                                              style: white12w600,
+                                              style: white14w500,
                                             ),
                                           ),
                                           SizedBox(
@@ -726,19 +736,21 @@ Widget todoCard({
                                             width: 24.0,
                                             child: Checkbox(
                                                 checkColor: AppColors.white,
-                                                side: MaterialStateBorderSide.resolveWith(
-                                                  (states) => const BorderSide(width: 1.5, color: Colors.white),
-                                                ),
+                                                side: MaterialStateBorderSide.resolveWith((states) => const BorderSide(width: 1.5, color: Colors.white)),
                                                 activeColor: Colors.transparent,
                                                 value: kHomeController.taskDetailModel.value.data?.subTask?[index]?.iscomplete ?? false,
                                                 onChanged: (val) {
-                                                  if (kHomeController.taskDetailModel.value.data?.subTask?[index]?.iscomplete != true) {
-                                                    kHomeController
-                                                        .setSubTaskComplete(kHomeController.taskDetailModel.value.data?.subTask?[index]?.subtaskid.toString() ?? "", () {
+                                                  // if (kHomeController.taskDetailModel.value.data?.subTask?[index]?.iscomplete != true) {
+                                                  kHomeController.setSubTaskComplete(
+                                                    kHomeController.taskDetailModel.value.data?.subTask?[index]?.subtaskid.toString() ?? "",
+                                                    (val ?? false) ? 0 : 1,
+                                                    () {
                                                       kHomeController.taskDetailModel.value.data?.subTask?[index]?.setComplete(val ?? false);
                                                       kHomeController.taskDetailModel.refresh();
-                                                    });
-                                                  }
+                                                    },
+                                                    showLoader: false,
+                                                  );
+                                                  // }
                                                 }),
                                           )
                                         ],

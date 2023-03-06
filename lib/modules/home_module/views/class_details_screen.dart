@@ -31,7 +31,6 @@ class _ClassDetailsScreenState extends State<ClassDetailsScreen> with SingleTick
 
   @override
   Widget build(BuildContext context) {
-    widget.data?.id;
     return Scaffold(
       appBar: GetAppBar(context, widget.data?.name ?? ""),
       body: Stack(
@@ -244,9 +243,9 @@ class _ClassDetailsScreenState extends State<ClassDetailsScreen> with SingleTick
               hideKeyBoard(context);
               await chatButtonClick(
                 context,
-                name: "${data.firstname ?? " "} ${data.lastname ?? " "}",
+                // name: "${data.firstname ?? ""} ${data.lastname ?? ""}",
                 id: "${(kHomeController.userData.value.userId ?? "").toString()}-${(data.userID ?? " ").toString()}",
-                image: data.profileUrl ?? "",
+                // image: data.profileUrl ?? "",
                 userIdList: [
                   (kHomeController.userData.value.userId ?? "").toString(),
                   (data.userID ?? " ").toString(),

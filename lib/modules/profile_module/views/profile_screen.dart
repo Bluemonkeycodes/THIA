@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -83,27 +85,61 @@ class _ProfileScreenState extends State<ProfileScreen> {
           heightBox(),
           // tile1(title: AppTexts.notification, icon: CupertinoIcons.bell),
           // tile1(title: AppTexts.theme, icon: CupertinoIcons.sparkles),
-          tile1(title: AppTexts.rateUs, icon: CupertinoIcons.star),
-          tile1(title: AppTexts.support, icon: Icons.help_outline),
-          tile1(title: AppTexts.shareApp, icon: Icons.share_outlined),
-          tile1(title: AppTexts.aboutUs, icon: Icons.help_outline),
+          tile1(
+              title: AppTexts.rateUs,
+              icon: CupertinoIcons.star,
+              onTap: () {
+                if (Platform.isAndroid) {
+                  launchURL("https://play.google.com/store/apps/details?id=com.app.thia");
+                } else {
+                  //TODO: launch ios url
+                  launchURL("https://thiaapp.com/");
+                }
+              }),
+          tile1(
+              title: AppTexts.support,
+              icon: Icons.help_outline,
+              onTap: () {
+                launchURL("https://thiaapp.com/");
+              }),
+          tile1(
+              title: AppTexts.shareApp,
+              icon: Icons.share_outlined,
+              onTap: () {
+                if (Platform.isAndroid) {
+                  onShare(context, title: "https://play.google.com/store/apps/details?id=com.app.thia", subject: appName);
+                  // launchURL("https://play.google.com/store/apps/details?id=com.app.thia");
+                } else {
+                  //TODO: launch ios url
+                  launchURL("https://thiaapp.com/");
+                }
+              }),
+          tile1(
+              title: AppTexts.aboutUs,
+              icon: Icons.help_outline,
+              onTap: () {
+                launchURL("https://thiaapp.com/");
+              }),
         ],
       ),
     );
   }
 
-  Widget tile1({required title, required IconData icon}) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 20),
-      child: Row(
-        children: [
-          Icon(icon),
-          widthBox(width: 15),
-          Text(
-            title,
-            style: black16w500,
-          )
-        ],
+  Widget tile1({required title, required IconData icon, required Function() onTap}) {
+    return InkWell(
+      onTap: onTap,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 20),
+        child: Row(
+          children: [
+            Icon(icon),
+            widthBox(width: 15),
+            Text(
+              title,
+              style: black16w500,
+            )
+          ],
+        ),
       ),
     );
   }

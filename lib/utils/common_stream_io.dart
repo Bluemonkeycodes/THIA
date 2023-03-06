@@ -3,18 +3,6 @@ import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 class StreamConfig {
   // static const String apikey = "4jwj4zgux2fp";
   static const String apikey = "aw46bmah6fne";
-
-  static const String tokenEmily =
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiYTUiLCJuYW1lIjoicHJhc2hhbnQiLCJpYXQiOjE1MTYyMzkwMjJ9.U-Nf-L_WOZebyB1JAtcy0ri3F5jDbAAON-UbMbYtejU';
-  static const String idEmily = 'a5';
-
-  static const String tokenPrashant =
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoicHJhc2hhbnQtMSIsIm5hbWUiOiJKb2huIERvZSIsImlhdCI6MTUxNjIzOTAyMn0.un1-rcJA80CAJrdu3BkdzUDJCUzJLrsCOVYFolHW0lk';
-  static const String idPrashant = 'prashant-1';
-
-  static const String tokenPeter =
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiYjUiLCJuYW1lIjoiQjUgQjUiLCJpYXQiOjE1MTYyMzkwMjJ9.Os9v0-7ppFC4zlDjkkPlGog8V1Kj8CeQh0Y7Dfsa1g8';
-  static const String idPeter = 'b5';
 }
 
 class StreamApi {
@@ -39,18 +27,21 @@ class StreamApi {
   static Future<Channel> createChannel(
     StreamChatClient client, {
     required String type,
-    required String name,
+    String? name,
     required String id,
-    required String image,
+    String? image,
     List<String> idMembers = const [],
   }) async {
     final channel = client.channel(type, id: id, extraData: {
-      'name': name,
-      'image': image,
+      if (name != null) 'name': name,
+      if (image != null) 'image': image,
       'members': idMembers,
     });
 
     // await channel.create();
+    // await channel.initialized.then((value) {
+    //   showLog("await channel.initialized ===> ${value}");
+    // });
     await channel.watch();
     await channel.addMembers(idMembers);
     return channel;

@@ -19,11 +19,9 @@ class _AllTodoScreenState extends State<AllTodoScreen> {
   void initState() {
     super.initState();
     selectedTab.value = widget.selectedCount;
-    if (kHomeController.userTaskTodoList.isEmpty) {
-      kHomeController.getUsesTaskList(
-        showProgress: true,
-      );
-    }
+    // if (kHomeController.userTaskTodoList.isEmpty) {
+    kHomeController.getUsesTaskList(showProgress: true);
+    // }
   }
 
   @override

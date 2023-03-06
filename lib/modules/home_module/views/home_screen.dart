@@ -29,8 +29,8 @@ class _HomeScreenState extends State<HomeScreen> {
       token: getPreference.read(PrefConstants.loginToken) ?? "",
     );
     await refreshToken(() {});
-    await kHomeController.getClassList();
     await kHomeController.getPriorityCount(showLoader: false);
+    await kHomeController.getClassList();
     kHomeController.classListLoading.value = false;
   }
 

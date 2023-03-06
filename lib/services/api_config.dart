@@ -16,6 +16,7 @@ class ApiConfig {
   static const String setSubTaskComplete = "${baseUrl}task/subtask/complete/";
   static const String deleteTask = "${baseUrl}task/";
   static const String getTaskDetail = "${baseUrl}task/";
+  static const String deleteSubTaskDetail = "${baseUrl}task/subtask/";
 
   static const String methodPOST = "post";
   static const String methodGET = "get";

@@ -80,6 +80,7 @@ Widget GetTextField({
 
             enabled: isEnabled != null && !isEnabled ? false : true,
             textAlign: align,
+            readOnly: isReadOnly,
             showCursor: !isReadOnly,
             onTap: () {
               if (onTapFunction != null) {
