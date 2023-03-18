@@ -112,7 +112,7 @@ passwordValidation(String value, {bool? isConfirm, String? oldValue}) {
 
 dateFormatter(String? dateTime, {String? dateFormat}) {
   final DateTime now = DateTime.now();
-  DateFormat formatter = DateFormat(dateFormat ?? 'dd MMM yyyy');
+  DateFormat formatter = DateFormat(dateFormat ?? 'MMM dd yyyy');
   final String formatted;
   if (isNotEmptyString(dateTime)) {
     // 'yyyy-MM-dd'

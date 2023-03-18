@@ -11,7 +11,7 @@ class ClassTodoModel {
       "userID": 42,
       "classID": "587252296793",
       "name": "testing",
-      "details": "this todo is for testing purpose",
+      "details": "this is for testing purpose",
       "duedate": "2023-02-22T08:00:00.000Z",
       "priority": 1,
       "private": false,

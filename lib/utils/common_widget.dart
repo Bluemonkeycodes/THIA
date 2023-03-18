@@ -599,16 +599,16 @@ Widget assignmentCard({
               desc: (data?.description) ?? "",
               // subject: subject,
             ),
-            heightBox(),
+            // heightBox(),
             // tile(title: "Estimated Time :", desc: data == null ? "3:00 Hour ⏳" : "${data.dueTime?.hours}:${data.dueTime?.minutes} hours ⏳"),
-            tile(
-              title: "Estimated Time :",
-              desc: (data == null || data.dueTime == null)
-                  ? "NA"
-                  : "${(printDuration(parseDuration((("${data.dueTime?.hours ?? 0}" ":" "${data.dueTime?.minutes ?? 0}" ":" "${data.dueTime?.seconds ?? 0}")).toString())))} ⏳",
-              // : "${(timeFormatter(DateTime((data.dueDate?.year ?? 0), (data.dueDate?.month ?? 0), (data.dueDate?.day ?? 0), (data.dueTime?.hours ?? 0), (data.dueTime?.minutes ?? 0)).toString()))} ⏳",
-              // subject: subject,
-            ),
+            // tile(
+            //   title: "Estimated Time :",
+            //   desc: (data == null || data.dueTime == null)
+            //       ? "NA"
+            //       : "${(printDuration(parseDuration((("${data.dueTime?.hours ?? 0}" ":" "${data.dueTime?.minutes ?? 0}" ":" "${data.dueTime?.seconds ?? 0}")).toString())))} ⏳",
+            //   // : "${(timeFormatter(DateTime((data.dueDate?.year ?? 0), (data.dueDate?.month ?? 0), (data.dueDate?.day ?? 0), (data.dueTime?.hours ?? 0), (data.dueTime?.minutes ?? 0)).toString()))} ⏳",
+            //   // subject: subject,
+            // ),
           ],
         ),
       ),
@@ -662,12 +662,13 @@ Widget todoCard({
                   desc: (data == null || data.duedate == null) ? "NA" : (dateFormatter(((DateTime.parse(data.duedate ?? "").toString()).toString()))),
                   // subject: subject,
                 ),
-              heightBox(),
-              tile(
-                title: "Details :",
-                desc: (data?.details) ?? "",
-                // subject: subject,
-              ),
+              if (data?.details != null && data?.details?.isNotEmpty == true) heightBox(),
+              if (data?.details != null && data?.details?.isNotEmpty == true)
+                tile(
+                  title: "Details :",
+                  desc: (data?.details) ?? "",
+                  // subject: subject,
+                ),
               heightBox(),
               // tile(title: "Estimated Time :", desc: data == null ? "3:00 Hour ⏳" : "${data.dueTime?.hours}:${data.dueTime?.minutes} hours ⏳"),
 
