@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:stream_chat_flutter/stream_chat_flutter.dart';
+import 'package:thia/generated/assets.dart';
 
 import '../../../utils/utils.dart';
 
@@ -76,6 +77,7 @@ class _ChannelListPageState extends State<ChannelListPage> {
           },
         ),
       ),
+      bottomNavigationBar: commonBottomBar(context, false, index: 1),
     );
   }
 }
@@ -105,8 +107,8 @@ class _ChannelPageState extends State<ChannelPage> {
     return Scaffold(
       appBar: const StreamChannelHeader(),
       body: Column(
-        children: const <Widget>[
-          Expanded(
+        children: <Widget>[
+          const Expanded(
               child: StreamMessageListView(
                   // messageBuilder: (p0, p1, p2, defaultMessageWidget) {
                   //   return Row(
@@ -134,24 +136,20 @@ class _ChannelPageState extends State<ChannelPage> {
                   // },
                   )),
           StreamMessageInput(
-              // idleSendButton: Container(
-              //   margin: const EdgeInsets.symmetric(horizontal: 10),
-              //   padding: const EdgeInsets.all(7),
-              //   decoration: BoxDecoration(gradient: AppColors.purpleGradient, borderRadius: BorderRadius.circular(10)),
-              //   child: Image.asset(Assets.iconsSendIcon, scale: 3.5),
-              // ),
-              ///
-              // sendButtonBuilder: (context, messageInputController) {
-              //   return Container(
-              //     margin: const EdgeInsets.symmetric(horizontal: 10),
-              //     padding: const EdgeInsets.all(7),
-              //     decoration: BoxDecoration(gradient: AppColors.purpleGradient, borderRadius: BorderRadius.circular(10)),
-              //     child: Image.asset(Assets.iconsSendIcon, scale: 3.5),
-              //   );
-              // },
-              ),
+            idleSendButton: sendButtonWidget(),
+            activeSendButton:  sendButtonWidget(),
+          ),
         ],
       ),
+    );
+  }
+
+  Widget sendButtonWidget() {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 10),
+      padding: const EdgeInsets.all(7),
+      decoration: BoxDecoration(gradient: AppColors.purpleGradient, borderRadius: BorderRadius.circular(10)),
+      child: Image.asset(Assets.iconsSendIcon, scale: 3.5),
     );
   }
 }

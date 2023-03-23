@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:stream_chat_flutter/stream_chat_flutter.dart';
+import 'package:thia/utils/firebase_messaging_service.dart';
 import 'package:thia/utils/social_login.dart';
 
 import '../../generated/assets.dart';
@@ -18,6 +20,7 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
+
     // bool isLogin = (getPreference.read(PrefConstants.isLogin) ?? false);
     var isLogin = getIsLogin();
 

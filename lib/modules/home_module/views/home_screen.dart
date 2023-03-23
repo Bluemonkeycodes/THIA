@@ -8,6 +8,7 @@ import 'package:thia/modules/profile_module/views/profile_screen.dart';
 import 'package:thia/utils/common_stream_io.dart';
 import 'package:thia/utils/social_login.dart';
 
+import '../../../utils/firebase_messaging_service.dart';
 import '../../../utils/utils.dart';
 import '../../auth/model/login_model.dart';
 
@@ -28,6 +29,8 @@ class _HomeScreenState extends State<HomeScreen> {
       id: (kHomeController.userData.value.userId ?? "").toString(),
       token: getPreference.read(PrefConstants.loginToken) ?? "",
     );
+    registerDevice(context);
+
     await refreshToken(() {});
     await kHomeController.getPriorityCount(showLoader: false);
     await kHomeController.getClassList();
@@ -41,9 +44,18 @@ class _HomeScreenState extends State<HomeScreen> {
     initUser();
   }
 
+  registerDevice(BuildContext context) {
+    StreamChatClient client = StreamChat.of(context).client;
+    StreamChat.of(context).client.addDevice(getFcmToken() ?? "", PushProvider.firebase, pushProviderName: "firebase");
+    FirebaseNotificationService.firebaseMessaging.onTokenRefresh.listen((token) {
+      // FirebaseNotificationService.firebaseMessaging.getToken().then((token) {
+      StreamChat.of(context).client.addDevice(token ?? "", PushProvider.firebase, pushProviderName: "firebase");
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    showLog(getPreference.read(PrefConstants.loginToken));
+    showLog(StreamChat.of(context).client.wsConnectionStatus);
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.all(20).copyWith(bottom: 0, top: 40),

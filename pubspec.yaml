@@ -35,11 +35,11 @@ dependencies:
   googleapis: ^10.0.0
   extension_google_sign_in_as_googleapis_auth: ^2.0.7
 
-  firebase_auth: ^4.2.5
-  firebase_crashlytics: ^3.0.3
-  firebase_messaging: ^14.0.3
-  flutter_local_notifications: ^12.0.3
-  cloud_firestore: ^4.3.1
+  firebase_auth: ^4.3.0
+  firebase_crashlytics: ^3.0.17
+  firebase_messaging: ^14.3.0
+  flutter_local_notifications: ^13.0.0
+  cloud_firestore: ^4.4.5
 
 
 dev_dependencies:

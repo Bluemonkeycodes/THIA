@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 import 'package:thia/utils/utils.dart';
 
 class FirebaseNotificationService {
@@ -31,6 +32,8 @@ class FirebaseNotificationService {
     FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
     firebaseMessaging.requestPermission(sound: true, badge: true, alert: true, provisional: true);
     if (!isNotEmptyString(getFcmToken())) {
+
+
       firebaseMessaging.getToken().then((String? token) {
         assert(token != null);
         showLog("FCM-TOKEN $token");
@@ -40,8 +43,8 @@ class FirebaseNotificationService {
   }
 
   static showNotification(PushNotificationModel data) async {
-    AndroidNotificationDetails android = const AndroidNotificationDetails('ziomls_channel_id', 'ziomls_channel_name',
-        channelDescription: 'ziomls_channel_description', priority: Priority.high, importance: Importance.max, icon: '@mipmap/ic_launcher');
+    AndroidNotificationDetails android = const AndroidNotificationDetails('thia_channel_id', 'thia_channel_name',
+        channelDescription: 'thia_channel_description', priority: Priority.high, importance: Importance.max, icon: '@mipmap/ic_launcher');
     DarwinNotificationDetails iOS = const DarwinNotificationDetails();
     NotificationDetails platform = NotificationDetails(android: android, iOS: iOS);
     var jsonData = jsonEncode(data);
@@ -81,45 +84,6 @@ class NotificationResponseModel {
   }
 }
 
-/*
-@JsonSerializable(explicitToJson: true)
-class NotificationResponseData {
-  NotificationResponseData({
-    this.id,
-    this.userId,
-    this.type,
-    this.isRead,
-    this.refId,
-    this.title,
-    this.description,
-    this.image,
-    this.updatedAt,
-    this.createdAt,
-    this.isSelected,
-  });
-
-  int? id;
-  int? userId;
-  int? type;
-  int? isRead;
-  @JsonKey(name: 'ref_id')
-  String? refId;
-  String? title;
-  String? description;
-  String? image;
-  @JsonKey(name: 'updated_at')
-  DateTime? updatedAt;
-  @JsonKey(name: 'created_at')
-  DateTime? createdAt;
-
-  ///For Developer Use Only
-  bool? isSelected;
-
-  factory NotificationResponseData.fromJson(Map<String, dynamic> json) => _$NotificationResponseDataFromJson(json);
-
-  Map<String, dynamic> toJson() => _$NotificationResponseDataToJson(this);
-}
-*/
 
 class PushNotificationModel {
   PushNotificationModel({this.title, this.body, this.data});

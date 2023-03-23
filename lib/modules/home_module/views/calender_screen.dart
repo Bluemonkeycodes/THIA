@@ -25,6 +25,7 @@ class _CalenderScreenState extends State<CalenderScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: GetAppBar(context, AppTexts.calendar),
+      bottomNavigationBar: commonBottomBar(context, false,index: 3),
       body: ListView(
         padding: const EdgeInsets.all(15),
         children: [

@@ -53,6 +53,13 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // StreamChatClient client = StreamChat.of(context).client;
+    //
+    // // FirebaseNotificationService.firebaseMessaging.onTokenRefresh.listen((token) {
+    // FirebaseNotificationService.firebaseMessaging.getToken().then((token) {
+    //   client.addDevice(token ?? "", PushProvider.firebase);
+    // });
+
     return GetMaterialApp(
       initialBinding: AppBinding(),
       debugShowCheckedModeBanner: false,

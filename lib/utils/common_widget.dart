@@ -422,15 +422,30 @@ Widget bottomNavigationBarItem({
   required String name,
   Color? iconColor,
   TextStyle? textStyle,
+  bool? showRedDot,
 }) {
   return InkWell(
     onTap: onTap,
     child: Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Icon(
-          iconData,
-          color: iconColor ?? AppColors.borderColor,
+        Stack(
+          alignment: Alignment.topRight,
+          children: [
+            Icon(
+              iconData,
+              color: iconColor ?? AppColors.borderColor,
+            ),
+            if (showRedDot == true)
+              Align(
+                alignment: Alignment.topRight,
+                child: Container(
+                  height: 10,
+                  width: 10,
+                  decoration: const BoxDecoration(color: AppColors.red, shape: BoxShape.circle),
+                ),
+              ),
+          ],
         ),
         heightBox(height: 5),
         Text(
@@ -672,7 +687,6 @@ Widget todoCard({
               heightBox(),
               // tile(title: "Estimated Time :", desc: data == null ? "3:00 Hour ⏳" : "${data.dueTime?.hours}:${data.dueTime?.minutes} hours ⏳"),
 
-              //TODO: set due time below
               tile(
                 title: "Estimated Time :",
                 desc: data?.time == null ? "00 Hour ⏳" : "${(printDuration(parseDuration(data?.time ?? "")))} ⏳",
@@ -840,7 +854,19 @@ Widget tile({
   );
 }
 
-Widget commonBottomBar(BuildContext context, bool isFromDetails, {Course? subject}) {
+Widget commonBottomBar(BuildContext context, bool isFromDetails, {Course? subject, int? index}) {
+  StreamChatClient client = StreamChat.of(context).client;
+
+  // getUnreadMessage(context);
+  RxInt count = 0.obs;
+  client.on().where((Event event) {
+    return event.unreadChannels != null;
+  }).listen((Event event) {
+    count.value = event.unreadChannels ?? 0;
+    showLog("Unread channels count changed to:${event.unreadChannels}");
+    showLog("Unread messages count changed to:${event.totalUnreadCount}");
+  });
+
   return Container(
     height: 75.0,
     decoration: BoxDecoration(
@@ -851,29 +877,36 @@ Widget commonBottomBar(BuildContext context, bool isFromDetails, {Course? subjec
     child: Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
-        bottomNavigationBarItem(
-            iconData: Icons.chat_bubble_outline,
-            name: AppTexts.chat,
-            iconColor: subject?.teacherFolder == null ? AppColors.borderColor : AppColors.grey,
-            textStyle: blue16w500.copyWith(color: subject?.teacherFolder == null ? AppColors.borderColor : AppColors.grey),
-            onTap: () async {
-              if (subject?.teacherFolder == null) {
-                final client = StreamChat.of(context).client;
+        StreamBuilder<Object>(
+            stream: count.stream,
+            builder: (context, snapshot) {
+              return bottomNavigationBarItem(
+                  iconData: Icons.chat_bubble_outline,
+                  name: AppTexts.chat,
+                  showRedDot: count.value > 0 ? true : false,
+                  iconColor: subject?.teacherFolder == null ? AppColors.borderColor : AppColors.grey,
+                  textStyle: blue16w500.copyWith(color: subject?.teacherFolder == null ? AppColors.borderColor : AppColors.grey),
+                  onTap: () async {
+                    if (index != 1) {
+                      if (subject?.teacherFolder == null) {
+                        final client = StreamChat.of(context).client;
 
-                if (isFromDetails) {
-                  await chatButtonClick(
-                    context,
-                    name: subject?.name ?? "",
-                    id: subject?.id ?? "",
-                    image: "",
-                    userIdList: [(kHomeController.userData.value.userId ?? "").toString()],
-                  );
-                } else {
-                  Get.to(() => StreamChat(client: client, child: const ChannelListPage()));
-                }
-              } else {
-                showSnackBar(title: ApiConfig.error, message: "Teachers are not allowed to chat with whole classroom.");
-              }
+                        if (isFromDetails) {
+                          await chatButtonClick(
+                            context,
+                            name: subject?.name ?? "",
+                            id: subject?.id ?? "",
+                            image: "",
+                            userIdList: [(kHomeController.userData.value.userId ?? "").toString()],
+                          );
+                        } else {
+                          Get.to(() => StreamChat(client: client, child: const ChannelListPage()));
+                        }
+                      } else {
+                        showSnackBar(title: ApiConfig.error, message: "Teachers are not allowed to chat with whole classroom.");
+                      }
+                    }
+                  });
             }),
         bottomNavigationBarItem(
             iconData: CupertinoIcons.add,
@@ -885,9 +918,20 @@ Widget commonBottomBar(BuildContext context, bool isFromDetails, {Course? subjec
             iconData: CupertinoIcons.calendar,
             name: AppTexts.calendar,
             onTap: () {
-              Get.to(() => const CalenderScreen());
+              if (index != 3) {
+                Get.to(() => const CalenderScreen());
+              }
             }),
       ],
     ),
   );
+}
+
+void getUnreadMessage(BuildContext context) async {
+  StreamChatClient client = StreamChat.of(context).client;
+
+  final response = await client.channel("messaging").watch();
+  showLog("length ===> ${response.read?.length}");
+  // showLog("There are ${response.me.unreadChannels} unread channels");
+  // showLog("There are ${response.me.totalUnreadCount} unread messages");
 }

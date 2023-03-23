@@ -8,6 +8,8 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:stream_chat_flutter/stream_chat_flutter.dart';
+import 'package:thia/utils/firebase_messaging_service.dart';
 import 'package:thia/utils/utils.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -41,6 +43,11 @@ getFcmToken() {
 
 setFcmToken(String value) {
   getPreference.write(PrefConstants.fcmTokenPref, value);
+  // StreamChatClient client = StreamChat.of(context).client;
+  //
+  // FirebaseNotificationService.firebaseMessaging.onTokenRefresh.listen((token) {
+  //   client.addDevice(token, PushProvider.firebase);
+  // });
 }
 
 hideKeyBoard(BuildContext context) {
