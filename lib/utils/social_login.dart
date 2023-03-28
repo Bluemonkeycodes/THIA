@@ -109,6 +109,7 @@ googleAuth(BuildContext context) async {
   if (await checkInternet()) {
     final GoogleSignInAccount? googleSignInAccount = await googleSignIn.signIn().onError((error, stackTrace) {
       showLog(error);
+      return null;
     });
     if (googleSignInAccount != null) {
       final GoogleSignInAuthentication googleSignInAuthentication = await googleSignInAccount.authentication;
@@ -126,16 +127,7 @@ googleAuth(BuildContext context) async {
           showProgressDialog(loaderColor: AppColors.white);
           // loginSuccess();
           Api().call(
-            params: {
-              "firstname": user?.displayName ?? "",
-              "lastname": "",
-              "email": user?.email ?? "",
-              "phonenumber": user?.phoneNumber ?? "",
-              "profileUrl": user?.photoURL ?? "",
-              "usertypeid": 1,
-              "googleID": user?.uid ?? "",
-              "active": 1
-            },
+            params: {"firstname": user?.displayName ?? "", "lastname": "", "email": user?.email ?? "", "phonenumber": user?.phoneNumber ?? "", "profileUrl": user?.photoURL ?? "", "usertypeid": 1, "googleID": user?.uid ?? "", "active": 1},
             loaderColor: AppColors.white,
             url: ApiConfig.login,
             success: (Map<String, dynamic> response) async {

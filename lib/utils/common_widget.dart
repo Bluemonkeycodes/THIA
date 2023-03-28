@@ -68,7 +68,7 @@ Widget commonDialog({
 }) {
   return AlertDialog(
     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-    title: Text(title ?? "", style: blue22w700, textAlign: TextAlign.center),
+    title: Text(title ?? "", style: primary22w700, textAlign: TextAlign.center),
     content: Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -110,7 +110,7 @@ Widget commonDialog({
                       },
                   height: 50.0,
                   borderRadius: 15,
-                  backGroundColor: AppColors.buttonColor,
+                  backGroundColor: AppColors.primaryColor,
                   text: yesButtonName ?? "Yes",
                   textStyle: white18w600),
             ),
@@ -146,7 +146,7 @@ Widget customToolTip({String? text}) {
     message: text ?? "",
     triggerMode: TooltipTriggerMode.tap,
     showDuration: const Duration(seconds: 30),
-    child: const Icon(Icons.help_outline, color: AppColors.buttonColor, size: 20),
+    child: const Icon(Icons.help_outline, color: AppColors.primaryColor, size: 20),
   );
 }
 
@@ -307,8 +307,8 @@ Widget commonRadioTile({required String title, required RxString groupValue, Fun
       value: value ?? title,
       groupValue: groupValue.value,
       contentPadding: const EdgeInsets.symmetric(horizontal: 0),
-      activeColor: AppColors.buttonColor,
-      selectedTileColor: AppColors.buttonColor,
+      activeColor: AppColors.primaryColor,
+      selectedTileColor: AppColors.primaryColor,
       onChanged: (value) {
         groupValue.value = value.toString();
         if (callBack != null) {
@@ -348,7 +348,7 @@ commonAlertDialog({
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       const SizedBox(height: 50.0),
-                      Text(title ?? appName, style: blue16w600.copyWith(fontSize: titleFontSize ?? 28, decoration: TextDecoration.none)),
+                      Text(title ?? appName, style: primary16w600.copyWith(fontSize: titleFontSize ?? 28, decoration: TextDecoration.none)),
                       const SizedBox(height: 20.0),
                       Text(message ?? "", style: grey16w500.copyWith(height: 1.5, decoration: TextDecoration.none)).paddingSymmetric(horizontal: 10.0),
                       const SizedBox(height: 20.0),
@@ -398,9 +398,9 @@ commonAlertDialog({
                     width: 80,
                     padding: const EdgeInsets.all(20.0),
                     decoration: BoxDecoration(
-                      color: AppColors.buttonColor,
+                      color: AppColors.primaryColor,
                       shape: BoxShape.circle,
-                      border: Border.all(color: AppColors.color2697FF.withOpacity(0.2)),
+                      border: Border.all(color: AppColors.blue.withOpacity(0.2)),
                     ),
                     //TODO: uncomment below
                     // child: Image.asset(Assets.iconsBlueLogo, fit: BoxFit.scaleDown, color: AppColors.white, height: 75, width: 75),
@@ -450,7 +450,7 @@ Widget bottomNavigationBarItem({
         heightBox(height: 5),
         Text(
           name,
-          style: textStyle ?? blue16w500,
+          style: textStyle ?? primary16w500,
         )
       ],
     ),
@@ -458,6 +458,7 @@ Widget bottomNavigationBarItem({
 }
 
 Widget classRoomCard(BuildContext context, Course? data) {
+  final image = kHomeController.getGroupPlaceHolder();
   return InkWell(
     onTap: () {
       Get.to(() => ClassDetailsScreen(data: data));
@@ -471,7 +472,18 @@ Widget classRoomCard(BuildContext context, Course? data) {
       ),
       child: Row(
         children: [
-          Image.asset(Assets.imagesCardImage, scale: 3.5),
+          // Image.asset(Assets.imagesCardImage, scale: 3.5),
+          Container(
+            decoration: BoxDecoration(color: AppColors.lightPrimaryColor, borderRadius: BorderRadius.circular(50)),
+            child: getNetworkImage(
+              // url: "https://i.imgur.com/30L5oye.png",
+              url: image,
+              borderRadius: 50,
+              height: 75,
+              width: 75,
+              fit: BoxFit.contain,
+            ),
+          ),
           widthBox(),
           Expanded(
             child: Column(
@@ -504,7 +516,7 @@ Widget classRoomCard(BuildContext context, Course? data) {
                             context,
                             name: data?.name ?? "",
                             id: data?.id ?? "",
-                            image: "",
+                            image: image,
                             userIdList: [(kHomeController.userData.value.userId ?? "").toString()],
                           );
                         } else {
@@ -604,8 +616,7 @@ Widget assignmentCard({
             if (showDate ?? false)
               tile(
                 title: "Due :",
-                desc:
-                    (data == null || data.dueDate == null) ? "NA" : (dateFormatter("${data.dueDate?.year}-${data.dueDate?.month}-${data.dueDate?.day}") ?? "").toString(),
+                desc: (data == null || data.dueDate == null) ? "NA" : (dateFormatter("${data.dueDate?.year}-${data.dueDate?.month}-${data.dueDate?.day}") ?? "").toString(),
                 // subject: subject,
               ),
             heightBox(),
@@ -885,7 +896,7 @@ Widget commonBottomBar(BuildContext context, bool isFromDetails, {Course? subjec
                   name: AppTexts.chat,
                   showRedDot: count.value > 0 ? true : false,
                   iconColor: subject?.teacherFolder == null ? AppColors.borderColor : AppColors.grey,
-                  textStyle: blue16w500.copyWith(color: subject?.teacherFolder == null ? AppColors.borderColor : AppColors.grey),
+                  textStyle: primary16w500.copyWith(color: subject?.teacherFolder == null ? AppColors.borderColor : AppColors.grey),
                   onTap: () async {
                     if (index != 1) {
                       if (subject?.teacherFolder == null) {

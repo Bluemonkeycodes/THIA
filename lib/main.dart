@@ -25,7 +25,7 @@ Future<void> main() async {
   await pref();
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  await FirebaseNotificationService.initializeService();
+  // await FirebaseNotificationService.initializeService();
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
   final client = getClient();
 
@@ -104,7 +104,7 @@ class MyApp extends StatelessWidget {
                 messageTextStyle: black16w500,
               ),
               ownMessageTheme: StreamMessageThemeData(
-                messageBackgroundColor: AppColors.buttonColor,
+                messageBackgroundColor: AppColors.primaryColor,
                 messageTextStyle: white16w500,
               ),
             ),
@@ -127,7 +127,7 @@ class MyApp extends StatelessWidget {
         highlightColor: Colors.transparent,
         splashColor: Colors.transparent,
         fontFamily: GoogleFonts.inter().fontFamily,
-        progressIndicatorTheme: ProgressIndicatorThemeData(color: Platform.isAndroid ? AppColors.buttonColor : null),
+        progressIndicatorTheme: ProgressIndicatorThemeData(color: Platform.isAndroid ? AppColors.primaryColor : null),
       ),
       home: const SplashScreen(),
     );

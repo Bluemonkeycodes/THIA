@@ -40,7 +40,7 @@ class HomeController extends GetxController {
   getClassList() async {
     // await googleSignIn.currentUser?.clearAuthCache();
     classListLoading.value = true;
-    ListCoursesResponse response = await classroomApi.courses.list(pageSize: 500).onError((error, stackTrace) async {
+    ListCoursesResponse response = await classroomApi.courses.list(pageSize: 500, courseStates: ["ACTIVE"]).onError((error, stackTrace) async {
       classListLoading.value = false;
 
       refreshToken(() async {

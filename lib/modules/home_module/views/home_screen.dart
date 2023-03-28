@@ -30,7 +30,7 @@ class _HomeScreenState extends State<HomeScreen> {
       token: getPreference.read(PrefConstants.loginToken) ?? "",
     );
     registerDevice(context);
-
+    await FirebaseNotificationService(context1: context).initializeService(context);
     await refreshToken(() {});
     await kHomeController.getPriorityCount(showLoader: false);
     await kHomeController.getClassList();
@@ -49,7 +49,7 @@ class _HomeScreenState extends State<HomeScreen> {
     StreamChat.of(context).client.addDevice(getFcmToken() ?? "", PushProvider.firebase, pushProviderName: "firebase");
     FirebaseNotificationService.firebaseMessaging.onTokenRefresh.listen((token) {
       // FirebaseNotificationService.firebaseMessaging.getToken().then((token) {
-      StreamChat.of(context).client.addDevice(token ?? "", PushProvider.firebase, pushProviderName: "firebase");
+      StreamChat.of(context).client.addDevice(token, PushProvider.firebase, pushProviderName: "firebase");
     });
   }
 
@@ -67,7 +67,7 @@ class _HomeScreenState extends State<HomeScreen> {
             heightBox(),
             Expanded(
               child: RefreshIndicator(
-                color: AppColors.buttonColor,
+                color: AppColors.primaryColor,
                 onRefresh: () async {
                   kHomeController.classListLoading.value = true;
                   await kHomeController.getPriorityCount(showLoader: false);
@@ -101,8 +101,8 @@ class _HomeScreenState extends State<HomeScreen> {
               ],
             );
           } else {
-            List<Course>? x = kHomeController.courseModel.value.courses?.where((element) => element.courseState == "ACTIVE").toList();
-            // List<Course>? x = kHomeController.courseModel.value.courses;
+            // List<Course>? x = kHomeController.courseModel.value.courses?.where((element) => element.courseState == "ACTIVE").toList();
+            List<Course>? x = kHomeController.courseModel.value.courses;
             return ListView.separated(
               itemCount: x?.length ?? 0,
               shrinkWrap: true,

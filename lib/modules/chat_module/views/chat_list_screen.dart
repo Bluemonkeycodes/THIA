@@ -42,11 +42,10 @@ class _ChatListScreenState extends State<ChatListScreen> {
                       width: 65,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(50),
-                        border: Border.all(color: AppColors.buttonColor, width: 3),
+                        border: Border.all(color: AppColors.primaryColor, width: 3),
                       ),
                       child: getNetworkImage(
-                        url:
-                            "https://images.unsplash.com/photo-1669993427100-221137cc7513?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHx0b3BpYy1mZWVkfDYxfHRvd0paRnNrcEdnfHxlbnwwfHx8fA%3D%3D&auto=format&fit=crop&w=900&q=60",
+                        url: "https://images.unsplash.com/photo-1669993427100-221137cc7513?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHx0b3BpYy1mZWVkfDYxfHRvd0paRnNrcEdnfHxlbnwwfHx8fA%3D%3D&auto=format&fit=crop&w=900&q=60",
                         borderRadius: 50,
                         fit: BoxFit.cover,
                       ),

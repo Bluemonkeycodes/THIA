@@ -35,7 +35,7 @@ class _ChannelListPageState extends State<ChannelListPage> {
     return Scaffold(
       appBar: GetAppBar(context, AppTexts.chat),
       body: RefreshIndicator(
-        color: AppColors.buttonColor,
+        color: AppColors.primaryColor,
         onRefresh: () async {
           _listController.refresh();
         },
@@ -137,7 +137,7 @@ class _ChannelPageState extends State<ChannelPage> {
                   )),
           StreamMessageInput(
             idleSendButton: sendButtonWidget(),
-            activeSendButton:  sendButtonWidget(),
+            activeSendButton: sendButtonWidget(),
           ),
         ],
       ),

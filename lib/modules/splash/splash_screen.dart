@@ -21,27 +21,14 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
 
-    // bool isLogin = (getPreference.read(PrefConstants.isLogin) ?? false);
-    var isLogin = getIsLogin();
-
+    bool isLogin = getIsLogin();
     Future.delayed(const Duration(seconds: 3)).then((value) {
       if (isLogin) {
         Get.offAll(() => const HomeScreen());
       } else {
         Get.offAll(() => const LoginScreen());
       }
-      // decideStartingPage();
     });
-  }
-
-  Future<dynamic> decideStartingPage() async {
-    bool isUserSignedIn = await googleSignIn.isSignedIn();
-
-    if (isUserSignedIn == true) {
-      Get.offAll(() => const HomeScreen());
-    } else {
-      Get.offAll(() => const LoginScreen());
-    }
   }
 
   @override

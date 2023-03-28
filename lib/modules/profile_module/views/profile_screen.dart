@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:stream_chat_flutter/stream_chat_flutter.dart' as stream;
 import 'package:thia/generated/assets.dart';
 import 'package:thia/modules/auth/views/login_screen.dart';
 import 'package:thia/utils/social_login.dart';
@@ -25,6 +26,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           try {
             await googleSignIn.signOut();
             await auth.signOut();
+            await stream.StreamChat.of(context).client.disconnectUser();
           } catch (e) {
             showLog(e);
           }
