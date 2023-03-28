@@ -25,7 +25,7 @@ class _CalenderScreenState extends State<CalenderScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: GetAppBar(context, AppTexts.calendar),
-      bottomNavigationBar: commonBottomBar(context, false,index: 3),
+      bottomNavigationBar: commonBottomBar(context, false, index: 3),
       body: ListView(
         padding: const EdgeInsets.all(15),
         children: [
@@ -37,8 +37,8 @@ class _CalenderScreenState extends State<CalenderScreen> {
             ),
             child: SfDateRangePicker(
               view: DateRangePickerView.month,
-              selectionColor: AppColors.buttonColor,
-              todayHighlightColor: AppColors.buttonColor,
+              selectionColor: AppColors.primaryColor,
+              todayHighlightColor: AppColors.primaryColor,
               minDate: DateTime.now(),
               maxDate: DateTime.now().add(const Duration(days: 365)),
               showNavigationArrow: true,

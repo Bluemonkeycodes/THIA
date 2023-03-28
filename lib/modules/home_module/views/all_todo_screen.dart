@@ -43,7 +43,7 @@ class _AllTodoScreenState extends State<AllTodoScreen> {
                       builder: (context, snapshot) {
                         return Expanded(
                           child: RefreshIndicator(
-                            color: AppColors.buttonColor,
+                            color: AppColors.primaryColor,
                             onRefresh: () async {},
                             child: ListView.separated(
                               itemCount: selectedTab.value == 1
@@ -126,7 +126,7 @@ class _AllTodoScreenState extends State<AllTodoScreen> {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(12),
                     color: color,
-                    border: selectedCount == selectedTab.value ? Border.all(color: AppColors.buttonColor, width: 2) : null,
+                    border: selectedCount == selectedTab.value ? Border.all(color: AppColors.primaryColor, width: 2) : null,
                   ),
                   child: Text(data, style: white18w700),
                 ),

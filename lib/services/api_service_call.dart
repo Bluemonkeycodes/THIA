@@ -129,15 +129,7 @@ class Api {
                 isRecall: true,
                 callBack: () {
                   get_x.Get.back();
-                  call(
-                      params: params,
-                      url: url,
-                      success: success,
-                      error: error,
-                      isProgressShow: isProgressShow,
-                      methodType: methodType,
-                      formValues: formValues,
-                      isHideLoader: isHideLoader);
+                  call(params: params, url: url, success: success, error: error, isProgressShow: isProgressShow, methodType: methodType, formValues: formValues, isHideLoader: isHideLoader);
                 });
             error(response.toString());
             isLoading.value = false;
@@ -202,15 +194,7 @@ class Api {
           isRecall: true,
           callBack: () {
             get_x.Get.back();
-            call(
-                params: params,
-                url: url,
-                success: success,
-                error: error,
-                isProgressShow: isProgressShow,
-                methodType: methodType,
-                formValues: formValues,
-                isHideLoader: isHideLoader);
+            call(params: params, url: url, success: success, error: error, isProgressShow: isProgressShow, methodType: methodType, formValues: formValues, isHideLoader: isHideLoader);
           },
         );
         isLoading.value = false;
@@ -262,7 +246,7 @@ void showProgressDialog({bool isLoading = true, Color? loaderColor}) {
       Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Center(child: CircularProgressIndicator(color: loaderColor ?? AppColors.buttonColor)),
+          Center(child: CircularProgressIndicator(color: loaderColor ?? AppColors.primaryColor)),
         ],
       ),
       barrierColor: Colors.black12,

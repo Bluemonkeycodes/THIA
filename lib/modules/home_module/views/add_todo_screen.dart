@@ -136,10 +136,8 @@ class _AddTodoScreenState extends State<AddTodoScreen> {
                                     },
                                     hint: Text("Select ${AppTexts.course}", style: grey14w500.copyWith(fontWeight: FontWeight.w400)),
                                     dropdownColor: AppColors.white,
-                                    items: kHomeController.courseModel.value.courses
-                                        ?.where((element) => element.courseState == "ACTIVE")
-                                        .toList()
-                                        .map<DropdownMenuItem<Course>>((value) {
+                                    // items: kHomeController.courseModel.value.courses?.where((element) => element.courseState == "ACTIVE").toList().map<DropdownMenuItem<Course>>((value) {
+                                    items: kHomeController.courseModel.value.courses?.map<DropdownMenuItem<Course>>((value) {
                                       return DropdownMenuItem<Course>(
                                         value: value,
                                         child: Text(value.name ?? "", style: black14w500),
@@ -186,7 +184,7 @@ class _AddTodoScreenState extends State<AddTodoScreen> {
                         builder: (context, child) {
                           return Theme(
                             data: Theme.of(context).copyWith(
-                              colorScheme: const ColorScheme.light(primary: AppColors.buttonColor),
+                              colorScheme: const ColorScheme.light(primary: AppColors.primaryColor),
                             ),
                             child: child!,
                           );
@@ -261,8 +259,8 @@ class _AddTodoScreenState extends State<AddTodoScreen> {
                           value: 'Private',
                           groupValue: radioValue.value,
                           contentPadding: const EdgeInsets.symmetric(horizontal: 0),
-                          activeColor: AppColors.buttonColor,
-                          selectedTileColor: AppColors.buttonColor,
+                          activeColor: AppColors.primaryColor,
+                          selectedTileColor: AppColors.primaryColor,
                           onChanged: (value) {
                             radioValue.value = value.toString();
                           },
@@ -280,8 +278,8 @@ class _AddTodoScreenState extends State<AddTodoScreen> {
                           value: 'Public',
                           groupValue: radioValue.value,
                           contentPadding: const EdgeInsets.symmetric(horizontal: 0),
-                          activeColor: AppColors.buttonColor,
-                          selectedTileColor: AppColors.buttonColor,
+                          activeColor: AppColors.primaryColor,
+                          selectedTileColor: AppColors.primaryColor,
                           onChanged: (value) {
                             radioValue.value = value.toString();
                           },
@@ -310,9 +308,7 @@ class _AddTodoScreenState extends State<AddTodoScreen> {
                               children: [
                                 Container(
                                   padding: const EdgeInsets.all(20),
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(20).copyWith(bottomLeft: Radius.zero, bottomRight: Radius.zero),
-                                      gradient: AppColors.lightPurpleGradient),
+                                  decoration: BoxDecoration(borderRadius: BorderRadius.circular(20).copyWith(bottomLeft: Radius.zero, bottomRight: Radius.zero), gradient: AppColors.lightPurpleGradient),
                                   child: Center(child: Text(AppTexts.selectEstimatedTime, style: black16w600)),
                                 ),
                                 heightBox(),
@@ -379,7 +375,7 @@ class _AddTodoScreenState extends State<AddTodoScreen> {
                     },
                     icon: const Icon(
                       Icons.add_circle_outline_sharp,
-                      color: AppColors.buttonColor,
+                      color: AppColors.primaryColor,
                     ))
               ],
             ),

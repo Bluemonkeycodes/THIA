@@ -252,7 +252,7 @@ class _ClassDetailsScreenState extends State<ClassDetailsScreen> with SingleTick
                 ],
               );
             },
-            icon: const Icon(Icons.messenger_outline_outlined, color: AppColors.buttonColor),
+            icon: const Icon(Icons.messenger_outline_outlined, color: AppColors.primaryColor),
           )
         ],
       ),

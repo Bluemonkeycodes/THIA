@@ -22,7 +22,7 @@ Widget GetCheckBoxRow({
         width: size,
         child: Container(
           // padding: const EdgeInsets.all(2),
-          decoration: BoxDecoration(border: Border.all(color: (value?.value ?? false) ? AppColors.buttonColor : AppColors.grey), borderRadius: BorderRadius.circular(6)),
+          decoration: BoxDecoration(border: Border.all(color: (value?.value ?? false) ? AppColors.primaryColor : AppColors.grey), borderRadius: BorderRadius.circular(6)),
           child: Checkbox(
             materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
             value: value?.value ?? false,
@@ -32,9 +32,9 @@ Widget GetCheckBoxRow({
                 },
             splashRadius: 10.0,
             side: MaterialStateBorderSide.resolveWith((states) => const BorderSide(width: 1, color: Colors.transparent)),
-            checkColor: checkColor ?? AppColors.buttonColor,
+            checkColor: checkColor ?? AppColors.primaryColor,
             activeColor: Colors.transparent,
-            hoverColor: AppColors.buttonColor,
+            hoverColor: AppColors.primaryColor,
             // fillColor: MaterialStateProperty.all(fillColor ?? AppColors.white),
             // shape: shape ?? RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
           ),

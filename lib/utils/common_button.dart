@@ -37,7 +37,7 @@ Widget GetButton({
                   color: Colors.transparent,
                 ),
           borderRadius: BorderRadius.circular(borderRadius ?? 10.0),
-          color: backGroundColor ?? AppColors.buttonColor,
+          color: backGroundColor ?? AppColors.primaryColor,
           gradient: gradient),
       // ignore: prefer_if_null_operators
       child: child ?? Center(child: Text(text ?? "", style: textStyle ?? white16w500)),

@@ -57,7 +57,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         children: [
                           Image.asset(Assets.iconsGoogleIcon, scale: 3.5),
                           widthBox(width: 50),
-                          Text(AppTexts.loginWithGoogle, style: blue18W500),
+                          Text(AppTexts.loginWithGoogle, style: primary18W500),
                         ],
                       )),
                 ],

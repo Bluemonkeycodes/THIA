@@ -2,19 +2,29 @@ import 'dart:convert';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:stream_chat_flutter/stream_chat_flutter.dart';
+import 'package:thia/utils/common_stream_io.dart';
 import 'package:thia/utils/utils.dart';
 
 class FirebaseNotificationService {
   static FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
   static FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+  BuildContext context1;
 
-  static initializeService() {
+  FirebaseNotificationService({required this.context1});
+
+  initializeService(BuildContext context) {
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
       flutterLocalNotificationsPlugin.resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()?.requestPermission();
-      if (message.notification != null) {
+      final chatClient = StreamChat.of(context1).client;
+      showLog("initializeService message ===> ${message.data}");
+      if (message.data["sender"] == "stream.chat") {
+        showStreamNotification(message, chatClient);
+      } else if (message.notification != null) {
         PushNotificationModel model = PushNotificationModel();
         model.title = message.notification!.title;
         model.body = message.notification!.body;
@@ -27,13 +37,14 @@ class FirebaseNotificationService {
       }
     });
     FirebaseMessaging.onMessageOpenedApp.listen((event) {
+      showLog("tap ===> $event");
+
       ///Handle tap here event.data["id"]
     });
-    FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+    FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
+
     firebaseMessaging.requestPermission(sound: true, badge: true, alert: true, provisional: true);
     if (!isNotEmptyString(getFcmToken())) {
-
-
       firebaseMessaging.getToken().then((String? token) {
         assert(token != null);
         showLog("FCM-TOKEN $token");
@@ -42,17 +53,54 @@ class FirebaseNotificationService {
     }
   }
 
+  static showStreamNotification(RemoteMessage message, StreamChatClient chatClient) async {
+    AndroidNotificationDetails android = const AndroidNotificationDetails(
+      'new_message',
+      'New message notifications channel',
+      priority: Priority.max,
+      importance: Importance.max,
+      icon: '@mipmap/ic_launcher',
+    );
+    DarwinNotificationDetails iOS = const DarwinNotificationDetails();
+    NotificationDetails platform = NotificationDetails(android: android, iOS: iOS);
+    final data = message.data;
+
+    if (data['type'] == 'message.new') {
+      final messageId = data['id'];
+      final response = await chatClient.getMessage(messageId);
+
+      flutterLocalNotificationsPlugin.show(
+        1,
+        'New message from ${response.message.user?.name} in ${response.channel?.name}',
+        response.message.text,
+        platform,
+      );
+    }
+  }
+
   static showNotification(PushNotificationModel data) async {
-    AndroidNotificationDetails android = const AndroidNotificationDetails('thia_channel_id', 'thia_channel_name',
-        channelDescription: 'thia_channel_description', priority: Priority.high, importance: Importance.max, icon: '@mipmap/ic_launcher');
+    AndroidNotificationDetails android = const AndroidNotificationDetails('thia_channel_id', 'thia_channel_name', channelDescription: 'thia_channel_description', priority: Priority.high, importance: Importance.max, icon: '@mipmap/ic_launcher');
     DarwinNotificationDetails iOS = const DarwinNotificationDetails();
     NotificationDetails platform = NotificationDetails(android: android, iOS: iOS);
     var jsonData = jsonEncode(data);
     await flutterLocalNotificationsPlugin.show(123, data.title, data.body, platform, payload: jsonData);
   }
 
-  static Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-    await Firebase.initializeApp();
+  Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+    showLog("firebaseMessagingBackgroundHandler message ===> ${message.data}");
+
+    // await Firebase.initializeApp();
+    // await initializeService(context1);
+    // await FirebaseMessaging.instance.getToken();
+    // final chatClient = StreamChat.of(context1).client;
+    final chatClient = StreamChatClient(StreamConfig.apikey);
+    try {
+      showLog("in background message received");
+
+      showStreamNotification(message, chatClient);
+    } catch (e) {
+      showLog(e.toString());
+    }
     // showLog('Handling a background message ${message.messageId}');
     // showSnackBar(title: "Notification", message: "Notification message");
   }
@@ -83,7 +131,6 @@ class NotificationResponseModel {
     return map;
   }
 }
-
 
 class PushNotificationModel {
   PushNotificationModel({this.title, this.body, this.data});
