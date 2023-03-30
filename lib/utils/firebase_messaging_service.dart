@@ -9,18 +9,24 @@ import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 import 'package:thia/utils/common_stream_io.dart';
 import 'package:thia/utils/utils.dart';
 
+import '../main.dart';
+
+FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+
 class FirebaseNotificationService {
   static FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
-  static FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
   BuildContext context1;
 
   FirebaseNotificationService({required this.context1});
 
   initializeService(BuildContext context) {
+    getStreamContext(context);
+
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
       flutterLocalNotificationsPlugin.resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()?.requestPermission();
-      final chatClient = StreamChat.of(context1).client;
+      final chatClient = streamChatClient!;
+      // final chatClient = StreamChat.of(context1).client;
       showLog("initializeService message ===> ${message.data}");
       if (message.data["sender"] == "stream.chat") {
         showStreamNotification(message, chatClient);
@@ -53,31 +59,6 @@ class FirebaseNotificationService {
     }
   }
 
-  static showStreamNotification(RemoteMessage message, StreamChatClient chatClient) async {
-    AndroidNotificationDetails android = const AndroidNotificationDetails(
-      'new_message',
-      'New message notifications channel',
-      priority: Priority.max,
-      importance: Importance.max,
-      icon: '@mipmap/ic_launcher',
-    );
-    DarwinNotificationDetails iOS = const DarwinNotificationDetails();
-    NotificationDetails platform = NotificationDetails(android: android, iOS: iOS);
-    final data = message.data;
-
-    if (data['type'] == 'message.new') {
-      final messageId = data['id'];
-      final response = await chatClient.getMessage(messageId);
-
-      flutterLocalNotificationsPlugin.show(
-        1,
-        'New message from ${response.message.user?.name} in ${response.channel?.name}',
-        response.message.text,
-        platform,
-      );
-    }
-  }
-
   static showNotification(PushNotificationModel data) async {
     AndroidNotificationDetails android = const AndroidNotificationDetails('thia_channel_id', 'thia_channel_name', channelDescription: 'thia_channel_description', priority: Priority.high, importance: Importance.max, icon: '@mipmap/ic_launcher');
     DarwinNotificationDetails iOS = const DarwinNotificationDetails();
@@ -85,25 +66,54 @@ class FirebaseNotificationService {
     var jsonData = jsonEncode(data);
     await flutterLocalNotificationsPlugin.show(123, data.title, data.body, platform, payload: jsonData);
   }
+}
 
-  Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-    showLog("firebaseMessagingBackgroundHandler message ===> ${message.data}");
+showStreamNotification(RemoteMessage message, StreamChatClient chatClient) async {
+  AndroidNotificationDetails android = const AndroidNotificationDetails(
+    'new_message',
+    'New message notifications channel',
+    priority: Priority.max,
+    importance: Importance.max,
+    icon: '@mipmap/ic_launcher',
+  );
+  DarwinNotificationDetails iOS = const DarwinNotificationDetails();
+  NotificationDetails platform = NotificationDetails(android: android, iOS: iOS);
+  final data = message.data;
 
-    // await Firebase.initializeApp();
-    // await initializeService(context1);
-    // await FirebaseMessaging.instance.getToken();
-    // final chatClient = StreamChat.of(context1).client;
-    final chatClient = StreamChatClient(StreamConfig.apikey);
-    try {
-      showLog("in background message received");
-
-      showStreamNotification(message, chatClient);
-    } catch (e) {
-      showLog(e.toString());
-    }
-    // showLog('Handling a background message ${message.messageId}');
-    // showSnackBar(title: "Notification", message: "Notification message");
+  if (data['type'] == 'message.new') {
+    final messageId = data['id'];
+    final response = await chatClient.getMessage(messageId);
+    showLog("notification from ===> ${((response.channel?.memberCount ?? 0) > 2) ? response.channel?.name : response.message.user?.name}");
+    // showLog("notification from ===> ${((response.channel?.memberCount ?? 0) > 2) ? response.channel?.name : response.channel?.createdBy?.extraData["name"]}");
+    flutterLocalNotificationsPlugin.show(
+      1,
+      'New message from ${response.message.user?.name} in ${((response.channel?.memberCount ?? 0) > 2) ? response.channel?.name : response.message.user?.name}',
+      response.message.text,
+      platform,
+    );
   }
+}
+
+Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  showLog("firebaseMessagingBackgroundHandler message ===> ${message.data}");
+
+  await Firebase.initializeApp();
+  // await initializeService(context1);
+  // await FirebaseMessaging.instance.getToken();
+  //TODO: somehow get context below and use that
+  // final chatClient = StreamChat.of(NavigationService.buildContext!).client;
+  final chatClient = streamChatClient!;
+  // final chatClient = getClient();
+  // final chatClient = StreamChatClient(StreamConfig.apikey);
+  try {
+    showLog("in background message received");
+
+    showStreamNotification(message, chatClient);
+  } catch (e) {
+    showLog(e.toString());
+  }
+  // showLog('Handling a background message ${message.messageId}');
+  // showSnackBar(title: "Notification", message: "Notification message");
 }
 
 class NotificationResponseModel {

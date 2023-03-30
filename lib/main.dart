@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -25,21 +26,12 @@ Future<void> main() async {
   await pref();
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  // FirebaseMessaging.onBackgroundMessage(FirebaseNotificationService(context1: NavigationService.navigatorKey.currentContext).firebaseMessagingBackgroundHandler);
+
   // await FirebaseNotificationService.initializeService();
+  FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
   final client = getClient();
-
-/*  String name = "name-1";
-  String userId = "id1";
-  String otherUserId = "id2";
-
-  await StreamApi.initUser(
-    client,
-    username: name,
-    urlImage: "https://png.pngtree.com/png-vector/20190710/ourmid/pngtree-user-vector-avatar-png-image_1541962.jpg",
-    id: userId,
-    token: getJwtToken(id: "id1", name: "name-1"),
-  );*/
   runApp(MyApp(client: client));
   await runZonedGuarded(() async {}, (error, stackTrace) {
     FirebaseCrashlytics.instance.recordError(error, stackTrace);
@@ -63,9 +55,13 @@ class MyApp extends StatelessWidget {
     return GetMaterialApp(
       initialBinding: AppBinding(),
       debugShowCheckedModeBanner: false,
+      navigatorKey: NavigationService.navigatorKey,
       // darkTheme: ThemeData(backgroundColor: AppColors.backgroundColor, brightness: Brightness.dark, canvasColor: AppColors.backgroundColor),
       themeMode: ThemeMode.light,
-
+      onInit: () {
+        NavigationService.buildContext = context;
+        streamChatClient = client;
+      },
       builder: (context, widget) => ResponsiveWrapper.builder(
         ClampingScrollWrapper.builder(
           context,
@@ -132,4 +128,9 @@ class MyApp extends StatelessWidget {
       home: const SplashScreen(),
     );
   }
+}
+
+class NavigationService {
+  static GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+  static BuildContext? buildContext;
 }

@@ -1,3 +1,5 @@
+import 'package:flutter/cupertino.dart';
+import 'package:googleapis/cloudbuild/v1.dart';
 import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 
 class StreamConfig {
@@ -62,6 +64,13 @@ class StreamApi {
 StreamChatClient getClient() {
   return StreamChatClient(StreamConfig.apikey, logLevel: Level.INFO);
 }
+
+getStreamContext(BuildContext context) {
+  streamChatClient = StreamChat.of(context).client;
+  // return streamChatClient!;
+}
+
+StreamChatClient? streamChatClient;
 
 // String getJwtToken({
 //   required String id,

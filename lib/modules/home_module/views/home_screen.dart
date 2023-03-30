@@ -20,7 +20,8 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  initUser() async {
+  initUser(context) async {
+    getStreamContext(context);
     kHomeController.classListLoading.value = true;
     await StreamApi.initUser(
       StreamChat.of(context).client,
@@ -41,7 +42,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     kHomeController.userData.value = LoginModelDataData.fromJson(getObject(PrefConstants.userDetails));
-    initUser();
+    initUser(context);
   }
 
   registerDevice(BuildContext context) {
@@ -56,6 +57,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     showLog(StreamChat.of(context).client.wsConnectionStatus);
+    showLog(NavigationService.buildContext!);
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.all(20).copyWith(bottom: 0, top: 40),
