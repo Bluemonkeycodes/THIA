@@ -5,7 +5,13 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:stream_chat_flutter/stream_chat_flutter.dart';
+import 'package:thia/modules/auth/model/login_model.dart';
+import 'package:thia/modules/chat_module/views/stream_chat_page.dart';
+import 'package:thia/modules/home_module/views/add_todo_screen.dart';
+import 'package:thia/modules/home_module/views/calender_screen.dart';
 import 'package:thia/utils/common_stream_io.dart';
 import 'package:thia/utils/utils.dart';
 
@@ -25,8 +31,9 @@ class FirebaseNotificationService {
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
       flutterLocalNotificationsPlugin.resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()?.requestPermission();
-      final chatClient = streamChatClient!;
-      // final chatClient = StreamChat.of(context1).client;
+      // final chatClient = streamChatClient!;
+
+      final chatClient = StreamChat.of(context1).client;
       showLog("initializeService message ===> ${message.data}");
       if (message.data["sender"] == "stream.chat") {
         showStreamNotification(message, chatClient);
@@ -43,7 +50,9 @@ class FirebaseNotificationService {
       }
     });
     FirebaseMessaging.onMessageOpenedApp.listen((event) {
-      showLog("tap ===> $event");
+      showLog("tap ===> ${event.data.toString()}");
+      Get.to(() => const CalenderScreen());
+      // Get.to(() => const ChannelListPage());
 
       ///Handle tap here event.data["id"]
     });
@@ -82,7 +91,16 @@ showStreamNotification(RemoteMessage message, StreamChatClient chatClient) async
 
   if (data['type'] == 'message.new') {
     final messageId = data['id'];
-    final response = await chatClient.getMessage(messageId);
+    final response = await chatClient.getMessage(messageId).onError((error, stackTrace) {
+      flutterLocalNotificationsPlugin.show(
+        1,
+        'New message received.',
+        "Tap to view",
+        platform,
+      );
+      if (error.runtimeType == StreamChatNetworkError) {}
+      return Future.error(error ?? Object());
+    });
     showLog("notification from ===> ${((response.channel?.memberCount ?? 0) > 2) ? response.channel?.name : response.message.user?.name}");
     // showLog("notification from ===> ${((response.channel?.memberCount ?? 0) > 2) ? response.channel?.name : response.channel?.createdBy?.extraData["name"]}");
     flutterLocalNotificationsPlugin.show(
@@ -94,17 +112,27 @@ showStreamNotification(RemoteMessage message, StreamChatClient chatClient) async
   }
 }
 
+@pragma('vm:entry-point')
 Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   showLog("firebaseMessagingBackgroundHandler message ===> ${message.data}");
 
   await Firebase.initializeApp();
   // await initializeService(context1);
-  // await FirebaseMessaging.instance.getToken();
+  // String userToken = await FirebaseMessaging.instance.getToken() ?? "";
+  await pref();
+  final GetStorage getPreference1 = GetStorage();
+
+  String userToken = getPreference1.read(PrefConstants.loginToken) ?? "";
   //TODO: somehow get context below and use that
   // final chatClient = StreamChat.of(NavigationService.buildContext!).client;
-  final chatClient = streamChatClient!;
+  // final chatClient = streamChatClient!;
   // final chatClient = getClient();
-  // final chatClient = StreamChatClient(StreamConfig.apikey);
+  final chatClient = StreamChatClient(StreamConfig.apikey);
+  chatClient.connectUser(
+    User(id: message.data["receiver_id"]),
+    userToken,
+    connectWebSocket: false,
+  );
   try {
     showLog("in background message received");
 
