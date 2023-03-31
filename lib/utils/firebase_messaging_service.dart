@@ -26,10 +26,10 @@ class FirebaseNotificationService {
   FirebaseNotificationService({required this.context1});
 
   initializeService(BuildContext context) {
+    flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
     getStreamContext(context);
 
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
       flutterLocalNotificationsPlugin.resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()?.requestPermission();
       // final chatClient = streamChatClient!;
 
@@ -49,6 +49,9 @@ class FirebaseNotificationService {
         showNotification(model);
       }
     });
+    // FirebaseMessaging.instance.getInitialMessage().then((value) {
+    //   showLog("tap ===> ${value.toString()}");
+    // });
     FirebaseMessaging.onMessageOpenedApp.listen((event) {
       showLog("tap ===> ${event.data.toString()}");
       Get.to(() => const CalenderScreen());
@@ -77,6 +80,17 @@ class FirebaseNotificationService {
   }
 }
 
+void notificationTapBackground(NotificationResponse notificationResponse) {
+  showLog('notification(${notificationResponse.id}) action tapped: '
+      '${notificationResponse.actionId} with'
+      ' payload: ${notificationResponse.payload}');
+
+  navigateFromNotification(notificationResponse);
+  if (notificationResponse.input?.isNotEmpty ?? false) {
+    showLog('notification action tapped with input: ${notificationResponse.input}');
+  }
+}
+
 showStreamNotification(RemoteMessage message, StreamChatClient chatClient) async {
   AndroidNotificationDetails android = const AndroidNotificationDetails(
     'new_message',
@@ -88,7 +102,14 @@ showStreamNotification(RemoteMessage message, StreamChatClient chatClient) async
   DarwinNotificationDetails iOS = const DarwinNotificationDetails();
   NotificationDetails platform = NotificationDetails(android: android, iOS: iOS);
   final data = message.data;
-
+  await flutterLocalNotificationsPlugin.initialize(
+    const InitializationSettings(android: AndroidInitializationSettings('@mipmap/ic_launcher'), iOS: DarwinInitializationSettings()),
+    onDidReceiveNotificationResponse: (NotificationResponse notificationResponse) {
+      showLog("payload ===> ${notificationResponse.payload}");
+      navigateFromNotification(notificationResponse);
+    },
+    onDidReceiveBackgroundNotificationResponse: notificationTapBackground,
+  );
   if (data['type'] == 'message.new') {
     final messageId = data['id'];
     final response = await chatClient.getMessage(messageId).onError((error, stackTrace) {
@@ -97,18 +118,71 @@ showStreamNotification(RemoteMessage message, StreamChatClient chatClient) async
         'New message received.',
         "Tap to view",
         platform,
+        payload: jsonEncode(data),
       );
       if (error.runtimeType == StreamChatNetworkError) {}
       return Future.error(error ?? Object());
     });
     showLog("notification from ===> ${((response.channel?.memberCount ?? 0) > 2) ? response.channel?.name : response.message.user?.name}");
-    // showLog("notification from ===> ${((response.channel?.memberCount ?? 0) > 2) ? response.channel?.name : response.channel?.createdBy?.extraData["name"]}");
     flutterLocalNotificationsPlugin.show(
       1,
       'New message from ${response.message.user?.name} in ${((response.channel?.memberCount ?? 0) > 2) ? response.channel?.name : response.message.user?.name}',
       response.message.text,
       platform,
+      payload: jsonEncode(data),
     );
+  }
+}
+
+Future<String> getUserToken() async {
+  final GetStorage getPreference1 = GetStorage();
+  await pref();
+  return getPreference1.read(PrefConstants.loginToken) ?? "";
+}
+
+navigateFromNotification(NotificationResponse notificationResponse) async {
+  showLog("notificationResponse ===> ${notificationResponse.payload}");
+
+  StreamChatClient chatClient = StreamChatClient(StreamConfig.apikey);
+  if (notificationResponse.payload != null) {
+    await chatClient.connectUser(
+      User(id: jsonDecode(notificationResponse.payload!)["receiver_id"]),
+      await getUserToken(),
+      connectWebSocket: false,
+    );
+    Get.to(() => const ChannelListPage());
+
+    /*https://chat.stream-io-api.com/channels/messaging/80-81?api_key=aw46bmah6fne&user_id=81&connection_id=63fde8b4-0a05-4328-0000-000000550d6c*/
+
+    /*https://chat.stream-io-api.com/channels/messaging/80-81/query?api_key=aw46bmah6fne&user_id=81&connection_id=63fde8b4-0a05-4328-0000-000000550d04*/
+
+    final response = await chatClient.getMessage(jsonDecode(notificationResponse.payload!)["channel_id"]);
+    // response.message.text;
+    // await StreamApi.createChannel(
+    //   chatClient,
+    //   type: "messaging",
+    //   name: response.message.id,
+    //   id: jsonDecode(notificationResponse.payload!)["channel_id"],
+    //   // image: (image?.isEmpty ?? false) ? kHomeController.getGroupPlaceHolder() : image,
+    //   // image: (image?.isEmpty ?? false) ? "https://www.pngkey.com/png/detail/950-9501315_katie-notopoulos-katienotopoulos-i-write-about-tech-user.png" : image,
+    //   // idMembers: userIdList,
+    // ).then(
+    //   (channel) async {
+    //     // await Future.delayed(const Duration(seconds: 1));
+    //     await StreamApi.watchChannel(chatClient, type: "messaging", id: jsonDecode(notificationResponse.payload!)["channel_id"]).then((value) async {
+    //       return await Future.delayed(const Duration(seconds: 1)).then((value) {
+    //         // hideProgressDialog();
+    //         return Get.to(() => StreamChannel(channel: channel, child: ChannelPage(channel: channel)));
+    //       });
+    //     });
+    //     // hideProgressDialog();
+    //   },
+    // );
+    ///
+    // Channel channel = Channel(chatClient, "messaging", jsonDecode(notificationResponse.payload!)["channel_id"]);
+    // await StreamApi.watchChannel(chatClient, type: "messaging", id: jsonDecode(notificationResponse.payload!)["channel_id"]).then((value) {
+    //   Get.to(() => StreamChannel(channel: value, child: ChannelPage(channel: value)));
+    // });
   }
 }
 
@@ -117,20 +191,10 @@ Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   showLog("firebaseMessagingBackgroundHandler message ===> ${message.data}");
 
   await Firebase.initializeApp();
-  // await initializeService(context1);
-  // String userToken = await FirebaseMessaging.instance.getToken() ?? "";
-  await pref();
-  final GetStorage getPreference1 = GetStorage();
-
-  String userToken = getPreference1.read(PrefConstants.loginToken) ?? "";
-  //TODO: somehow get context below and use that
-  // final chatClient = StreamChat.of(NavigationService.buildContext!).client;
-  // final chatClient = streamChatClient!;
-  // final chatClient = getClient();
   final chatClient = StreamChatClient(StreamConfig.apikey);
-  chatClient.connectUser(
+  await chatClient.connectUser(
     User(id: message.data["receiver_id"]),
-    userToken,
+    await getUserToken(),
     connectWebSocket: false,
   );
   try {

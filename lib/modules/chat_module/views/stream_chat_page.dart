@@ -108,33 +108,7 @@ class _ChannelPageState extends State<ChannelPage> {
       appBar: const StreamChannelHeader(),
       body: Column(
         children: <Widget>[
-          const Expanded(
-              child: StreamMessageListView(
-                  // messageBuilder: (p0, p1, p2, defaultMessageWidget) {
-                  //   return Row(
-                  //     mainAxisAlignment: MainAxisAlignment.end,
-                  //     children: [
-                  //       InkWell(
-                  //         onLongPress: () {
-                  //           if (defaultMessageWidget.onThreadTap != null) {
-                  //             defaultMessageWidget.onThreadTap!(p1.message);
-                  //           }
-                  //         },
-                  //         child: Container(
-                  //           alignment: Alignment.topRight,
-                  //           // width: 250,
-                  //           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 7),
-                  //           decoration: BoxDecoration(
-                  //             borderRadius: BorderRadius.circular(10).copyWith(bottomRight: const Radius.circular(0)),
-                  //             gradient: AppColors.purpleGradient,
-                  //           ),
-                  //           child: Text(p1.message.text ?? "", style: white14w500),
-                  //         ),
-                  //       ),
-                  //     ],
-                  //   );
-                  // },
-                  )),
+          const Expanded(child: StreamMessageListView()),
           StreamMessageInput(
             idleSendButton: sendButtonWidget(),
             activeSendButton: sendButtonWidget(),
