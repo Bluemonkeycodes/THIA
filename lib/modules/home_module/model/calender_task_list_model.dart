@@ -31,6 +31,7 @@ class TodoModel {
   bool? private;
   String? time;
   bool? isCompleted;
+  bool? late;
   String? createdBy;
   String? isSubtask;
 
@@ -46,6 +47,7 @@ class TodoModel {
     this.private,
     this.time,
     this.isCompleted,
+    this.late,
     this.createdBy,
     this.isSubtask,
   });
@@ -61,6 +63,7 @@ class TodoModel {
     private = json['private'];
     time = json['time']?.toString();
     isCompleted = json['isCompleted'];
+    late = json['late'];
     createdBy = json['createdBy']?.toString();
     isSubtask = json['isSubtask']?.toString();
   }
@@ -77,6 +80,7 @@ class TodoModel {
     data['private'] = private;
     data['time'] = time;
     data['isCompleted'] = isCompleted;
+    data['late'] = late;
     data['createdBy'] = createdBy;
     data['isSubtask'] = isSubtask;
     return data;

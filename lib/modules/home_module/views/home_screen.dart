@@ -56,7 +56,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    showLog(StreamChat.of(context).client.wsConnectionStatus);
+    showLog(getPreference.read(PrefConstants.loginToken) ?? "");
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.all(20).copyWith(bottom: 0, top: 40),

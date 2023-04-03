@@ -18,11 +18,15 @@ class _CalenderScreenState extends State<CalenderScreen> {
   @override
   void initState() {
     super.initState();
-    kHomeController.getCalenderTaskList(date: selectedDate.value.toIso8601String(), showLoader: false);
+
+    // kHomeController.getCalenderTaskList(date: selectedDate.value.toIso8601String(), showLoader: false);
+    kHomeController.getCalenderTaskList(date: DateTime(selectedDate.value.year, selectedDate.value.month, selectedDate.value.day).toIso8601String(), showLoader: false);
   }
 
   @override
   Widget build(BuildContext context) {
+    // showLog("selectedDate ===> ${(selectedDate.value.year)}-${selectedDate.value.month}-${selectedDate.value.day}T00:00:00.000000");
+    showLog("selectedDate ===> ${DateTime(selectedDate.value.year, selectedDate.value.month, selectedDate.value.day).toIso8601String()}");
     return Scaffold(
       appBar: GetAppBar(context, AppTexts.calendar),
       bottomNavigationBar: commonBottomBar(context, false, index: 3),
@@ -44,7 +48,11 @@ class _CalenderScreenState extends State<CalenderScreen> {
               showNavigationArrow: true,
               onSelectionChanged: (dateRangePickerSelectionChangedArgs) {
                 selectedDate.value = DateTime.parse(dateRangePickerSelectionChangedArgs.value.toString());
-                kHomeController.getCalenderTaskList(date: selectedDate.value.toIso8601String(), showLoader: false);
+                // kHomeController.getCalenderTaskList(date: selectedDate.value.toIso8601String(), showLoader: false);
+                kHomeController.getCalenderTaskList(
+                  date: DateTime(selectedDate.value.year, selectedDate.value.month, selectedDate.value.day).toIso8601String(),
+                  showLoader: false,
+                );
                 showLog("dateRangePickerSelectionChangedArgs ===> ${DateTime.parse(dateRangePickerSelectionChangedArgs.value.toString()).toIso8601String()}");
               },
               initialSelectedDate: DateTime.now(),

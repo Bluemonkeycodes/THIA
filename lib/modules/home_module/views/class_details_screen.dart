@@ -194,7 +194,7 @@ class _ClassDetailsScreenState extends State<ClassDetailsScreen> with SingleTick
                                             itemBuilder: (context, index) {
                                               return todoCard(
                                                 // subject: Course(),
-                                                data: kHomeController.userTodoList[index],
+                                                  data: kHomeController.userTodoList[index],
                                               );
                                             },
                                           )

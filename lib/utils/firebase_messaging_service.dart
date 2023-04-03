@@ -54,7 +54,7 @@ class FirebaseNotificationService {
     // });
     FirebaseMessaging.onMessageOpenedApp.listen((event) {
       showLog("tap ===> ${event.data.toString()}");
-      Get.to(() => const CalenderScreen());
+      // Get.to(() => const CalenderScreen());
       // Get.to(() => const ChannelListPage());
 
       ///Handle tap here event.data["id"]
