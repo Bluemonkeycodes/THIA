@@ -45,19 +45,26 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // StreamChatClient client = StreamChat.of(context).client;
-    //
-    // // FirebaseNotificationService.firebaseMessaging.onTokenRefresh.listen((token) {
-    // FirebaseNotificationService.firebaseMessaging.getToken().then((token) {
-    //   client.addDevice(token ?? "", PushProvider.firebase);
-    // });
-
     return GetMaterialApp(
       initialBinding: AppBinding(),
       debugShowCheckedModeBanner: false,
       navigatorKey: NavigationService.navigatorKey,
-      // darkTheme: ThemeData(backgroundColor: AppColors.backgroundColor, brightness: Brightness.dark, canvasColor: AppColors.backgroundColor),
+      // themeMode: ThemeMode.dark,
       themeMode: ThemeMode.light,
+      theme: ThemeData(
+        highlightColor: Colors.transparent,
+        splashColor: Colors.transparent,
+        fontFamily: GoogleFonts.inter().fontFamily,
+        progressIndicatorTheme: ProgressIndicatorThemeData(color: Platform.isAndroid ? AppColors.primaryColor : null),
+      ),
+      darkTheme: ThemeData(
+        highlightColor: Colors.transparent,
+        splashColor: Colors.transparent,
+        fontFamily: GoogleFonts.inter().fontFamily,
+        progressIndicatorTheme: ProgressIndicatorThemeData(color: Platform.isAndroid ? AppColors.primaryColor : null),
+        colorScheme: const ColorScheme.dark(background: AppColors.backgroundColor),
+
+      ),
       onInit: () {
         NavigationService.buildContext = context;
         streamChatClient = client;
@@ -119,12 +126,7 @@ class MyApp extends StatelessWidget {
         backgroundColor: AppColors.backgroundColor,
         background: Container(color: AppColors.backgroundColor),
       ),
-      theme: ThemeData(
-        highlightColor: Colors.transparent,
-        splashColor: Colors.transparent,
-        fontFamily: GoogleFonts.inter().fontFamily,
-        progressIndicatorTheme: ProgressIndicatorThemeData(color: Platform.isAndroid ? AppColors.primaryColor : null),
-      ),
+
       home: const SplashScreen(),
     );
   }

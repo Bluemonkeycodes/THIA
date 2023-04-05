@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 import 'package:thia/generated/assets.dart';
+import 'package:thia/modules/chat_module/views/group_detail_screen.dart';
 
 import '../../../utils/utils.dart';
 
@@ -104,8 +106,27 @@ class _ChannelPageState extends State<ChannelPage> {
 
   @override
   Widget build(BuildContext context) {
+    showLog("isGroup ===> ${widget.channel.isGroup}");
+    // widget.channel.queryMembers().then((value) {
+    //   showLog("members ===> ${value.members}");
+    // });
     return Scaffold(
-      appBar: const StreamChannelHeader(),
+      appBar: StreamChannelHeader(
+        onImageTap: () async {
+          if (widget.channel.isGroup) {
+
+
+            Get.to(() => GroupDetailScreen(
+              // title: widget.channel.name ?? "",
+              // image: widget.channel.image ?? "",
+              // members: members,
+              channel: widget.channel,
+            ));
+          } else {
+            showLog("Conversion is not Group.");
+          }
+        },
+      ),
       body: Column(
         children: <Widget>[
           const Expanded(child: StreamMessageListView()),

@@ -445,7 +445,7 @@ class HomeController extends GetxController {
 
   String getGroupPlaceHolder() {
     final random = Random();
-    showLog("random image ===> ${groupPlaceholderImageList[random.nextInt(groupPlaceholderImageList.length)]}");
+    // showLog("random image ===> ${groupPlaceholderImageList[random.nextInt(groupPlaceholderImageList.length)]}");
     return groupPlaceholderImageList[random.nextInt(groupPlaceholderImageList.length)];
   }
 }
