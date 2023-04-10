@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:stream_chat_flutter/stream_chat_flutter.dart';
-import 'package:thia/utils/firebase_messaging_service.dart';
-import 'package:thia/utils/social_login.dart';
 
 import '../../generated/assets.dart';
 import '../../utils/utils.dart';
@@ -20,7 +17,6 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-
     bool isLogin = getIsLogin();
     Future.delayed(const Duration(seconds: 3)).then((value) {
       if (isLogin) {

@@ -4,8 +4,10 @@ import 'dart:io';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -15,6 +17,7 @@ import 'package:thia/modules/splash/splash_screen.dart';
 import 'package:thia/utils/common_stream_io.dart';
 import 'package:thia/utils/firebase_messaging_service.dart';
 import 'package:thia/utils/utils.dart';
+import 'package:upgrader/upgrader.dart';
 
 final GetStorage getPreference = GetStorage();
 
@@ -27,12 +30,14 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   // FirebaseMessaging.onBackgroundMessage(FirebaseNotificationService(context1: NavigationService.navigatorKey.currentContext).firebaseMessagingBackgroundHandler);
-
+  if (kDebugMode) {
+    await Upgrader.clearSavedSettings();
+  }
   // await FirebaseNotificationService.initializeService();
   FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
   final client = getClient();
-  runApp(MyApp(client: client));
+  runApp(Phoenix(child: MyApp(client: client)));
   await runZonedGuarded(() async {}, (error, stackTrace) {
     FirebaseCrashlytics.instance.recordError(error, stackTrace);
   });
@@ -50,7 +55,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       navigatorKey: NavigationService.navigatorKey,
       // themeMode: ThemeMode.dark,
-      themeMode: ThemeMode.light,
+      themeMode: getDarkMode() ? ThemeMode.dark : ThemeMode.light,
       theme: ThemeData(
         highlightColor: Colors.transparent,
         splashColor: Colors.transparent,
@@ -62,8 +67,7 @@ class MyApp extends StatelessWidget {
         splashColor: Colors.transparent,
         fontFamily: GoogleFonts.inter().fontFamily,
         progressIndicatorTheme: ProgressIndicatorThemeData(color: Platform.isAndroid ? AppColors.primaryColor : null),
-        colorScheme: const ColorScheme.dark(background: AppColors.backgroundColor),
-
+        colorScheme: ColorScheme.dark(background: AppColors.backgroundColor),
       ),
       onInit: () {
         NavigationService.buildContext = context;
@@ -76,30 +80,23 @@ class MyApp extends StatelessWidget {
             client: client,
             child: widget,
             streamChatThemeData: StreamChatThemeData(
+              brightness: getDarkMode() ? Brightness.dark : Brightness.light,
               channelListHeaderTheme: StreamChannelListHeaderThemeData(
-                avatarTheme: StreamAvatarThemeData(
-                  borderRadius: BorderRadius.circular(50),
-                ),
+                avatarTheme: StreamAvatarThemeData(borderRadius: BorderRadius.circular(50)),
                 titleStyle: black18bold,
+                color: AppColors.white,
               ),
-              textTheme: StreamTextTheme.light(
-                title: black18bold,
-                body: black12w500,
-              ),
+              textTheme: getDarkMode() ? StreamTextTheme.dark(title: white18bold, body: white12w500) : StreamTextTheme.light(title: black18bold, body: black12w500),
               channelPreviewTheme: StreamChannelPreviewThemeData(
                 subtitleStyle: black12w500,
                 titleStyle: black18bold,
                 unreadCounterColor: Colors.greenAccent,
                 lastMessageAtStyle: grey12w500,
-                avatarTheme: StreamAvatarThemeData(
-                  borderRadius: BorderRadius.circular(50),
-                ),
+                avatarTheme: StreamAvatarThemeData(borderRadius: BorderRadius.circular(50)),
               ),
               channelHeaderTheme: StreamChannelHeaderThemeData(
                 titleStyle: black18bold,
-                avatarTheme: StreamAvatarThemeData(
-                  borderRadius: BorderRadius.circular(50),
-                ),
+                avatarTheme: StreamAvatarThemeData(borderRadius: BorderRadius.circular(50)),
                 subtitleStyle: grey12w500,
               ),
               otherMessageTheme: StreamMessageThemeData(

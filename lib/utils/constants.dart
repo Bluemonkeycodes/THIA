@@ -18,4 +18,6 @@ class PrefConstants {
   static const String userDetails = "userDetails";
   static const String id = "id";
   static const String googleApiKey = "AIzaSyB2anv4CejkZOc503QihkH5E3pjf6GkU9E";
+  static const String primaryColor = "primaryColor";
+  static const String isDarkMode = "isDarkMode";
 }

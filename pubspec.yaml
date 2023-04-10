@@ -27,10 +27,14 @@ dependencies:
   syncfusion_flutter_datepicker: ^20.4.44
   lottie: ^2.2.0
   share_plus: ^4.5.0
+  upgrader: ^6.2.0
 
-#  google_sign_in: ^5.4.3
+  #  to restart app
+  flutter_phoenix: ^1.1.1
+
+  #  google_sign_in: ^5.4.3
   stream_chat_flutter: ^5.2.0
-#  dart_jsonwebtoken: ^2.6.4
+  #  dart_jsonwebtoken: ^2.6.4
 
   googleapis: ^10.0.0
   extension_google_sign_in_as_googleapis_auth: ^2.0.7

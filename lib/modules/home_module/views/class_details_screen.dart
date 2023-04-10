@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:googleapis/classroom/v1.dart';
 import 'package:thia/generated/assets.dart';
+import 'package:thia/modules/home_module/model/class_user_model.dart';
 import 'package:thia/utils/utils.dart';
-
-import '../model/class_user_model.dart';
 
 class ClassDetailsScreen extends StatefulWidget {
   const ClassDetailsScreen({Key? key, this.data}) : super(key: key);
@@ -69,7 +68,7 @@ class _ClassDetailsScreenState extends State<ClassDetailsScreen> with SingleTick
                           Container(
                             height: 45,
                             decoration: BoxDecoration(
-                              color: AppColors.borderColor.withOpacity(0.2),
+                              color: AppColors.primaryColor.withOpacity(0.2),
                               borderRadius: BorderRadius.circular(25.0),
                             ),
                             child: TabBar(
@@ -80,7 +79,7 @@ class _ClassDetailsScreenState extends State<ClassDetailsScreen> with SingleTick
                               // give the indicator a decoration (color and border radius)
                               indicator: BoxDecoration(
                                 borderRadius: BorderRadius.circular(25.0),
-                                color: AppColors.borderColor,
+                                color: AppColors.primaryColor,
                               ),
                               labelColor: Colors.white,
                               labelStyle: white18w500,
@@ -194,7 +193,7 @@ class _ClassDetailsScreenState extends State<ClassDetailsScreen> with SingleTick
                                             itemBuilder: (context, index) {
                                               return todoCard(
                                                 // subject: Course(),
-                                                  data: kHomeController.userTodoList[index],
+                                                data: kHomeController.userTodoList[index],
                                               );
                                             },
                                           )
@@ -205,58 +204,6 @@ class _ClassDetailsScreenState extends State<ClassDetailsScreen> with SingleTick
                             });
               });
         });
-  }
-
-  Widget userTile(ClassUserModelData data) {
-    return Padding(
-      padding: const EdgeInsets.all(10),
-      child: Row(
-        children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(50),
-            child: Container(
-              height: 65,
-              width: 65,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(50),
-                // border: Border.all(color: AppColors.buttonColor, width: 3),
-              ),
-              child: getNetworkImage(
-                url: data.profileUrl ?? "",
-                borderRadius: 50,
-                fit: BoxFit.cover,
-              ),
-            ),
-          ),
-          widthBox(),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text("${data.firstname ?? ""} ${data.lastname ?? ""}", style: black18bold),
-                heightBox(),
-              ],
-            ),
-          ),
-          IconButton(
-            onPressed: () async {
-              hideKeyBoard(context);
-              await chatButtonClick(
-                context,
-                // name: "${data.firstname ?? ""} ${data.lastname ?? ""}",
-                id: "${(kHomeController.userData.value.userId ?? "").toString()}-${(data.userID ?? " ").toString()}",
-                // image: data.profileUrl ?? "",
-                userIdList: [
-                  (kHomeController.userData.value.userId ?? "").toString(),
-                  (data.userID ?? " ").toString(),
-                ],
-              );
-            },
-            icon: const Icon(Icons.messenger_outline_outlined, color: AppColors.primaryColor),
-          )
-        ],
-      ),
-    );
   }
 
   Widget topSection() {
@@ -321,7 +268,7 @@ class _ClassDetailsScreenState extends State<ClassDetailsScreen> with SingleTick
                   padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                   decoration: BoxDecoration(
                     border: Border.all(
-                      color: (index == kHomeController.selectedTabIndex.value) ? AppColors.borderColor : AppColors.grey,
+                      color: (index == kHomeController.selectedTabIndex.value) ? AppColors.primaryColor : AppColors.grey,
                     ),
                     borderRadius: BorderRadius.circular(20),
                   ),
@@ -329,7 +276,7 @@ class _ClassDetailsScreenState extends State<ClassDetailsScreen> with SingleTick
                     children: [
                       Image.asset(
                         image,
-                        color: (index == kHomeController.selectedTabIndex.value) ? AppColors.borderColor : AppColors.grey,
+                        color: (index == kHomeController.selectedTabIndex.value) ? AppColors.primaryColor : AppColors.grey,
                         scale: 3.5,
                       ),
                       heightBox(),
@@ -339,7 +286,7 @@ class _ClassDetailsScreenState extends State<ClassDetailsScreen> with SingleTick
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                         style: grey14w500.copyWith(
-                          color: (index == kHomeController.selectedTabIndex.value) ? AppColors.borderColor : AppColors.grey,
+                          color: (index == kHomeController.selectedTabIndex.value) ? AppColors.primaryColor : AppColors.grey,
                           fontWeight: (index == kHomeController.selectedTabIndex.value) ? FontWeight.w600 : FontWeight.w500,
                         ),
                       ),
@@ -353,7 +300,7 @@ class _ClassDetailsScreenState extends State<ClassDetailsScreen> with SingleTick
                     child: Container(
                       height: 8,
                       width: 8,
-                      decoration: const BoxDecoration(
+                      decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         color: AppColors.red,
                       ),
@@ -363,5 +310,57 @@ class _ClassDetailsScreenState extends State<ClassDetailsScreen> with SingleTick
             ),
           );
         });
+  }
+
+  Widget userTile(ClassUserModelData data) {
+    return Padding(
+      padding: const EdgeInsets.all(10),
+      child: Row(
+        children: [
+          ClipRRect(
+            borderRadius: BorderRadius.circular(50),
+            child: Container(
+              height: 65,
+              width: 65,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(50),
+                // border: Border.all(color: AppColors.buttonColor, width: 3),
+              ),
+              child: getNetworkImage(
+                url: data.profileUrl ?? "",
+                borderRadius: 50,
+                fit: BoxFit.cover,
+              ),
+            ),
+          ),
+          widthBox(),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text("${data.firstname ?? ""} ${data.lastname ?? ""}", style: black18bold),
+                heightBox(),
+              ],
+            ),
+          ),
+          IconButton(
+            onPressed: () async {
+              hideKeyBoard(context);
+              await chatButtonClick(
+                context,
+                // name: "${data.firstname ?? ""} ${data.lastname ?? ""}",
+                id: "${(kHomeController.userData.value.userId ?? "").toString()}-${(data.userID ?? " ").toString()}",
+                // image: data.profileUrl ?? "",
+                userIdList: [
+                  (kHomeController.userData.value.userId ?? "").toString(),
+                  (data.userID ?? " ").toString(),
+                ],
+              );
+            },
+            icon: Icon(Icons.messenger_outline_outlined, color: AppColors.primaryColor),
+          )
+        ],
+      ),
+    );
   }
 }

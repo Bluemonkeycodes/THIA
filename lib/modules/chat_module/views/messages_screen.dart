@@ -48,7 +48,7 @@ class _MessagesScreenState extends State<MessagesScreen> {
               Container(
                 padding: const EdgeInsets.all(7),
                 decoration: BoxDecoration(gradient: AppColors.purpleGradient, borderRadius: BorderRadius.circular(10)),
-                child: const Icon(
+                child: Icon(
                   Icons.photo_outlined,
                   color: AppColors.white,
                 ),

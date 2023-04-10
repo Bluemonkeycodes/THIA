@@ -129,7 +129,7 @@ class _AddTodoScreenState extends State<AddTodoScreen> {
                                     iconSize: 22,
                                     elevation: 16,
                                     icon: Icon(Icons.keyboard_arrow_down_outlined, color: AppColors.grey),
-                                    style: const TextStyle(fontSize: 15.0, fontWeight: FontWeight.w500, color: AppColors.black),
+                                    style: TextStyle(fontSize: 15.0, fontWeight: FontWeight.w500, color: AppColors.black),
                                     underline: Container(color: Colors.transparent),
                                     onChanged: (Course? newValue) {
                                       kHomeController.selectedCourse.value = newValue ?? Course();
@@ -184,7 +184,7 @@ class _AddTodoScreenState extends State<AddTodoScreen> {
                         builder: (context, child) {
                           return Theme(
                             data: Theme.of(context).copyWith(
-                              colorScheme: const ColorScheme.light(primary: AppColors.primaryColor),
+                              colorScheme: ColorScheme.light(primary: AppColors.primaryColor),
                             ),
                             child: child!,
                           );
@@ -373,7 +373,7 @@ class _AddTodoScreenState extends State<AddTodoScreen> {
                     onPressed: () {
                       kHomeController.subTodoTaskList.add(TaskDetailModelDataSubTask());
                     },
-                    icon: const Icon(
+                    icon: Icon(
                       Icons.add_circle_outline_sharp,
                       color: AppColors.primaryColor,
                     ))
@@ -381,62 +381,61 @@ class _AddTodoScreenState extends State<AddTodoScreen> {
             ),
             heightBox(),
             StreamBuilder<Object>(
-              stream: kHomeController.subTodoTaskList.stream,
-              builder: (context, snapshot) {
-                return ListView.builder(
-                    itemCount: kHomeController.subTodoTaskList.length,
-                    shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
-                    itemBuilder: (context, index) {
-                      return Padding(
-                        padding: const EdgeInsets.only(bottom: 16.0),
-                        child: Row(
-                          children: [
-                            Expanded(
-                              child: GetTextField(
-                                hintText: "Enter sub todo detail",
-                                isReadOnly: kHomeController.subTodoTaskList[index].iscomplete == true ? true : false,
-                                textEditingController: TextEditingController(text: kHomeController.subTodoTaskList[index].name),
-                                validationFunction: (val) {
-                                  return emptyFieldValidation(val);
-                                },
-                                onChangedFunction: (val) {
-                                  kHomeController.subTodoTaskList[index].setName(val);
-                                },
-                                outlineInputBorder: border,
-                              ),
-                            ),
-                            const SizedBox(
-                              width: 16.0,
-                            ),
-                            IconButton(
-                                onPressed: () {
-                                  if (kHomeController.subTodoTaskList[index].iscomplete != true) {
-                                    if (kHomeController.subTodoTaskList[index].subtaskid != null) {
-                                      kHomeController.callDeleteSubTodoApi(kHomeController.subTodoTaskList[index].subtaskid.toString(), () {
-                                        kHomeController.subTodoTaskList.remove(kHomeController.subTodoTaskList[index]);
-                                      });
-                                    } else {
-                                      kHomeController.subTodoTaskList.remove(kHomeController.subTodoTaskList[index]);
-                                    }
-                                  }
-                                },
-                                padding: EdgeInsets.zero,
-                                iconSize: 28.0,
-                                constraints: const BoxConstraints(
-                                  maxHeight: 28.0,
-                                  maxWidth: 28.0,
+                stream: kHomeController.subTodoTaskList.stream,
+                builder: (context, snapshot) {
+                  return ListView.builder(
+                      itemCount: kHomeController.subTodoTaskList.length,
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                      itemBuilder: (context, index) {
+                        return Padding(
+                          padding: const EdgeInsets.only(bottom: 16.0),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: GetTextField(
+                                  hintText: "Enter sub todo detail",
+                                  isReadOnly: kHomeController.subTodoTaskList[index].iscomplete == true ? true : false,
+                                  textEditingController: TextEditingController(text: kHomeController.subTodoTaskList[index].name),
+                                  validationFunction: (val) {
+                                    return emptyFieldValidation(val);
+                                  },
+                                  onChangedFunction: (val) {
+                                    kHomeController.subTodoTaskList[index].setName(val);
+                                  },
+                                  outlineInputBorder: border,
                                 ),
-                                icon: Icon(
-                                  kHomeController.subTodoTaskList[index].iscomplete == true ? Icons.check_circle : Icons.delete_outline_outlined,
-                                  color: kHomeController.subTodoTaskList[index].iscomplete == true ? Colors.green : AppColors.red,
-                                )),
-                          ],
-                        ),
-                      );
-                    });
-              }
-            ),
+                              ),
+                              const SizedBox(
+                                width: 16.0,
+                              ),
+                              IconButton(
+                                  onPressed: () {
+                                    if (kHomeController.subTodoTaskList[index].iscomplete != true) {
+                                      if (kHomeController.subTodoTaskList[index].subtaskid != null) {
+                                        kHomeController.callDeleteSubTodoApi(kHomeController.subTodoTaskList[index].subtaskid.toString(), () {
+                                          kHomeController.subTodoTaskList.remove(kHomeController.subTodoTaskList[index]);
+                                        });
+                                      } else {
+                                        kHomeController.subTodoTaskList.remove(kHomeController.subTodoTaskList[index]);
+                                      }
+                                    }
+                                  },
+                                  padding: EdgeInsets.zero,
+                                  iconSize: 28.0,
+                                  constraints: const BoxConstraints(
+                                    maxHeight: 28.0,
+                                    maxWidth: 28.0,
+                                  ),
+                                  icon: Icon(
+                                    kHomeController.subTodoTaskList[index].iscomplete == true ? Icons.check_circle : Icons.delete_outline_outlined,
+                                    color: kHomeController.subTodoTaskList[index].iscomplete == true ? Colors.green : AppColors.red,
+                                  )),
+                            ],
+                          ),
+                        );
+                      });
+                }),
             // GetTextField(hintText: AppTexts.selectEstimatedTime, title: AppTexts.estimatedTime, outlineInputBorder: border),
             heightBox(height: 45),
             GetButton(

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 import 'package:thia/generated/assets.dart';
+import 'package:thia/modules/chat_module/views/create_group_screen.dart';
 import 'package:thia/modules/chat_module/views/group_detail_screen.dart';
 
 import '../../../utils/utils.dart';
@@ -36,6 +37,13 @@ class _ChannelListPageState extends State<ChannelListPage> {
     showLog("current user ===> ${StreamChat.of(context).currentUser}");
     return Scaffold(
       appBar: GetAppBar(context, AppTexts.chat),
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: AppColors.primaryColor,
+        onPressed: () {
+          Get.to(() => const CreatedGroupScreen());
+        },
+        child: Icon(Icons.add, color: AppColors.white, size: 30),
+      ),
       body: RefreshIndicator(
         color: AppColors.primaryColor,
         onRefresh: () async {
@@ -114,14 +122,12 @@ class _ChannelPageState extends State<ChannelPage> {
       appBar: StreamChannelHeader(
         onImageTap: () async {
           if (widget.channel.isGroup) {
-
-
             Get.to(() => GroupDetailScreen(
-              // title: widget.channel.name ?? "",
-              // image: widget.channel.image ?? "",
-              // members: members,
-              channel: widget.channel,
-            ));
+                  // title: widget.channel.name ?? "",
+                  // image: widget.channel.image ?? "",
+                  // members: members,
+                  channel: widget.channel,
+                ));
           } else {
             showLog("Conversion is not Group.");
           }

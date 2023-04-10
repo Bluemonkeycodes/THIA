@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:googleapis/classroom/v1.dart';
@@ -7,6 +9,7 @@ import 'package:thia/modules/home_module/views/all_todo_screen.dart';
 import 'package:thia/modules/profile_module/views/profile_screen.dart';
 import 'package:thia/utils/common_stream_io.dart';
 import 'package:thia/utils/social_login.dart';
+import 'package:upgrader/upgrader.dart';
 
 import '../../../utils/firebase_messaging_service.dart';
 import '../../../utils/utils.dart';
@@ -57,35 +60,41 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     showLog(getPreference.read(PrefConstants.loginToken) ?? "");
-    return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.all(20).copyWith(bottom: 0, top: 40),
-        child: Column(
-          children: [
-            topSection(),
-            heightBox(height: 30),
-            prioritySection(),
-            heightBox(),
-            Expanded(
-              child: RefreshIndicator(
-                color: AppColors.primaryColor,
-                onRefresh: () async {
-                  kHomeController.classListLoading.value = true;
-                  await kHomeController.getPriorityCount(showLoader: false);
-                  await kHomeController.getClassList();
-                  kHomeController.classListLoading.value = false;
-                },
-                child: StreamBuilder<Object>(
-                    stream: kHomeController.classListLoading.stream,
-                    builder: (context, snapshot) {
-                      return kHomeController.classListLoading.value ? const Center(child: CircularProgressIndicator()) : cardSection();
-                    }),
-              ),
-            ),
-          ],
-        ),
+    return UpgradeAlert(
+      upgrader: Upgrader(
+        // debugDisplayAlways: true,
+        dialogStyle: Platform.isIOS ? UpgradeDialogStyle.cupertino : UpgradeDialogStyle.material,
       ),
-      bottomNavigationBar: commonBottomBar(context, false),
+      child: Scaffold(
+        body: Padding(
+          padding: const EdgeInsets.all(20).copyWith(bottom: 0, top: 40),
+          child: Column(
+            children: [
+              topSection(),
+              heightBox(height: 30),
+              prioritySection(),
+              heightBox(),
+              Expanded(
+                child: RefreshIndicator(
+                  color: AppColors.primaryColor,
+                  onRefresh: () async {
+                    kHomeController.classListLoading.value = true;
+                    await kHomeController.getPriorityCount(showLoader: false);
+                    await kHomeController.getClassList();
+                    kHomeController.classListLoading.value = false;
+                  },
+                  child: StreamBuilder<Object>(
+                      stream: kHomeController.classListLoading.stream,
+                      builder: (context, snapshot) {
+                        return kHomeController.classListLoading.value ? const Center(child: CircularProgressIndicator()) : cardSection();
+                      }),
+                ),
+              ),
+            ],
+          ),
+        ),
+        bottomNavigationBar: commonBottomBar(context, false),
+      ),
     );
   }
 

@@ -46,4 +46,12 @@ class AppTexts {
   static const String noClassWork = "No ClassWork";
   static const String noClass = "No Class";
   static const String allTodo = "All Todos";
+  static const String changeTheme = "Change Theme";
+  static const String apply = "Apply";
+  static const String createGroup = "Create Group";
+  static const String enterGroupName = "Enter group name";
+  static const String enterUserName = "Enter user name";
+  static const String searchUserName = "Search user name";
+  static const String groupName = "Group name";
+  static const String selectUser = "Select Users";
 }

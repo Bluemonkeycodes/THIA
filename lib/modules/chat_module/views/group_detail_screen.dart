@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:stream_chat_flutter/stream_chat_flutter.dart';
+import 'package:thia/modules/chat_module/views/change_image_screen.dart';
 import 'package:thia/utils/utils.dart';
 
 class GroupDetailScreen extends StatefulWidget {
@@ -49,8 +50,8 @@ class _GroupDetailScreenState extends State<GroupDetailScreen> {
     });
   }
 
-  changeImage() async {
-    await widget.channel.updateImage("https://play-lh.googleusercontent.com/6UgEjh8Xuts4nwdWzTnWH8QtLuHqRMUB7dp24JYVE2xcYzq4HA8hFfcAbU-R-PC_9uA1").whenComplete(() {
+  changeImage(String url) async {
+    await widget.channel.updateImage(url).whenComplete(() {
       setState(() {
         widget.channel.watch();
       });
@@ -81,20 +82,24 @@ class _GroupDetailScreenState extends State<GroupDetailScreen> {
                     fit: BoxFit.cover,
                   ),
                 ),
-                // Positioned(
-                //   bottom: 0,
-                //   right: 0,
-                //   child: InkWell(
-                //     onTap: () {
-                //       changeImage();
-                //     },
-                //     child: Container(
-                //       padding: const EdgeInsets.all(5),
-                //       decoration: const BoxDecoration(color: AppColors.primaryColor, shape: BoxShape.circle),
-                //       child: const Icon(Icons.edit_outlined, color: AppColors.white),
-                //     ),
-                //   ),
-                // ),
+                Positioned(
+                  bottom: 0,
+                  right: 0,
+                  child: InkWell(
+                    onTap: () {
+                      Get.to(() => ChangeImageScreen(image: widget.channel.image ?? ""))?.then((value) {
+                        showLog("return image ===> $value");
+                        changeImage(value.toString());
+                        // imageUrl.value = value.toString();
+                      });
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.all(5),
+                      decoration: BoxDecoration(color: AppColors.primaryColor, shape: BoxShape.circle),
+                      child: Icon(Icons.edit_outlined, color: AppColors.white),
+                    ),
+                  ),
+                ),
               ],
             ),
           ),
@@ -119,9 +124,9 @@ class _GroupDetailScreenState extends State<GroupDetailScreen> {
                       },
                       value: isMuted.value,
                       activeColor: AppColors.primaryColor,
-                      activeTrackColor: AppColors.lightPrimaryColor,
+                      activeTrackColor: AppColors.primaryColor.withOpacity(0.6),
                       inactiveThumbColor: AppColors.primaryColor,
-                      inactiveTrackColor: AppColors.lightPrimaryColor,
+                      inactiveTrackColor: AppColors.primaryColor.withOpacity(0.6),
                     );
                   }),
             ],
@@ -144,7 +149,7 @@ class _GroupDetailScreenState extends State<GroupDetailScreen> {
                   separatorBuilder: (context, index) => heightBox(),
                   itemCount: members.length,
                   itemBuilder: (context, index) {
-                    return userTile(members[index]);
+                    return userDetailsTile(members[index]);
                   },
                 )
         ],
@@ -152,7 +157,7 @@ class _GroupDetailScreenState extends State<GroupDetailScreen> {
     );
   }
 
-  Widget userTile(Member data) {
+  Widget userDetailsTile(Member data) {
     return Padding(
       padding: const EdgeInsets.all(10),
       child: Row(
@@ -198,7 +203,7 @@ class _GroupDetailScreenState extends State<GroupDetailScreen> {
                   ],
                 );
               },
-              icon: const Icon(Icons.messenger_outline_outlined, color: AppColors.primaryColor),
+              icon: Icon(Icons.messenger_outline_outlined, color: AppColors.primaryColor),
             )
         ],
       ),

@@ -16,6 +16,8 @@ PreferredSize GetAppBar(BuildContext context, String title,
     bool? isCenterTitle,
     Widget? child,
     Color? bgColor,
+    Color? leadingColor,
+    TextStyle? titleStyle,
     ShapeBorder? shape}) {
   return PreferredSize(
     preferredSize: Size.fromHeight(height ?? 60.0),
@@ -35,12 +37,12 @@ PreferredSize GetAppBar(BuildContext context, String title,
             Get.back();
           }
         },
-        child: leadingIcon ?? const Icon(Icons.arrow_back_ios, color: AppColors.black, size: 20),
+        child: leadingIcon ?? Icon(Icons.arrow_back_ios, color: leadingColor ?? AppColors.black, size: 20),
       ),
       title: child ??
           Container(
             margin: const EdgeInsets.only(left: 10, top: 15, bottom: 15, right: 10),
-            child: Text(title, textAlign: TextAlign.center, style: black20w600),
+            child: Text(title, textAlign: TextAlign.center, style: titleStyle ?? black20w600),
           ),
       actions: actionWidgets,
       // actions: actions != null ? actions : null,

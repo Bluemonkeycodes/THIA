@@ -146,7 +146,7 @@ Widget customToolTip({String? text}) {
     message: text ?? "",
     triggerMode: TooltipTriggerMode.tap,
     showDuration: const Duration(seconds: 30),
-    child: const Icon(Icons.help_outline, color: AppColors.primaryColor, size: 20),
+    child: Icon(Icons.help_outline, color: AppColors.primaryColor, size: 20),
   );
 }
 
@@ -400,7 +400,7 @@ commonAlertDialog({
                     decoration: BoxDecoration(
                       color: AppColors.primaryColor,
                       shape: BoxShape.circle,
-                      border: Border.all(color: AppColors.blue.withOpacity(0.2)),
+                      border: Border.all(color: AppColors.primaryColor.withOpacity(0.2)),
                     ),
                     //TODO: uncomment below
                     // child: Image.asset(Assets.iconsBlueLogo, fit: BoxFit.scaleDown, color: AppColors.white, height: 75, width: 75),
@@ -434,7 +434,7 @@ Widget bottomNavigationBarItem({
           children: [
             Icon(
               iconData,
-              color: iconColor ?? AppColors.borderColor,
+              color: iconColor ?? AppColors.primaryColor,
             ),
             if (showRedDot == true)
               Align(
@@ -442,7 +442,7 @@ Widget bottomNavigationBarItem({
                 child: Container(
                   height: 10,
                   width: 10,
-                  decoration: const BoxDecoration(color: AppColors.red, shape: BoxShape.circle),
+                  decoration: BoxDecoration(color: AppColors.red, shape: BoxShape.circle),
                 ),
               ),
           ],
@@ -466,15 +466,16 @@ Widget classRoomCard(BuildContext context, Course? data) {
     child: Container(
       padding: const EdgeInsets.all(15),
       decoration: BoxDecoration(
-        color: AppColors.borderColor.withOpacity(0.1),
+        // color: AppColors.primaryColor.withOpacity(0.1),
+        color: AppColors.primaryColor.withOpacity(0.1),
         borderRadius: BorderRadius.circular(35),
-        border: Border.all(color: AppColors.borderColor),
+        border: Border.all(color: AppColors.primaryColor),
       ),
       child: Row(
         children: [
           // Image.asset(Assets.imagesCardImage, scale: 3.5),
           Container(
-            decoration: BoxDecoration(color: AppColors.lightPrimaryColor, borderRadius: BorderRadius.circular(50)),
+            decoration: BoxDecoration(color: AppColors.primaryColor.withOpacity(0.6), borderRadius: BorderRadius.circular(50)),
             child: getNetworkImage(
               // url: "https://i.imgur.com/30L5oye.png",
               url: image,
@@ -496,7 +497,7 @@ Widget classRoomCard(BuildContext context, Course? data) {
                   style: black18w600.copyWith(fontWeight: FontWeight.w700),
                 ),
                 // heightBox(height: 5),
-                const Divider(color: AppColors.borderColor, thickness: 1.3),
+                Divider(color: AppColors.primaryColor, thickness: 1.3),
                 // heightBox(height: 5),
                 Row(
                   children: [
@@ -527,7 +528,7 @@ Widget classRoomCard(BuildContext context, Course? data) {
                         padding: const EdgeInsets.all(8.0),
                         child: Icon(
                           Icons.chat_bubble_outline,
-                          color: data?.teacherFolder == null ? AppColors.borderColor : AppColors.grey,
+                          color: data?.teacherFolder == null ? AppColors.primaryColor : AppColors.grey,
                         ),
                       ),
                     ),
@@ -548,6 +549,7 @@ Future<void> chatButtonClick(
   required String id,
   String? image,
   required List<String> userIdList,
+  bool? removeRoute,
 }) async {
   showProgressDialog();
   final client = StreamChat.of(context).client;
@@ -566,7 +568,11 @@ Future<void> chatButtonClick(
       await StreamApi.watchChannel(client, type: "messaging", id: id).then((value) async {
         return await Future.delayed(const Duration(seconds: 1)).then((value) {
           hideProgressDialog();
-          return Get.to(() => StreamChannel(channel: channel, child: ChannelPage(channel: channel)));
+          if (removeRoute ?? false) {
+            return Get.off(() => StreamChannel(channel: channel, child: ChannelPage(channel: channel)));
+          } else {
+            return Get.to(() => StreamChannel(channel: channel, child: ChannelPage(channel: channel)));
+          }
         });
       });
       hideProgressDialog();
@@ -641,7 +647,7 @@ Widget assignmentCard({
       if (showPriorityBar ?? false)
         Container(
           height: 10,
-          decoration: const BoxDecoration(color: AppColors.red, borderRadius: BorderRadius.only(topRight: Radius.circular(15), topLeft: Radius.circular(15))),
+          decoration: BoxDecoration(color: AppColors.red, borderRadius: BorderRadius.only(topRight: Radius.circular(15), topLeft: Radius.circular(15))),
         ),
     ],
   );
@@ -786,16 +792,14 @@ Widget todoCard({
                           : const SizedBox();
                     }),
 
-
               if (data?.late == true) heightBox(),
 
               if (data?.late == true)
                 tile(
                   title: "Over Due",
                   desc: "",
-                  titleStyle: red12w500.copyWith(fontSize: 16, fontWeight: FontWeight.w600,color: AppColors.yellow),
+                  titleStyle: red12w500.copyWith(fontSize: 16, fontWeight: FontWeight.w600, color: AppColors.yellow),
                 ),
-
             ],
           ),
         ),
@@ -864,7 +868,7 @@ Widget tile({
                     // subject: subject,
                   ));
             },
-            child: const Icon(
+            child: Icon(
               Icons.add_circle_outline_sharp,
               color: AppColors.white,
               size: 24,
@@ -905,8 +909,8 @@ Widget commonBottomBar(BuildContext context, bool isFromDetails, {Course? subjec
                   iconData: Icons.chat_bubble_outline,
                   name: AppTexts.chat,
                   showRedDot: count.value > 0 ? true : false,
-                  iconColor: subject?.teacherFolder == null ? AppColors.borderColor : AppColors.grey,
-                  textStyle: primary16w500.copyWith(color: subject?.teacherFolder == null ? AppColors.borderColor : AppColors.grey),
+                  iconColor: subject?.teacherFolder == null ? AppColors.primaryColor : AppColors.grey,
+                  textStyle: primary16w500.copyWith(color: subject?.teacherFolder == null ? AppColors.primaryColor : AppColors.grey),
                   onTap: () async {
                     if (index != 1) {
                       if (subject?.teacherFolder == null) {

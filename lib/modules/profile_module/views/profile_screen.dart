@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:stream_chat_flutter/stream_chat_flutter.dart' as stream;
 import 'package:thia/generated/assets.dart';
 import 'package:thia/modules/auth/views/login_screen.dart';
+import 'package:thia/modules/profile_module/views/change_theme_screen.dart';
 import 'package:thia/utils/social_login.dart';
 import 'package:thia/utils/utils.dart';
 
@@ -86,7 +87,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
           Divider(color: AppColors.black.withOpacity(0.1), thickness: 1.5),
           heightBox(),
           // tile1(title: AppTexts.notification, icon: CupertinoIcons.bell),
-          // tile1(title: AppTexts.theme, icon: CupertinoIcons.sparkles),
+          tile1(
+              title: AppTexts.theme,
+              icon: CupertinoIcons.sparkles,
+              onTap: () {
+                Get.to(() => const ChangeThemeScreen());
+              }),
           tile1(
               title: AppTexts.rateUs,
               icon: CupertinoIcons.star,
