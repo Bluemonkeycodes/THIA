@@ -122,6 +122,7 @@ class _ChannelPageState extends State<ChannelPage> {
       appBar: StreamChannelHeader(
         onImageTap: () async {
           if (widget.channel.isGroup) {
+            hideKeyBoard(context);
             Get.to(() => GroupDetailScreen(
                   // title: widget.channel.name ?? "",
                   // image: widget.channel.image ?? "",

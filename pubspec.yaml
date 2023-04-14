@@ -33,7 +33,7 @@ dependencies:
   flutter_phoenix: ^1.1.1
 
   #  google_sign_in: ^5.4.3
-  stream_chat_flutter: ^5.2.0
+  stream_chat_flutter: ^5.3.0
   #  dart_jsonwebtoken: ^2.6.4
 
   googleapis: ^10.0.0

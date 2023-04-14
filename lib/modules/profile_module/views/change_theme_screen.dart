@@ -125,7 +125,7 @@ class _ChangeThemeScreenState extends State<ChangeThemeScreen> {
     return Container(
       padding: const EdgeInsets.all(10),
       child: ListView.separated(
-        itemCount: 5,
+        itemCount: 2,
         shrinkWrap: true,
         primary: false,
         separatorBuilder: (context, index) => heightBox(height: 25),
@@ -156,7 +156,7 @@ class _ChangeThemeScreenState extends State<ChangeThemeScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        "Lorem Ipsum is simply dummy text of the printing...",
+                        "Math",
                         maxLines: 3,
                         overflow: TextOverflow.ellipsis,
                         style: black18w600.copyWith(fontWeight: FontWeight.w700, color: darkLightIndex.value == 1 ? blackColor : whiteColor),
@@ -166,7 +166,7 @@ class _ChangeThemeScreenState extends State<ChangeThemeScreen> {
                         children: [
                           Expanded(
                             child: Text(
-                              "John Deo",
+                              "John Doe",
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                               style: grey14w500.copyWith(

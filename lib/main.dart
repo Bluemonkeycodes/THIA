@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
@@ -60,13 +59,13 @@ class MyApp extends StatelessWidget {
         highlightColor: Colors.transparent,
         splashColor: Colors.transparent,
         fontFamily: GoogleFonts.inter().fontFamily,
-        progressIndicatorTheme: ProgressIndicatorThemeData(color: Platform.isAndroid ? AppColors.primaryColor : null),
+        progressIndicatorTheme: ProgressIndicatorThemeData(color: AppColors.primaryColor),
       ),
       darkTheme: ThemeData(
         highlightColor: Colors.transparent,
         splashColor: Colors.transparent,
         fontFamily: GoogleFonts.inter().fontFamily,
-        progressIndicatorTheme: ProgressIndicatorThemeData(color: Platform.isAndroid ? AppColors.primaryColor : null),
+        progressIndicatorTheme: ProgressIndicatorThemeData(color: AppColors.primaryColor),
         colorScheme: ColorScheme.dark(background: AppColors.backgroundColor),
       ),
       onInit: () {
@@ -79,35 +78,7 @@ class MyApp extends StatelessWidget {
           StreamChat(
             client: client,
             child: widget,
-            streamChatThemeData: StreamChatThemeData(
-              brightness: getDarkMode() ? Brightness.dark : Brightness.light,
-              channelListHeaderTheme: StreamChannelListHeaderThemeData(
-                avatarTheme: StreamAvatarThemeData(borderRadius: BorderRadius.circular(50)),
-                titleStyle: black18bold,
-                color: AppColors.white,
-              ),
-              textTheme: getDarkMode() ? StreamTextTheme.dark(title: white18bold, body: white12w500) : StreamTextTheme.light(title: black18bold, body: black12w500),
-              channelPreviewTheme: StreamChannelPreviewThemeData(
-                subtitleStyle: black12w500,
-                titleStyle: black18bold,
-                unreadCounterColor: Colors.greenAccent,
-                lastMessageAtStyle: grey12w500,
-                avatarTheme: StreamAvatarThemeData(borderRadius: BorderRadius.circular(50)),
-              ),
-              channelHeaderTheme: StreamChannelHeaderThemeData(
-                titleStyle: black18bold,
-                avatarTheme: StreamAvatarThemeData(borderRadius: BorderRadius.circular(50)),
-                subtitleStyle: grey12w500,
-              ),
-              otherMessageTheme: StreamMessageThemeData(
-                messageBackgroundColor: AppColors.white,
-                messageTextStyle: black16w500,
-              ),
-              ownMessageTheme: StreamMessageThemeData(
-                messageBackgroundColor: AppColors.primaryColor,
-                messageTextStyle: white16w500,
-              ),
-            ),
+            streamChatThemeData: streamChatTheme,
           ),
         ),
         maxWidth: 1200,
@@ -123,11 +94,36 @@ class MyApp extends StatelessWidget {
         backgroundColor: AppColors.backgroundColor,
         background: Container(color: AppColors.backgroundColor),
       ),
-
       home: const SplashScreen(),
     );
   }
 }
+
+StreamChatThemeData get streamChatTheme => StreamChatThemeData(
+      brightness: getDarkMode() ? Brightness.dark : Brightness.light,
+      // colorTheme: StreamColorTheme.dark(appBg: AppColors.backgroundColor),
+      channelListHeaderTheme: StreamChannelListHeaderThemeData(
+        avatarTheme: StreamAvatarThemeData(borderRadius: BorderRadius.circular(50)),
+        titleStyle: black18bold,
+        color: AppColors.white,
+      ),
+      textTheme: getDarkMode() ? StreamTextTheme.dark(title: white18bold, body: white12w500) : StreamTextTheme.light(title: black18bold, body: black12w500),
+      channelPreviewTheme: StreamChannelPreviewThemeData(
+        subtitleStyle: black12w500,
+        titleStyle: black18bold,
+        unreadCounterColor: Colors.greenAccent,
+        lastMessageAtStyle: grey12w500,
+        avatarTheme: StreamAvatarThemeData(borderRadius: BorderRadius.circular(50)),
+      ),
+      messageInputTheme: StreamMessageInputThemeData(inputTextStyle: black14w500),
+      channelHeaderTheme: StreamChannelHeaderThemeData(
+        titleStyle: black18bold,
+        avatarTheme: StreamAvatarThemeData(borderRadius: BorderRadius.circular(50)),
+        subtitleStyle: grey12w500,
+      ),
+      otherMessageTheme: StreamMessageThemeData(messageBackgroundColor: AppColors.white, messageTextStyle: black16w500),
+      ownMessageTheme: StreamMessageThemeData(messageBackgroundColor: AppColors.primaryColor, messageTextStyle: white16w500),
+    );
 
 class NavigationService {
   static GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();

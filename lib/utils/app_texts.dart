@@ -53,5 +53,9 @@ class AppTexts {
   static const String enterUserName = "Enter user name";
   static const String searchUserName = "Search user name";
   static const String groupName = "Group name";
+  static const String editGroupName = "Edit group name";
   static const String selectUser = "Select Users";
+  static const String addMembers = "Add Members";
+  static const String invite = "Invite";
+  static const String leaveGroup = "Leave Group";
 }

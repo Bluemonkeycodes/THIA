@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 
 import '../../../services/api_service_call.dart';
 import '../../../utils/utils.dart';
@@ -6,6 +7,23 @@ import '../../home_module/model/class_user_model.dart';
 import '../model/get_all_user_model.dart';
 
 class ChatController extends GetxController {
+  Future changeGroupName(Channel channel, String name) async {
+    await channel.updateName(name).whenComplete(() {
+      channel.watch();
+    });
+  }
+
+  Future changeGroupImage(Channel channel, String url) async {
+    await channel.updateImage(url).whenComplete(() {
+      channel.watch();
+    });
+  }
+
+  Future leaveGroup(Channel channel, List<String> memberIds) async {
+    await channel.removeMembers(memberIds);
+    // channel.watch();
+  }
+
   Rx<GetAllUserModel> getAllUserModel = GetAllUserModel().obs;
   RxList<ClassUserModelData> allUserList = <ClassUserModelData>[].obs;
 

@@ -121,13 +121,14 @@ class _CreatedGroupScreenState extends State<CreatedGroupScreen> {
               title: AppTexts.searchUserName,
               outlineInputBorder: border,
               textEditingController: searchController,
+              preFixIcon: Icon(Icons.search, color: AppColors.grey),
               onChangedFunction: (String val) {
                 onSearchTextChanged(val);
               },
             ),
             heightBox(height: 15),
-            Text(AppTexts.selectUser, style: black16w500),
-            heightBox(),
+            // Text(AppTexts.selectUser, style: black16w500),
+            // heightBox(),
             StreamBuilder<Object>(
                 stream: searchUserList.stream,
                 builder: (context, snapshot) {
@@ -137,7 +138,10 @@ class _CreatedGroupScreenState extends State<CreatedGroupScreen> {
                     primary: false,
                     separatorBuilder: (context, index) => Divider(endIndent: 10, indent: 10, color: AppColors.black.withOpacity(0.35)),
                     itemBuilder: (context, index) {
-                      return userTile(searchUserList[index]);
+                      return checkUserTile(
+                        data: searchUserList[index],
+                        selectedUserList: selectedUserList,
+                      );
                     },
                   );
                 }),
@@ -148,10 +152,13 @@ class _CreatedGroupScreenState extends State<CreatedGroupScreen> {
   }
 
   onSearchTextChanged(String text) async {
+    searchUserList.clear();
     if (text.isEmpty) {
+      kChatController.allUserList.forEach((element) {
+        searchUserList.add(element);
+      });
       return;
     }
-    searchUserList.clear();
 
     kChatController.allUserList.forEach((userDetail) {
       if ((userDetail.firstname ?? "").toLowerCase().contains(text.toLowerCase()) || (userDetail.lastname ?? "").toLowerCase().contains(text.toLowerCase())) {
@@ -159,70 +166,73 @@ class _CreatedGroupScreenState extends State<CreatedGroupScreen> {
       }
     });
   }
+}
 
-  Widget userTile(ClassUserModelData data) {
-    return StreamBuilder<Object>(
-        stream: selectedUserList.stream,
-        builder: (context, snapshot) {
-          return InkWell(
-            onTap: () {
-              if (selectedUserList.contains(data)) {
-                selectedUserList.remove(data);
-              } else {
-                selectedUserList.add(data);
-              }
-            },
-            child: Padding(
-              padding: const EdgeInsets.all(10),
-              child: Row(
-                children: [
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(50),
-                    child: Container(
-                      height: 65,
-                      width: 65,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(50),
-                        // border: Border.all(color: AppColors.buttonColor, width: 3),
-                      ),
-                      child: getNetworkImage(
-                        url: data.profileUrl ?? "",
-                        borderRadius: 50,
-                        fit: BoxFit.cover,
-                      ),
+Widget checkUserTile({
+  required ClassUserModelData data,
+  required RxList<ClassUserModelData> selectedUserList,
+}) {
+  return StreamBuilder<Object>(
+      stream: selectedUserList.stream,
+      builder: (context, snapshot) {
+        return InkWell(
+          onTap: () {
+            if (selectedUserList.contains(data)) {
+              selectedUserList.remove(data);
+            } else {
+              selectedUserList.add(data);
+            }
+          },
+          child: Padding(
+            padding: const EdgeInsets.all(10),
+            child: Row(
+              children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(50),
+                  child: Container(
+                    height: 65,
+                    width: 65,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(50),
+                      // border: Border.all(color: AppColors.buttonColor, width: 3),
+                    ),
+                    child: getNetworkImage(
+                      url: data.profileUrl ?? "",
+                      borderRadius: 50,
+                      fit: BoxFit.cover,
                     ),
                   ),
-                  widthBox(),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text("${data.firstname ?? ""} ${data.lastname ?? ""}", style: black18bold),
-                        heightBox(),
-                      ],
-                    ),
+                ),
+                widthBox(),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text("${data.firstname ?? ""} ${data.lastname ?? ""}", style: black18bold),
+                      heightBox(),
+                    ],
                   ),
-                  Checkbox(
-                    materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                    value: selectedUserList.contains(data),
-                    onChanged: (val) {
-                      if (selectedUserList.contains(data)) {
-                        selectedUserList.remove(data);
-                      } else {
-                        selectedUserList.add(data);
-                      }
-                    },
-                    splashRadius: 10.0,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
-                    side: MaterialStateBorderSide.resolveWith((states) => BorderSide(width: 1, color: AppColors.primaryColor)),
-                    checkColor: AppColors.primaryColor,
-                    activeColor: Colors.transparent,
-                    hoverColor: AppColors.primaryColor,
-                  )
-                ],
-              ),
+                ),
+                Checkbox(
+                  materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                  value: selectedUserList.contains(data),
+                  onChanged: (val) {
+                    if (selectedUserList.contains(data)) {
+                      selectedUserList.remove(data);
+                    } else {
+                      selectedUserList.add(data);
+                    }
+                  },
+                  splashRadius: 10.0,
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+                  side: MaterialStateBorderSide.resolveWith((states) => BorderSide(width: 1, color: AppColors.primaryColor)),
+                  checkColor: AppColors.primaryColor,
+                  activeColor: Colors.transparent,
+                  hoverColor: AppColors.primaryColor,
+                )
+              ],
             ),
-          );
-        });
-  }
+          ),
+        );
+      });
 }
