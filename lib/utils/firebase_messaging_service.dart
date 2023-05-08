@@ -2,16 +2,12 @@ import 'dart:convert';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:stream_chat_flutter/stream_chat_flutter.dart';
-import 'package:thia/modules/auth/model/login_model.dart';
 import 'package:thia/modules/chat_module/views/stream_chat_page.dart';
-import 'package:thia/modules/home_module/views/add_todo_screen.dart';
-import 'package:thia/modules/home_module/views/calender_screen.dart';
 import 'package:thia/utils/common_stream_io.dart';
 import 'package:thia/utils/utils.dart';
 

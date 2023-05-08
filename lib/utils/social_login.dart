@@ -127,7 +127,17 @@ googleAuth(BuildContext context) async {
           showProgressDialog(loaderColor: AppColors.white);
           // loginSuccess();
           Api().call(
-            params: {"firstname": user?.displayName ?? "", "lastname": "", "email": user?.email ?? "", "phonenumber": user?.phoneNumber ?? "", "profileUrl": user?.photoURL ?? "", "usertypeid": 1, "googleID": user?.uid ?? "", "active": 1},
+            params: {
+              "firstname": user?.displayName ?? "",
+              "lastname": "",
+              "email": user?.email ?? "",
+              "phonenumber": user?.phoneNumber ?? "",
+              "profileUrl": user?.photoURL ?? "",
+              "usertypeid": 1,
+              "googleID": user?.uid ?? "",
+              "active": 1,
+              "fcmtoken": getFcmToken(),
+            },
             loaderColor: AppColors.white,
             url: ApiConfig.login,
             success: (Map<String, dynamic> response) async {

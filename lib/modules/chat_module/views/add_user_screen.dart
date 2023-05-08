@@ -1,3 +1,4 @@
+import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:stream_chat_flutter/stream_chat_flutter.dart';
@@ -32,6 +33,57 @@ class _AddUserScreenState extends State<AddUserScreen> {
     });
   }
 
+  String? _linkMessage;
+  FirebaseDynamicLinks dynamicLinks = FirebaseDynamicLinks.instance;
+
+  final String dynamicLink = 'https://example/helloworld';
+  // final String link = 'https://flutterfiretests.page.link/MEGs';
+
+  Future<String> createDynamicLink(bool short) async {
+    // final parameters = DynamicLinkParameters(
+    //   uriPrefix: 'https://thia.page.link',
+    //   link: Uri.parse('https://test/welcome?userId=1'),
+    //   androidParameters: const AndroidParameters(packageName: "com.app.thia"),
+    //   iosParameters: const IOSParameters(bundleId: "com.app.thia", appStoreId: '295288564239'),
+    // );
+    // // var dynamicUrl = await parameters.buildUrl();
+    // final shortLink = parameters.link;
+    // // final shortLink = await parameters.buildShortLink();
+    // final shortUrl = shortLink.path;
+    const baseUrl = "https://thia.page.link";
+    final DynamicLinkParameters parameters = DynamicLinkParameters(
+      uriPrefix: baseUrl,
+      // longDynamicLink: Uri.parse(
+      //   '$baseUrl?efr=0&ibi=io.flutter.plugins.firebase.dynamiclinksexample&apn=io.flutter.plugins.firebase.dynamiclinksexample&imv=0&amv=0&link=https%3A%2F%2Fexample%2Fhelloworld&ofl=https://ofl-example.com',
+      // ),
+      // link: Uri.parse(dynamicLink),
+      link: Uri.parse("https://test/welcome?userId=1"),
+      navigationInfoParameters: const NavigationInfoParameters(forcedRedirectEnabled: true),
+      androidParameters: const AndroidParameters(
+        packageName: 'com.app.thia',
+        // minimumVersion: 0,
+      ),
+      iosParameters: const IOSParameters(
+        bundleId: 'com.app.thia',
+        // minimumVersion: '0',
+      ),
+    );
+
+    Uri url;
+    if (short) {
+      final ShortDynamicLink shortLink = await dynamicLinks.buildShortLink(parameters);
+      url = shortLink.shortUrl;
+    } else {
+      url = await dynamicLinks.buildLink(parameters);
+    }
+
+    setState(() {
+      _linkMessage = url.toString();
+    });
+    showLog("Url ===> $_linkMessage");
+    return _linkMessage.toString();
+  }
+
   @override
   void initState() {
     super.initState();
@@ -55,21 +107,12 @@ class _AddUserScreenState extends State<AddUserScreen> {
           hideKeyBoard(context);
           List<String> users = selectedUserList.map((element) => (element.userID ?? 0).toString()).toList();
           if (widget.isFromInvite == true) {
-            await widget.channel.inviteMembers(users).then((value) {
-              widget.channel.watch();
-              Get.back();
-              Get.back();
-            });
-
-            // final client = StreamChat.of(context).client;
-            // final invite = client.channel("messaging", id: widget.channel.id ?? "", extraData: {
-            //   "name": widget.channel.name ?? "",
-            //   "members": members,
-            //   "invites": users,
+            // await widget.channel.inviteMembers(users).then((value) {
+            //   widget.channel.watch();
+            //   Get.back();
+            //   Get.back();
             // });
-            // await invite.create().then((value) {
-            //   showLog("value ===> ${value.members}");
-            // });
+            await createDynamicLink(true);
           } else {
             if (selectedUserList.isNotEmpty) {
               await widget.channel.addMembers(users).then((value) {

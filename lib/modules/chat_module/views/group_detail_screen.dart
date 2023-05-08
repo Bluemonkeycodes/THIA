@@ -65,17 +65,17 @@ class _GroupDetailScreenState extends State<GroupDetailScreen> {
       appBar: GetAppBar(
         context,
         widget.channel.name ?? "",
-        // actionWidgets: [
-        //   InkWell(
-        //     onTap: () {
-        //       Get.to(() => AddUserScreen(channel: widget.channel, isFromInvite: true));
-        //     },
-        //     child: Padding(
-        //       padding: const EdgeInsets.all(18),
-        //       child: Text(AppTexts.invite, style: primary16w600),
-        //     ),
-        //   ),
-        // ],
+        actionWidgets: [
+          InkWell(
+            onTap: () {
+              Get.to(() => AddUserScreen(channel: widget.channel, isFromInvite: true));
+            },
+            child: Padding(
+              padding: const EdgeInsets.all(18),
+              child: Text(AppTexts.invite, style: primary16w600),
+            ),
+          ),
+        ],
       ),
       bottomNavigationBar: GetButton(
         gradient: AppColors.purpleGradient,

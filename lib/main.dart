@@ -32,6 +32,13 @@ Future<void> main() async {
   if (kDebugMode) {
     await Upgrader.clearSavedSettings();
   }
+  if (!isNotEmptyString(getFcmToken())) {
+    FirebaseNotificationService.firebaseMessaging.getToken().then((String? token) {
+      assert(token != null);
+      showLog("FCM-TOKEN $token");
+      setFcmToken(token!);
+    });
+  }
   // await FirebaseNotificationService.initializeService();
   FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
