@@ -29,19 +29,14 @@ class FirebaseNotificationService {
       flutterLocalNotificationsPlugin.resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()?.requestPermission();
       // final chatClient = streamChatClient!;
 
-      final chatClient = StreamChat.of(context1).client;
-      showLog("initializeService message ===> ${message.data}");
+      showLog("initializeService message ===> $message");
       if (message.data["sender"] == "stream.chat") {
+        final chatClient = StreamChat.of(context1).client;
         showStreamNotification(message, chatClient);
-      } else if (message.notification != null) {
-        PushNotificationModel model = PushNotificationModel();
-        model.title = message.notification!.title;
-        model.body = message.notification!.body;
-        showNotification(model);
       } else {
         PushNotificationModel model = PushNotificationModel();
-        model.title = message.data["title"];
-        model.body = message.data["body"];
+        model.title = message.notification?.title ?? "";
+        model.body = message.notification?.body ?? "";
         showNotification(model);
       }
     });
@@ -50,7 +45,6 @@ class FirebaseNotificationService {
     // });
     FirebaseMessaging.onMessageOpenedApp.listen((event) {
       showLog("tap ===> ${event.data.toString()}");
-      // Get.to(() => const CalenderScreen());
       // Get.to(() => const ChannelListPage());
 
       ///Handle tap here event.data["id"]
@@ -67,12 +61,42 @@ class FirebaseNotificationService {
     }
   }
 
+  // static showNotification(PushNotificationModel data) async {
+  //   AndroidNotificationDetails android = const AndroidNotificationDetails('thia_channel_id', 'thia_channel_name', channelDescription: 'thia_channel_description', priority: Priority.high, importance: Importance.max, icon: '@mipmap/ic_launcher');
+  //   DarwinNotificationDetails iOS = const DarwinNotificationDetails();
+  //   NotificationDetails platform = NotificationDetails(android: android, iOS: iOS);
+  //   var jsonData = jsonEncode(data);
+  //   await flutterLocalNotificationsPlugin.show(123, data.title, data.body, platform, payload: jsonData);
+  // }
   static showNotification(PushNotificationModel data) async {
-    AndroidNotificationDetails android = const AndroidNotificationDetails('thia_channel_id', 'thia_channel_name', channelDescription: 'thia_channel_description', priority: Priority.high, importance: Importance.max, icon: '@mipmap/ic_launcher');
+    AndroidNotificationDetails android = const AndroidNotificationDetails(
+      'new_message',
+      'New message notifications channel',
+      priority: Priority.max,
+      importance: Importance.max,
+      icon: '@mipmap/ic_launcher',
+    );
     DarwinNotificationDetails iOS = const DarwinNotificationDetails();
     NotificationDetails platform = NotificationDetails(android: android, iOS: iOS);
-    var jsonData = jsonEncode(data);
-    await flutterLocalNotificationsPlugin.show(123, data.title, data.body, platform, payload: jsonData);
+    // final data = message.data;
+    await flutterLocalNotificationsPlugin.initialize(
+      const InitializationSettings(
+        android: AndroidInitializationSettings('@mipmap/ic_launcher'),
+        iOS: DarwinInitializationSettings(),
+      ),
+      onDidReceiveNotificationResponse: (NotificationResponse notificationResponse) {
+        showLog("payload ===> ${notificationResponse.payload}");
+        navigateFromNotification(notificationResponse);
+      },
+      onDidReceiveBackgroundNotificationResponse: notificationTapBackground,
+    );
+    flutterLocalNotificationsPlugin.show(
+      1,
+      data.title ?? "",
+      data.body ?? "",
+      platform,
+      payload: jsonEncode(data),
+    );
   }
 }
 
@@ -163,6 +187,7 @@ navigateFromNotification(NotificationResponse notificationResponse) async {
     //   // image: (image?.isEmpty ?? false) ? "https://www.pngkey.com/png/detail/950-9501315_katie-notopoulos-katienotopoulos-i-write-about-tech-user.png" : image,
     //   // idMembers: userIdList,
     // ).then(
+
     //   (channel) async {
     //     // await Future.delayed(const Duration(seconds: 1));
     //     await StreamApi.watchChannel(chatClient, type: "messaging", id: jsonDecode(notificationResponse.payload!)["channel_id"]).then((value) async {
@@ -193,6 +218,7 @@ Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
     await getUserToken(),
     connectWebSocket: false,
   );
+
   try {
     showLog("in background message received");
 
@@ -279,6 +305,7 @@ class PushNotificationData {
     map['title'] = title;
     map['description'] = description;
     map['url'] = url;
+
     map['image'] = image;
     map['createdat'] = createdat;
     return map;

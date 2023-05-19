@@ -59,7 +59,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    showLog(getPreference.read(PrefConstants.loginToken) ?? "");
+    showLog("FCM token ===> ${getFcmToken() ?? " "}");
+    showLog("token ===> ${getPreference.read(PrefConstants.loginToken) ?? " "}");
+
     return UpgradeAlert(
       upgrader: Upgrader(
         // debugDisplayAlways: true,

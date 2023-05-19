@@ -1,9 +1,11 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 import 'package:thia/generated/assets.dart';
 import 'package:thia/modules/chat_module/views/create_group_screen.dart';
 import 'package:thia/modules/chat_module/views/group_detail_screen.dart';
+import 'package:thia/modules/chat_module/views/notification_screen.dart';
 
 import '../../../utils/utils.dart';
 
@@ -36,7 +38,18 @@ class _ChannelListPageState extends State<ChannelListPage> {
     // showLog("current user ===> ${context1.currentUser}");
     showLog("current user ===> ${StreamChat.of(context).currentUser}");
     return Scaffold(
-      appBar: GetAppBar(context, AppTexts.chat),
+      appBar: GetAppBar(
+        context,
+        AppTexts.chat,
+        actionWidgets: [
+          IconButton(
+            onPressed: () {
+              Get.to(() => const NotificationScreen());
+            },
+            icon: Icon(CupertinoIcons.bell, color: AppColors.black, size: 22),
+          ),
+        ],
+      ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: AppColors.primaryColor,
         onPressed: () {

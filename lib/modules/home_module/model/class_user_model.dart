@@ -15,6 +15,7 @@ class ClassUserModelData {
   "usertypeid": 1,
   "profileUrl": "hjhjhjhj",
   "googleID": "103"
+  "fcmtoken": ""
 }
 */
 
@@ -29,6 +30,7 @@ class ClassUserModelData {
   int? usertypeid;
   String? profileUrl;
   String? googleID;
+  String? fcmtoken;
 
   ClassUserModelData({
     this.userID,
@@ -42,6 +44,7 @@ class ClassUserModelData {
     this.usertypeid,
     this.profileUrl,
     this.googleID,
+    this.fcmtoken,
   });
   ClassUserModelData.fromJson(Map<String, dynamic> json) {
     userID = json['userID']?.toInt();
@@ -55,6 +58,7 @@ class ClassUserModelData {
     usertypeid = json['usertypeid']?.toInt();
     profileUrl = json['profileUrl']?.toString();
     googleID = json['googleID']?.toString();
+    fcmtoken = json['fcmtoken']?.toString();
   }
   Map<String, dynamic> toJson() {
     final data = <String, dynamic>{};
@@ -69,6 +73,7 @@ class ClassUserModelData {
     data['usertypeid'] = usertypeid;
     data['profileUrl'] = profileUrl;
     data['googleID'] = googleID;
+    data['fcmtoken'] = fcmtoken;
     return data;
   }
 }

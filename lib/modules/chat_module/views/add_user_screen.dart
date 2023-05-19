@@ -1,4 +1,3 @@
-import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:stream_chat_flutter/stream_chat_flutter.dart';
@@ -18,7 +17,10 @@ class AddUserScreen extends StatefulWidget {
 
 class _AddUserScreenState extends State<AddUserScreen> {
   final searchController = TextEditingController();
-  OutlineInputBorder border = OutlineInputBorder(borderSide: BorderSide(color: AppColors.black.withOpacity(0.1)), borderRadius: BorderRadius.circular(15.0));
+  OutlineInputBorder border = OutlineInputBorder(
+    borderSide: BorderSide(color: AppColors.black.withOpacity(0.1)),
+    borderRadius: BorderRadius.circular(15.0),
+  );
 
   RxList<ClassUserModelData> selectedUserList = <ClassUserModelData>[].obs;
   RxList<ClassUserModelData> searchUserList = <ClassUserModelData>[].obs;
@@ -33,56 +35,57 @@ class _AddUserScreenState extends State<AddUserScreen> {
     });
   }
 
-  String? _linkMessage;
-  FirebaseDynamicLinks dynamicLinks = FirebaseDynamicLinks.instance;
-
-  final String dynamicLink = 'https://example/helloworld';
-  // final String link = 'https://flutterfiretests.page.link/MEGs';
-
-  Future<String> createDynamicLink(bool short) async {
-    // final parameters = DynamicLinkParameters(
-    //   uriPrefix: 'https://thia.page.link',
-    //   link: Uri.parse('https://test/welcome?userId=1'),
-    //   androidParameters: const AndroidParameters(packageName: "com.app.thia"),
-    //   iosParameters: const IOSParameters(bundleId: "com.app.thia", appStoreId: '295288564239'),
-    // );
-    // // var dynamicUrl = await parameters.buildUrl();
-    // final shortLink = parameters.link;
-    // // final shortLink = await parameters.buildShortLink();
-    // final shortUrl = shortLink.path;
-    const baseUrl = "https://thia.page.link";
-    final DynamicLinkParameters parameters = DynamicLinkParameters(
-      uriPrefix: baseUrl,
-      // longDynamicLink: Uri.parse(
-      //   '$baseUrl?efr=0&ibi=io.flutter.plugins.firebase.dynamiclinksexample&apn=io.flutter.plugins.firebase.dynamiclinksexample&imv=0&amv=0&link=https%3A%2F%2Fexample%2Fhelloworld&ofl=https://ofl-example.com',
-      // ),
-      // link: Uri.parse(dynamicLink),
-      link: Uri.parse("https://test/welcome?userId=1"),
-      navigationInfoParameters: const NavigationInfoParameters(forcedRedirectEnabled: true),
-      androidParameters: const AndroidParameters(
-        packageName: 'com.app.thia',
-        // minimumVersion: 0,
-      ),
-      iosParameters: const IOSParameters(
-        bundleId: 'com.app.thia',
-        // minimumVersion: '0',
-      ),
-    );
-
-    Uri url;
-    if (short) {
-      final ShortDynamicLink shortLink = await dynamicLinks.buildShortLink(parameters);
-      url = shortLink.shortUrl;
-    } else {
-      url = await dynamicLinks.buildLink(parameters);
-    }
-
-    setState(() {
-      _linkMessage = url.toString();
-    });
-    showLog("Url ===> $_linkMessage");
-    return _linkMessage.toString();
-  }
+  // String? _linkMessage;
+  // FirebaseDynamicLinks dynamicLinks = FirebaseDynamicLinks.instance;
+  //
+  // final String dynamicLink = 'https://example/helloworld';
+  //
+  // // final String link = 'https://flutterfiretests.page.link/MEGs';
+  //
+  // Future<String> createDynamicLink(bool short) async {
+  //   // final parameters = DynamicLinkParameters(
+  //   //   uriPrefix: 'https://thia.page.link',
+  //   //   link: Uri.parse('https://test/welcome?userId=1'),
+  //   //   androidParameters: const AndroidParameters(packageName: "com.app.thia"),
+  //   //   iosParameters: const IOSParameters(bundleId: "com.app.thia", appStoreId: '295288564239'),
+  //   // );
+  //   // // var dynamicUrl = await parameters.buildUrl();
+  //   // final shortLink = parameters.link;
+  //   // // final shortLink = await parameters.buildShortLink();
+  //   // final shortUrl = shortLink.path;
+  //   const baseUrl = "https://thia.page.link";
+  //   final DynamicLinkParameters parameters = DynamicLinkParameters(
+  //     uriPrefix: baseUrl,
+  //     // longDynamicLink: Uri.parse(
+  //     //   '$baseUrl?efr=0&ibi=io.flutter.plugins.firebase.dynamiclinksexample&apn=io.flutter.plugins.firebase.dynamiclinksexample&imv=0&amv=0&link=https%3A%2F%2Fexample%2Fhelloworld&ofl=https://ofl-example.com',
+  //     // ),
+  //     // link: Uri.parse(dynamicLink),
+  //     link: Uri.parse("https://test/welcome?userId=1"),
+  //     navigationInfoParameters: const NavigationInfoParameters(forcedRedirectEnabled: true),
+  //     androidParameters: const AndroidParameters(
+  //       packageName: 'com.app.thia',
+  //       // minimumVersion: 0,
+  //     ),
+  //     iosParameters: const IOSParameters(
+  //       bundleId: 'com.app.thia',
+  //       // minimumVersion: '0',
+  //     ),
+  //   );
+  //
+  //   Uri url;
+  //   if (short) {
+  //     final ShortDynamicLink shortLink = await dynamicLinks.buildShortLink(parameters);
+  //     url = shortLink.shortUrl;
+  //   } else {
+  //     url = await dynamicLinks.buildLink(parameters);
+  //   }
+  //
+  //   setState(() {
+  //     _linkMessage = url.toString();
+  //   });
+  //   showLog("Url ===> $_linkMessage");
+  //   return _linkMessage.toString();
+  // }
 
   @override
   void initState() {
@@ -100,20 +103,66 @@ class _AddUserScreenState extends State<AddUserScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: GetAppBar(context, widget.isFromInvite == true ? AppTexts.invite : AppTexts.addMembers),
+      appBar: GetAppBar(
+        context,
+        widget.isFromInvite == true ? AppTexts.invite : AppTexts.addMembers,
+        actionWidgets: [
+          InkWell(
+            onTap: () {
+              final params = {
+                "channel_id": widget.channel.id ?? "",
+                "channel_name": widget.channel.name ?? "",
+                // "Id": widget.channel.id ?? "",
+                // "name": widget.channel.name ?? "",
+                "channel_image": widget.channel.image ?? "",
+              };
+
+              kChatController.generateLink(params, () async {
+                if (kChatController.generateLinkModel.value.data?.url?.isNotEmpty ?? false) {
+                  await onShare(
+                    context,
+                    title: kChatController.generateLinkModel.value.data?.url ?? "",
+                    subject: appName,
+                  );
+                }
+              });
+            },
+            child: Padding(
+              padding: const EdgeInsets.all(18),
+              child: Text(AppTexts.shareLink, style: primary16w600),
+            ),
+          ),
+        ],
+      ),
       bottomNavigationBar: GetButton(
         text: widget.isFromInvite == true ? AppTexts.invite : AppTexts.addMembers,
         ontap: () async {
           hideKeyBoard(context);
-          List<String> users = selectedUserList.map((element) => (element.userID ?? 0).toString()).toList();
           if (widget.isFromInvite == true) {
             // await widget.channel.inviteMembers(users).then((value) {
             //   widget.channel.watch();
             //   Get.back();
             //   Get.back();
             // });
-            await createDynamicLink(true);
+            final userMapList = selectedUserList
+                .map((element) => {
+                      "userID": element.userID ?? "",
+                      "fcmtoken": element.fcmtoken ?? "",
+                    })
+                .toList();
+
+            final params = {
+              "users": userMapList,
+              "channel_id": widget.channel.id ?? "",
+              "channel_name": widget.channel.name ?? "",
+              "channel_image": widget.channel.image ?? "",
+            };
+            showLog("params ===> $params");
+            kChatController.sendNotification(params, () {
+              Get.back();
+            });
           } else {
+            final users = selectedUserList.map((element) => (element.userID ?? 0).toString()).toList();
             if (selectedUserList.isNotEmpty) {
               await widget.channel.addMembers(users).then((value) {
                 widget.channel.watch();

@@ -57,5 +57,8 @@ class AppTexts {
   static const String selectUser = "Select Users";
   static const String addMembers = "Add Members";
   static const String invite = "Invite";
+  static const String shareLink = "Share link";
   static const String leaveGroup = "Leave Group";
+  static const String accept = "Accept";
+  static const String decline = "Decline";
 }

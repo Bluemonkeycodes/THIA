@@ -18,6 +18,12 @@ class ApiConfig {
   static const String getTaskDetail = "${baseUrl}task/";
   static const String deleteSubTaskDetail = "${baseUrl}task/subtask/";
   static const String getAllUser = "${baseUrl}user/class/all";
+  static const String generateLink = "${baseUrl}user/share/generatelink";
+  static const String sendNotification = "${baseUrl}user/sendnotification";
+  static const String getAllNotification = "${baseUrl}user/notification";
+  static const String acceptNotification = "${baseUrl}user/notification/accept/";
+  static const String rejectNotification = "${baseUrl}user/notification/reject/";
+  static const String testApi = "${baseUrl}test/";
 
   static const String methodPOST = "post";
   static const String methodGET = "get";

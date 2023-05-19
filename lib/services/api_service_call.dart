@@ -63,7 +63,7 @@ class Api {
       }
 
       Map<String, dynamic> headerParameters;
-      headerParameters =  {
+      headerParameters = {
         "Authorization": "Bearer ${getPreference.read(PrefConstants.loginToken) ?? ""}",
         // "fcm_token": getPreference.read(PrefConstants.fcmTokenPref) ?? "",
         // "timeZoneOffset": DateTime.now().timeZoneOffset,

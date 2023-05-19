@@ -15,6 +15,7 @@ import '../model/class_user_model.dart';
 import '../model/get_priority_count.dart';
 import '../model/other_user_task_model.dart';
 import '../model/task_detail_model.dart';
+import '../model/test_model.dart';
 
 class HomeController extends GetxController {
   // RxInt subTodoCount = 0.obs;
@@ -447,5 +448,24 @@ class HomeController extends GetxController {
     final random = Random();
     // showLog("random image ===> ${groupPlaceholderImageList[random.nextInt(groupPlaceholderImageList.length)]}");
     return groupPlaceholderImageList[random.nextInt(groupPlaceholderImageList.length)];
+  }
+
+  Rx<TestModel> testModel = TestModel().obs;
+
+  demoApi(String data, Function() callBack) {
+    taskDetailLoader.value = true;
+    Api().call(
+      params: {},
+      url: ApiConfig.testApi + data,
+      success: (Map<String, dynamic> response) async {
+        testModel.value = TestModel.fromJson(response);
+        callBack();
+      },
+      error: (Map<String, dynamic> response) {
+        showSnackBar(title: ApiConfig.error, message: response["message"] ?? "");
+      },
+      isProgressShow: true,
+      methodType: MethodType.get,
+    );
   }
 }

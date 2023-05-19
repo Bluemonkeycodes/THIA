@@ -4,6 +4,8 @@ import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 import '../../../services/api_service_call.dart';
 import '../../../utils/utils.dart';
 import '../../home_module/model/class_user_model.dart';
+import '../model/all_notification_model.dart';
+import '../model/generate_deep_link_model.dart';
 import '../model/get_all_user_model.dart';
 
 class ChatController extends GetxController {
@@ -39,6 +41,95 @@ class ChatController extends GetxController {
             allUserList.add(element ?? ClassUserModelData());
           }
         });
+        callBack();
+      },
+      error: (Map<String, dynamic> response) {
+        showSnackBar(title: ApiConfig.error, message: response["message"] ?? "");
+      },
+      isProgressShow: true,
+      methodType: MethodType.get,
+    );
+  }
+
+  Rx<GenerateDeepLinkModel> generateLinkModel = GenerateDeepLinkModel().obs;
+
+  generateLink(Map<String, dynamic> params, Function() callBack) {
+    Api().call(
+      params: params,
+      url: ApiConfig.generateLink,
+      success: (Map<String, dynamic> response) async {
+        generateLinkModel.value = GenerateDeepLinkModel.fromJson(response);
+        callBack();
+      },
+      error: (Map<String, dynamic> response) {
+        showSnackBar(title: ApiConfig.error, message: response["message"] ?? "");
+      },
+      isProgressShow: true,
+      methodType: MethodType.get,
+    );
+  }
+
+  sendNotification(Map<String, dynamic> params, Function() callBack) {
+    Api().call(
+      params: params,
+      url: ApiConfig.sendNotification,
+      success: (Map<String, dynamic> response) async {
+        callBack();
+        showSnackBar(title: ApiConfig.success, message: "Invitation send successfully...");
+      },
+      error: (Map<String, dynamic> response) {
+        showSnackBar(title: ApiConfig.error, message: response["message"] ?? "");
+      },
+      isProgressShow: true,
+      methodType: MethodType.post,
+    );
+  }
+
+  Rx<AllNotificationModel> allNotificationModel = AllNotificationModel().obs;
+  RxList<AllNotificationModelData> allNotificationList = <AllNotificationModelData>[].obs;
+
+  getAllNotification(Map<String, dynamic> params, Function() callBack) {
+    Api().call(
+      params: params,
+      url: ApiConfig.getAllNotification,
+      success: (Map<String, dynamic> response) async {
+        allNotificationModel.value = AllNotificationModel.fromJson(response);
+        allNotificationList.clear();
+        allNotificationModel.value.data?.forEach((element) {
+          if (element?.accepted != true && element?.rejected != true) {
+            allNotificationList.add(element ?? AllNotificationModelData());
+          }
+        });
+        callBack();
+      },
+      error: (Map<String, dynamic> response) {
+        showSnackBar(title: ApiConfig.error, message: response["message"] ?? "");
+      },
+      isProgressShow: true,
+      methodType: MethodType.get,
+    );
+  }
+
+  acceptNotification(String id, Function() callBack) {
+    Api().call(
+      params: {},
+      url: ApiConfig.acceptNotification + id,
+      success: (Map<String, dynamic> response) async {
+        callBack();
+      },
+      error: (Map<String, dynamic> response) {
+        showSnackBar(title: ApiConfig.error, message: response["message"] ?? "");
+      },
+      isProgressShow: true,
+      methodType: MethodType.get,
+    );
+  }
+
+  rejectNotification(String id, Function() callBack) {
+    Api().call(
+      params: {},
+      url: ApiConfig.rejectNotification + id,
+      success: (Map<String, dynamic> response) async {
         callBack();
       },
       error: (Map<String, dynamic> response) {
