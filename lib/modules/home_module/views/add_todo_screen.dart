@@ -465,7 +465,7 @@ class _AddTodoScreenState extends State<AddTodoScreen> {
                     if (widget.isFromEdit == true) {
                       params["taskID"] = (widget.data?.taskID ?? 0).toString();
                     }
-                    print(params);
+                    showLog(params);
                     kHomeController.createTodo(params, () {
                       kHomeController.getPriorityCount(showLoader: false);
                       // Get.back();

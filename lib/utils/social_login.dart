@@ -15,7 +15,6 @@ import 'package:thia/modules/auth/model/login_model.dart';
 import 'package:thia/services/api_service_call.dart';
 import 'package:thia/utils/utils.dart';
 
-import '../modules/home_module/views/demo_testing_screen.dart';
 import '../modules/home_module/views/home_screen.dart';
 
 f_auth.User? user;
@@ -147,18 +146,18 @@ googleAuth(BuildContext context) async {
               kHomeController.userData.value = LoginModelDataData.fromJson(loginModel.data?.data?.toJson() ?? {});
               setObject(PrefConstants.userDetails, loginModel.data?.data ?? {});
               getPreference.write(PrefConstants.loginToken, loginModel.data?.token ?? "");
-              if (true) {
-                Get.offAll(() => const DemoScreen());
-              } else {
-                await googleSignIn.authenticatedClient().then((value) {
-                  AccessCredentials accessCredentials = value?.credentials ?? AccessCredentials(AccessToken("", "", DateTime.now()), "refreshToken", []);
-                  setAuthJsonData(accessCredentials);
-                  showLog("1111 ===> ${getPreference.read(PrefConstants.httpClient)}");
-                  setIsLogin(isLogin: true);
-                  refreshToken(() {});
-                  Get.offAll(() => const HomeScreen());
-                });
-              }
+              // if (false) {
+              //   Get.offAll(() => const DemoScreen());
+              // } else {
+              await googleSignIn.authenticatedClient().then((value) {
+                AccessCredentials accessCredentials = value?.credentials ?? AccessCredentials(AccessToken("", "", DateTime.now()), "refreshToken", []);
+                setAuthJsonData(accessCredentials);
+                showLog("1111 ===> ${getPreference.read(PrefConstants.httpClient)}");
+                setIsLogin(isLogin: true);
+                refreshToken(() {});
+                Get.offAll(() => const HomeScreen());
+              });
+              // }
             },
             error: (Map<String, dynamic> response) {
               hideProgressDialog();

@@ -252,10 +252,10 @@ String formNum(TextEditingController controller) {
     int position = controller.selection.base.offset;
     showLog("NumberFormat.currency ===> ${NumberFormat().format(double.parse(controller.text.replaceAll(",", "")))}");
     controller.text = NumberFormat().format(double.parse(controller.text.replaceAll(",", "")));
-    int specialCharLength = 0;
-    if (controller.text.contains(",")) {
-      specialCharLength = controller.text.split(",").length - 1;
-    }
+    // if (controller.text.contains(",")) {
+    // int specialCharLength = 0;
+    //   specialCharLength = controller.text.split(",").length - 1;
+    // }
 
     showLog("xxx ===> ${controller.text.split(",").length - 1}");
     showLog("position ===> $position");

@@ -26,30 +26,38 @@ class _HomeScreenState extends State<HomeScreen> {
   initUser(context) async {
     getStreamContext(context);
     kHomeController.classListLoading.value = true;
-    await StreamApi.initUser(
-      StreamChat.of(context).client,
-      username: "${kHomeController.userData.value.firstname ?? ""} ${kHomeController.userData.value.lastname ?? ""}",
-      urlImage: kHomeController.userData.value.profileUrl ?? "",
-      id: (kHomeController.userData.value.userId ?? "").toString(),
-      token: getPreference.read(PrefConstants.loginToken) ?? "",
-    );
-    registerDevice(context);
-    await FirebaseNotificationService(context1: context).initializeService(context);
-    await refreshToken(() {});
-    await kHomeController.getPriorityCount(showLoader: false);
-    await kHomeController.getClassList();
-    kHomeController.classListLoading.value = false;
+    try {
+      // StreamChat.of(context).client.disconnectUser();
+      await StreamApi.initUser(
+        StreamChat.of(context).client,
+        username: "${kHomeController.userData.value.firstname ?? ""} ${kHomeController.userData.value.lastname ?? ""}",
+        urlImage: kHomeController.userData.value.profileUrl ?? "",
+        id: (kHomeController.userData.value.userId ?? "").toString(),
+        token: getPreference.read(PrefConstants.loginToken) ?? "",
+      );
+      registerDevice(context);
+      await FirebaseNotificationService(context1: context).initializeService(context);
+      await refreshToken(() {});
+      await kHomeController.getPriorityCount(showLoader: false);
+      await kHomeController.getClassList();
+      kHomeController.classListLoading.value = false;
+    } catch (e) {
+      kHomeController.classListLoading.value = false;
+      showLog("e ===> $e");
+    }
   }
 
   @override
   void initState() {
     super.initState();
-    kHomeController.userData.value = LoginModelDataData.fromJson(getObject(PrefConstants.userDetails));
-    initUser(context);
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      kHomeController.userData.value = LoginModelDataData.fromJson(getObject(PrefConstants.userDetails));
+      initUser(context);
+    });
   }
 
   registerDevice(BuildContext context) {
-    StreamChatClient client = StreamChat.of(context).client;
+    // StreamChatClient client = StreamChat.of(context).client;
     StreamChat.of(context).client.addDevice(getFcmToken() ?? "", PushProvider.firebase, pushProviderName: "firebase");
     FirebaseNotificationService.firebaseMessaging.onTokenRefresh.listen((token) {
       // FirebaseNotificationService.firebaseMessaging.getToken().then((token) {
@@ -61,9 +69,9 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     showLog("FCM token ===> ${getFcmToken() ?? " "}");
     showLog("token ===> ${getPreference.read(PrefConstants.loginToken) ?? " "}");
-
     return UpgradeAlert(
       upgrader: Upgrader(
+        // minAppVersion: ,
         // debugDisplayAlways: true,
         dialogStyle: Platform.isIOS ? UpgradeDialogStyle.cupertino : UpgradeDialogStyle.material,
       ),

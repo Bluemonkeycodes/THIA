@@ -46,7 +46,7 @@ class GetAllUserModel {
       v.forEach((v) {
         arr0.add(ClassUserModelData.fromJson(v));
       });
-      this.data = arr0;
+      data = arr0;
     }
   }
 

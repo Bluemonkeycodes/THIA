@@ -647,7 +647,7 @@ Widget assignmentCard({
       if (showPriorityBar ?? false)
         Container(
           height: 10,
-          decoration: BoxDecoration(color: AppColors.red, borderRadius: BorderRadius.only(topRight: Radius.circular(15), topLeft: Radius.circular(15))),
+          decoration: BoxDecoration(color: AppColors.red, borderRadius: const BorderRadius.only(topRight: Radius.circular(15), topLeft: Radius.circular(15))),
         ),
     ],
   );

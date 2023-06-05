@@ -43,7 +43,7 @@ class OtherUserTaskModel {
       v.forEach((v) {
         arr0.add(TodoModel.fromJson(v));
       });
-      this.data = arr0;
+      data = arr0;
     }
   }
   Map<String, dynamic> toJson() {

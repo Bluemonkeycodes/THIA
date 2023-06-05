@@ -1,5 +1,4 @@
 import 'package:flutter/cupertino.dart';
-import 'package:googleapis/cloudbuild/v1.dart';
 import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 
 class StreamConfig {

@@ -6,8 +6,8 @@ class APIProvider {
   static Dio? dio = Dio(options);
   static BaseOptions? options = BaseOptions(
       baseUrl: ApiConfig.baseUrl,
-      connectTimeout: 30000,
-      receiveTimeout: 30000,
+      connectTimeout: const Duration(milliseconds: 30000),
+      receiveTimeout: const Duration(milliseconds: 30000),
       validateStatus: (code) {
         if (code! >= 200) {
           return true;

@@ -1,6 +1,6 @@
 class ApiConfig {
-  // static const String baseUrl = "http://44.199.178.207/api/";
-  static const String baseUrl = "https://api.thiaapp.com/api/";
+  // static const String baseUrl = "https://api.thiaapp.com/api/";
+  static const String baseUrl = "https://api.thiaapp.com/api/v2/";
   static const String localBaseUrl = "localhost:5001/api/";
 
   // static const String baseUrl = "https://proud-lab-coat-pike.cyclic.app/api/";
@@ -14,7 +14,7 @@ class ApiConfig {
   static const String getOtherUserTask = "${baseUrl}task/class/";
   static const String setTaskComplete = "${baseUrl}task/status/complete/";
   static const String setSubTaskComplete = "${baseUrl}task/subtask/complete/";
-  static const String deleteTask = "${baseUrl}task/";
+  static const String deleteTask = "${baseUrl}task/delete/";
   static const String getTaskDetail = "${baseUrl}task/";
   static const String deleteSubTaskDetail = "${baseUrl}task/subtask/";
   static const String getAllUser = "${baseUrl}user/class/all";

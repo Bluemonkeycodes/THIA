@@ -107,9 +107,7 @@ class LoginModelData {
   Map<String, dynamic> toJson() {
     final data = <String, dynamic>{};
     data['token'] = token;
-    if (data != null) {
-      data['data'] = this.data!.toJson();
-    }
+    data['data'] = this.data!.toJson();
     return data;
   }
 }
@@ -156,9 +154,7 @@ class LoginModel {
     final data = <String, dynamic>{};
     data['success'] = success;
     data['message'] = message;
-    if (data != null) {
-      data['data'] = this.data!.toJson();
-    }
+    data['data'] = this.data!.toJson();
     return data;
   }
 }

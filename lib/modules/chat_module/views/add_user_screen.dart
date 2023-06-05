@@ -116,7 +116,7 @@ class _AddUserScreenState extends State<AddUserScreen> {
                 // "name": widget.channel.name ?? "",
                 "channel_image": widget.channel.image ?? "",
               };
-
+              // kChatController.createDynamicLink(context: context, itemId: "123");
               kChatController.generateLink(params, () async {
                 if (kChatController.generateLinkModel.value.data?.url?.isNotEmpty ?? false) {
                   await onShare(

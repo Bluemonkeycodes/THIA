@@ -1,11 +1,11 @@
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 
 import '../../generated/assets.dart';
 import '../../utils/utils.dart';
 import '../auth/views/login_screen.dart';
-import '../chat_module/views/stream_chat_page.dart';
 import '../home_module/views/home_screen.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -19,22 +19,36 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    bool isLogin = getIsLogin();
-    Future.delayed(const Duration(seconds: 3)).then((value) async {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+      bool isLogin = getIsLogin();
       if (isLogin) {
         await initDynamicLinks();
-        Get.offAll(() => const HomeScreen());
-      } else {
-        Get.offAll(() => const LoginScreen());
       }
+      Future.delayed(const Duration(seconds: 3)).then((value) async {
+        if (isLogin) {
+          Get.offAll(() => const HomeScreen());
+        } else {
+          Get.offAll(() => const LoginScreen());
+        }
+      });
     });
   }
 
   FirebaseDynamicLinks dynamicLinks = FirebaseDynamicLinks.instance;
 
   Future<void> initDynamicLinks() async {
+    // if (await dynamicLinks.onLink.isEmpty) {
+    //   bool isLogin = getIsLogin();
+    //   if (isLogin) {
+    //     Get.offAll(() => const HomeScreen());
+    //   } else {
+    //     Get.offAll(() => const LoginScreen());
+    //   }
+    // } else {
     dynamicLinks.onLink.listen((dynamicLinkData) async {
-      showLog("dynamicLinkData ===> $dynamicLinkData");
+      showLog("dynamicLinkData ===> ${dynamicLinkData.link.path}");
+      var x = await dynamicLinks.getInitialLink();
+      showLog("link ===> ${x?.link}");
       String name = "";
       String id = "";
       String image = "";
@@ -50,22 +64,32 @@ class _SplashScreenState extends State<SplashScreen> {
       showLog("id ===> $id");
       showLog("name ===> $name");
       showLog("image ===> $image");
-
-      await chatButtonClick(
-        context,
-        name: name,
-        id: id,
-        image: image,
-        userIdList: [(kHomeController.userData.value.userId ?? "").toString()],
-      );
-      Future.delayed(const Duration(seconds: 1)).then((value) {
-        Get.to(() => const ChannelListPage());
+      Future.delayed(const Duration(seconds: 2)).then((value) async {
+        try {
+          Get.to(() => const HomeScreen())?.whenComplete(() async {
+            // await StreamChat.of(context).client.disconnectUser();
+            // await StreamChat.of(context).client.conn();
+            StreamChat.of(context).client.closeConnection();
+            await chatButtonClick(
+              context,
+              name: name,
+              id: id,
+              image: image,
+              userIdList: [(kHomeController.userData.value.userId ?? "").toString()],
+            );
+          });
+          // Future.delayed(const Duration(seconds: 1)).then((value) {
+          //   Get.offAll(() => const ChannelListPage());
+          // });
+        } catch (e) {
+          showLog('error ===> $e');
+        }
       });
-      // Navigator.pushNamed(context, dynamicLinkData.link.path);
     }).onError((error) {
       showLog('onLink error');
       showLog(error.message);
     });
+    // }
   }
 
   @override

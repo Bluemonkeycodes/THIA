@@ -47,9 +47,7 @@ class GenerateDeepLinkModel {
   Map<String, dynamic> toJson() {
     final data = <String, dynamic>{};
     data['success'] = success;
-    if (data != null) {
-      data['data'] = this.data!.toJson();
-    }
+    data['data'] = this.data!.toJson();
     return data;
   }
 }

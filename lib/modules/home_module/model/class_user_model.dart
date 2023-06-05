@@ -119,7 +119,7 @@ class ClassUserModel {
       v.forEach((v) {
         arr0.add(ClassUserModelData.fromJson(v));
       });
-      this.data = arr0;
+      data = arr0;
     }
   }
   Map<String, dynamic> toJson() {

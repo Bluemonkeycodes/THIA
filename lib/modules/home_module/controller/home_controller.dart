@@ -150,7 +150,7 @@ class HomeController extends GetxController {
         showSnackBar(title: ApiConfig.error, message: response["message"] ?? "");
       },
       isProgressShow: showLoader ?? true,
-      methodType: MethodType.get,
+      methodType: MethodType.post,
     );
   }
 
@@ -199,7 +199,7 @@ class HomeController extends GetxController {
         showSnackBar(title: ApiConfig.error, message: response["message"] ?? "");
       },
       isProgressShow: showProgress ?? true,
-      methodType: MethodType.get,
+      methodType: MethodType.post,
     );
   }
 
@@ -238,7 +238,7 @@ class HomeController extends GetxController {
         showSnackBar(title: ApiConfig.error, message: response["message"] ?? "");
       },
       isProgressShow: showLoader ?? true,
-      methodType: MethodType.get,
+      methodType: MethodType.post,
     );
   }
 
@@ -267,7 +267,7 @@ class HomeController extends GetxController {
         showSnackBar(title: ApiConfig.error, message: response["message"] ?? "");
       },
       isProgressShow: showProgress ?? true,
-      methodType: MethodType.get,
+      methodType: MethodType.post,
     );
   }
 
@@ -296,7 +296,7 @@ class HomeController extends GetxController {
         showSnackBar(title: ApiConfig.error, message: response["message"] ?? "");
       },
       isProgressShow: showProgress ?? true,
-      methodType: MethodType.get,
+      methodType: MethodType.post,
     );
   }
 
@@ -341,7 +341,7 @@ class HomeController extends GetxController {
         showSnackBar(title: ApiConfig.error, message: response["message"] ?? "");
       },
       isProgressShow: true,
-      methodType: MethodType.delete,
+      methodType: MethodType.post,
     );
   }
 
@@ -352,6 +352,7 @@ class HomeController extends GetxController {
 
   getUsesTaskList({bool? showProgress}) {
     userTaskTodoProgress.value = true;
+    userTaskTodoList.clear();
     Api().call(
       params: {},
       url: ApiConfig.getUserTask,
@@ -360,7 +361,6 @@ class HomeController extends GetxController {
         userTasTodoModel.value = ClassTodoModel.fromJson(response);
 
         if (userTasTodoModel.value.data?.isNotEmpty ?? false) {
-          userTaskTodoList.clear();
           userTasTodoModel.value.data?.forEach((element) {
             if (element != null) {
               userTaskTodoList.add(element);
@@ -373,7 +373,7 @@ class HomeController extends GetxController {
         showSnackBar(title: ApiConfig.error, message: response["message"] ?? "");
       },
       isProgressShow: showProgress ?? true,
-      methodType: MethodType.get,
+      methodType: MethodType.post,
     );
   }
 
@@ -396,7 +396,7 @@ class HomeController extends GetxController {
         showSnackBar(title: ApiConfig.error, message: response["message"] ?? "");
       },
       isProgressShow: false,
-      methodType: MethodType.get,
+      methodType: MethodType.post,
     );
   }
 
@@ -416,7 +416,7 @@ class HomeController extends GetxController {
         showSnackBar(title: ApiConfig.error, message: response["message"] ?? "");
       },
       isProgressShow: true,
-      methodType: MethodType.delete,
+      methodType: MethodType.post,
     );
   }
 
@@ -465,7 +465,7 @@ class HomeController extends GetxController {
         showSnackBar(title: ApiConfig.error, message: response["message"] ?? "");
       },
       isProgressShow: true,
-      methodType: MethodType.get,
+      methodType: MethodType.post,
     );
   }
 }

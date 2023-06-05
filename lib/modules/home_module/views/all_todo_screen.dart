@@ -20,54 +20,71 @@ class _AllTodoScreenState extends State<AllTodoScreen> {
     super.initState();
     selectedTab.value = widget.selectedCount;
     // if (kHomeController.userTaskTodoList.isEmpty) {
-    kHomeController.getUsesTaskList(showProgress: true);
+    kHomeController.getUsesTaskList(showProgress: false);
     // }
   }
 
   @override
   Widget build(BuildContext context) {
-    print(getPreference.read(PrefConstants.loginToken));
+    showLog(getPreference.read(PrefConstants.loginToken));
     return Scaffold(
       appBar: GetAppBar(context, AppTexts.allTodo),
       body: Padding(
         padding: const EdgeInsets.all(15),
-        child: Column(
-          children: [
-            prioritySection(),
-            heightBox(height: 15),
-            StreamBuilder<Object>(
-                stream: kHomeController.userTaskTodoList.stream,
-                builder: (context, snapshot) {
-                  return StreamBuilder<Object>(
-                      stream: selectedTab.stream,
-                      builder: (context, snapshot) {
-                        return Expanded(
-                          child: RefreshIndicator(
-                            color: AppColors.primaryColor,
-                            onRefresh: () async {},
-                            child: ListView.separated(
-                              itemCount: selectedTab.value == 1
-                                  ? (kHomeController.userTaskTodoList.where((p0) => (p0.priority == 1)).length)
-                                  : selectedTab.value == 2
-                                      ? kHomeController.userTaskTodoList.where((p0) => (p0.priority == 2)).length
-                                      : kHomeController.userTaskTodoList.where((p0) => (p0.priority == 3)).length,
-                              shrinkWrap: true,
-                              primary: false,
-                              separatorBuilder: (context, index) => heightBox(height: 12),
-                              itemBuilder: (context, index) {
-                                return todoCard(
-                                    data: selectedTab.value == 1
-                                        ? kHomeController.userTaskTodoList.where((p0) => (p0.priority == 1)).toList()[index]
-                                        : selectedTab.value == 2
-                                            ? kHomeController.userTaskTodoList.where((p0) => (p0.priority == 2)).toList()[index]
-                                            : kHomeController.userTaskTodoList.where((p0) => (p0.priority == 3)).toList()[index]);
-                              },
-                            ),
-                          ),
-                        );
-                      });
-                }),
-          ],
+        child: RefreshIndicator(
+          color: AppColors.primaryColor,
+          onRefresh: () async {
+            kHomeController.getUsesTaskList(showProgress: false);
+          },
+          child: StreamBuilder<Object>(
+              stream: kHomeController.userTaskTodoProgress.stream,
+              builder: (context, snapshot) {
+                return Column(
+                  children: [
+                    prioritySection(),
+                    heightBox(height: 15),
+                    (kHomeController.userTaskTodoProgress.value)
+                        ? const Padding(
+                            padding: EdgeInsets.only(top: 100.0),
+                            child: Center(child: CircularProgressIndicator()),
+                          )
+                        : StreamBuilder<Object>(
+                            stream: kHomeController.userTaskTodoList.stream,
+                            builder: (context, snapshot) {
+                              return StreamBuilder<Object>(
+                                  stream: selectedTab.stream,
+                                  builder: (context, snapshot) {
+                                    return Expanded(
+                                      child: (selectedTab.value == 1 && kHomeController.userTaskTodoList.where((p0) => (p0.priority == 1)).isEmpty)
+                                          ? noDataFoundWidget(message: AppTexts.noTodoFound)
+                                          : (selectedTab.value == 2 && kHomeController.userTaskTodoList.where((p0) => (p0.priority == 2)).isEmpty)
+                                              ? noDataFoundWidget(message: AppTexts.noTodoFound)
+                                              : (selectedTab.value == 3 && kHomeController.userTaskTodoList.where((p0) => (p0.priority == 3)).isEmpty)
+                                                  ? noDataFoundWidget(message: AppTexts.noTodoFound)
+                                                  : ListView.separated(
+                                                      itemCount: selectedTab.value == 1
+                                                          ? (kHomeController.userTaskTodoList.where((p0) => (p0.priority == 1)).length)
+                                                          : selectedTab.value == 2
+                                                              ? kHomeController.userTaskTodoList.where((p0) => (p0.priority == 2)).length
+                                                              : kHomeController.userTaskTodoList.where((p0) => (p0.priority == 3)).length,
+                                                      shrinkWrap: true,
+                                                      primary: true,
+                                                      separatorBuilder: (context, index) => heightBox(height: 12),
+                                                      itemBuilder: (context, index) {
+                                                        return todoCard(
+                                                            data: selectedTab.value == 1
+                                                                ? kHomeController.userTaskTodoList.where((p0) => (p0.priority == 1)).toList()[index]
+                                                                : selectedTab.value == 2
+                                                                    ? kHomeController.userTaskTodoList.where((p0) => (p0.priority == 2)).toList()[index]
+                                                                    : kHomeController.userTaskTodoList.where((p0) => (p0.priority == 3)).toList()[index]);
+                                                      },
+                                                    ),
+                                    );
+                                  });
+                            }),
+                  ],
+                );
+              }),
         ),
       ),
     );

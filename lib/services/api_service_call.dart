@@ -63,8 +63,10 @@ class Api {
       }
 
       Map<String, dynamic> headerParameters;
+      String authorization = "${getPreference.read(PrefConstants.loginToken) ?? ""}";
       headerParameters = {
-        "Authorization": "Bearer ${getPreference.read(PrefConstants.loginToken) ?? ""}",
+        // "Authorization": "Bearer ${getPreference.read(PrefConstants.loginToken) ?? ""}",
+        // "Authorization": authorization,
         // "fcm_token": getPreference.read(PrefConstants.fcmTokenPref) ?? "",
         // "timeZoneOffset": DateTime.now().timeZoneOffset,
         // "deviceType": Platform.isAndroid
@@ -73,6 +75,12 @@ class Api {
         //         ? "2"
         //         : "3",
       };
+
+      // final uri = Uri.http(url, '/path').replace(queryParameters: params);
+      // params.addAll(Map.from({"token": authorization}));
+      params["token"] = authorization;
+      showLog("url ===> $url");
+      showLog("params ===> $params");
 
       try {
         Response response;
@@ -87,8 +95,8 @@ class Api {
         }
         showLog("status code ===> ${response.statusCode}");
         if (handleResponse(response)) {
-          showLog("url ===> $url");
-          showLog("params ===> $params");
+          // showLog("url ===> $url");
+          // showLog("params ===> $params");
           showLog("response ===> $response");
 
           Map<String, dynamic>? responseData;
@@ -262,12 +270,12 @@ void hideProgressDialog({bool isLoading = true, bool isProgressShow = true, bool
 
 dioErrorCall({required DioError dioError, required Function onCallBack}) {
   switch (dioError.type) {
-    case DioErrorType.other:
-    case DioErrorType.connectTimeout:
+    case DioErrorType.unknown:
+    case DioErrorType.connectionTimeout:
       // onCallBack(connectionTimeOutMessage, false);
       onCallBack(dioError.message, true);
       break;
-    case DioErrorType.response:
+    // case DioErrorType.response:
     case DioErrorType.cancel:
     case DioErrorType.receiveTimeout:
     case DioErrorType.sendTimeout:
