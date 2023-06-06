@@ -108,7 +108,7 @@ class _AddUserScreenState extends State<AddUserScreen> {
         widget.isFromInvite == true ? AppTexts.invite : AppTexts.addMembers,
         actionWidgets: [
           InkWell(
-            onTap: () {
+            onTap: () async {
               final params = {
                 "channel_id": widget.channel.id ?? "",
                 "channel_name": widget.channel.name ?? "",
@@ -117,16 +117,16 @@ class _AddUserScreenState extends State<AddUserScreen> {
                 "channel_image": widget.channel.image ?? "",
               };
               // kChatController.createDynamicLink(context: context, itemId: "123");
-              kChatController.createDynamicLink1(
+              final shareUrl = await kChatController.createDynamicLink(
                 channelId: widget.channel.id ?? "",
                 channelName: widget.channel.name ?? "",
                 channelImage: widget.channel.image ?? "",
               );
               kChatController.generateLink(params, () async {
-                if (kChatController.generateLinkModel.value.data?.url?.isNotEmpty ?? false) {
+                if (shareUrl.isNotEmpty) {
                   await onShare(
                     context,
-                    title: kChatController.generateLinkModel.value.data?.url ?? "",
+                    title: shareUrl,
                     subject: appName,
                   );
                 }

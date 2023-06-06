@@ -1,5 +1,4 @@
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 
@@ -73,81 +72,21 @@ class ChatController extends GetxController {
 
   FirebaseDynamicLinks dynamicLinks = FirebaseDynamicLinks.instance;
 
-  Future createDynamicLink({
-    required BuildContext context,
-    String? title,
-    String? image,
-    required String itemId,
-  }) async {
-    bool short = true;
-    final DynamicLinkParameters parameters = DynamicLinkParameters(
-      //add urlPrefix as per point 3.2
-      uriPrefix: 'https://thia.page.link',
-      //add link as per point 4.7
-      link: Uri.parse('https://thiaapp.com/fMNh?id=$itemId'),
-      // link: Uri.parse('https://thia.page.link/invite?id=$itemId'),
-      // link: Uri.parse('https://thia.page.link/fMNh?id=$itemId'),
-      androidParameters: const AndroidParameters(
-          //android/app/build.gradle
-          packageName: 'com.app.thia',
-          minimumVersion: 0),
-      socialMetaTagParameters: SocialMetaTagParameters(title: title, imageUrl: Uri.parse(image ?? "")),
-      // dynamicLinkParametersOptions: DynamicLinkParametersOptions(
-      //   shortDynamicLinkPathLength: ShortDynamicLinkPathLength.short,
-      // ),
-      iosParameters: const IOSParameters(bundleId: 'com.app.thia', minimumVersion: '0'),
-    );
-
-    Uri url;
-    if (short) {
-      // final ShortDynamicLink shortLink = await parameters.buildShortLink();
-      final ShortDynamicLink shortLink = await dynamicLinks.buildShortLink(parameters);
-      url = shortLink.shortUrl;
-    } else {
-      // url = await parameters.buildUrl();
-      url = await dynamicLinks.buildLink(parameters);
-    }
-    showLog("url ---> ${url}");
-    return url.toString();
-  }
-
-  // FirebaseDynamicLinks dynamicLinks = FirebaseDynamicLinks.instance;
-
-  createDynamicLink1({
+  Future<String> createDynamicLink({
     required String channelId,
     required String channelName,
     required String channelImage,
   }) async {
     var parameters = DynamicLinkParameters(
-      // This should match firebase but without the username query param
       uriPrefix: 'https://thia.page.link',
-      // This can be whatever you want for the uri, https://yourapp.com/groupinvite?username=$userName
       link: Uri.parse('https://thiaapp.com/invite?channel_id=$channelId&channel_name=$channelName&channel_image=$channelImage'),
-      //"https://thia.page.link/fMNh?channel_id=516573860629&channel_name=Pratik&channel_image=https://i.imgur.com/ReSxSJU.png&";
       androidParameters: const AndroidParameters(packageName: 'com.app.thia', minimumVersion: 1),
       iosParameters: const IOSParameters(bundleId: 'com.app.thia', minimumVersion: '1', appStoreId: ''),
     );
-
-    // print(parameters.link);
-    // print(parameters.longDynamicLink?.path);
-    // print(parameters.longDynamicLink?.data);
-    // print(parameters.);
-
-    // return Uri();
-    // Uri url = await dynamicLinks.buildLink(parameters);
     final url1 = await dynamicLinks.buildShortLink(parameters);
 
     print(url1.shortUrl);
-
-    // print(url);
-    // print("url1.shortUrl ${url1.shortUrl}");
-    // return url1;
-    // final link =  parameters.link;
-    // final ShortDynamicLink shortenedLink = await DynamicLinkParameters.shortenUrl(
-    //   link,
-    //   DynamicLinkParametersOptions(shortDynamicLinkPathLength: ShortDynamicLinkPathLength.unguessable),
-    // );
-    // return shortenedLink.shortUrl;
+    return url1.shortUrl.toString();
   }
 
   sendNotification(Map<String, dynamic> params, Function() callBack) {
