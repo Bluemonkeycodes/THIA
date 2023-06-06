@@ -39,6 +39,7 @@ class _CreatedGroupScreenState extends State<CreatedGroupScreen> {
         text: AppTexts.createGroup,
         ontap: () async {
           hideKeyBoard(context);
+
           if (formKey.currentState?.validate() == true) {
             if (selectedUserList.length < 2 || false) {
               showSnackBar(title: ApiConfig.error, message: "Please select at-least 2 users to create group");

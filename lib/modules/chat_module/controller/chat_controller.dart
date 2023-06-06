@@ -29,12 +29,15 @@ class ChatController extends GetxController {
 
   Rx<GetAllUserModel> getAllUserModel = GetAllUserModel().obs;
   RxList<ClassUserModelData> allUserList = <ClassUserModelData>[].obs;
+  RxBool isAllUserLoading = false.obs;
 
-  getAllUser(Map<String, dynamic> params, Function() callBack) {
+  getAllUser(Map<String, dynamic> params, Function() callBack, {bool? showLoader}) {
+    isAllUserLoading.value = true;
     Api().call(
       params: params,
       url: ApiConfig.getAllUser,
       success: (Map<String, dynamic> response) async {
+        isAllUserLoading.value = false;
         getAllUserModel.value = GetAllUserModel.fromJson(response);
         allUserList.clear();
         getAllUserModel.value.data?.forEach((element) {
@@ -45,9 +48,10 @@ class ChatController extends GetxController {
         callBack();
       },
       error: (Map<String, dynamic> response) {
+        isAllUserLoading.value = false;
         showSnackBar(title: ApiConfig.error, message: response["message"] ?? "");
       },
-      isProgressShow: true,
+      isProgressShow: showLoader ?? true,
       methodType: MethodType.post,
     );
   }
