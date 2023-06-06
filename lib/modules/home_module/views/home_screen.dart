@@ -16,7 +16,10 @@ import '../../../utils/utils.dart';
 import '../../auth/model/login_model.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({Key? key}) : super(key: key);
+  const HomeScreen({Key? key, this.name, this.id, this.image}) : super(key: key);
+  final String? name;
+  final String? id;
+  final String? image;
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -35,6 +38,17 @@ class _HomeScreenState extends State<HomeScreen> {
         id: (kHomeController.userData.value.userId ?? "").toString(),
         token: getPreference.read(PrefConstants.loginToken) ?? "",
       );
+      if (widget.id != null) {
+        // widget.callBack!();
+        kHomeController.classListLoading.value = false;
+        await chatButtonClick(
+          context,
+          name: widget.name,
+          id: widget.id ?? "",
+          image: widget.image,
+          userIdList: [(kHomeController.userData.value.userId ?? "").toString()],
+        );
+      }
       registerDevice(context);
       await FirebaseNotificationService(context1: context).initializeService(context);
       await refreshToken(() {});

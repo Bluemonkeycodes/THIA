@@ -22,6 +22,7 @@ class StreamApi {
         'image': urlImage,
       },
     );
+    await client.disconnectUser();
     await client.connectUser(user, token);
   }
 
