@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart' as get_x;
 
 import '../main.dart';
+import '../modules/auth/views/login_screen.dart';
 import '../utils/utils.dart';
 
 const String somethingWrong = "Something Went Wrong";
@@ -312,6 +313,8 @@ unauthorizedDialog(message) async {
               onPressed: () {
                 //restart the application
                 getPreference.erase();
+
+                get_x.Get.offAll(() => const LoginScreen());
                 // get_x.Get.offAll(() => const SplashScreen());
               },
             ),

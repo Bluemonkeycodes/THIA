@@ -19,4 +19,5 @@ class Assets {
   static const String imagesLogo = 'assets/images/logo.png';
   static const String imagesNoDataFound = 'assets/images/no_data_found.png';
   static const String imagesSplash = 'assets/images/splash.png';
+  static const String thiaAssetsNoDataFound = 'assets/no_data_found.json';
 }

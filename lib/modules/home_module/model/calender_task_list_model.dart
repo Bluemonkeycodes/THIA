@@ -29,6 +29,7 @@ class TodoModel {
   int? priority;
   String? length;
   bool? private;
+  bool? isAddedByTeacher;
   String? time;
   bool? isCompleted;
   bool? late;
@@ -45,6 +46,7 @@ class TodoModel {
     this.priority,
     this.length,
     this.private,
+    this.isAddedByTeacher,
     this.time,
     this.isCompleted,
     this.late,
@@ -61,6 +63,7 @@ class TodoModel {
     priority = json['priority']?.toInt();
     length = json['length']?.toString();
     private = json['private'];
+    isAddedByTeacher = json['isAddedByTeacher'];
     time = json['time']?.toString();
     isCompleted = json['isCompleted'];
     late = json['late'];
@@ -78,6 +81,7 @@ class TodoModel {
     data['priority'] = priority;
     data['length'] = length;
     data['private'] = private;
+    data['isAddedByTeacher'] = isAddedByTeacher;
     data['time'] = time;
     data['isCompleted'] = isCompleted;
     data['late'] = late;

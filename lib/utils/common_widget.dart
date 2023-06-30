@@ -715,18 +715,19 @@ Widget todoCard({
                 desc: data?.time == null ? "00 Hour ⏳" : "${(printDuration(parseDuration(data?.time ?? "")))} ⏳",
                 // subject: subject,
               ),
-              if (data?.createdBy != null)
-                Column(
-                  children: [
-                    heightBox(),
-                    tile(
-                      title: "Created By :",
-                      desc: data?.createdBy ?? "",
-                      // subject: subject,
-                    ),
-                  ],
+              if (data?.isAddedByTeacher == true) heightBox(),
+              if (data?.isAddedByTeacher == true)
+                tile(
+                  title: "Added by Teacher :",
+                  desc: "true",
                 ),
-
+              if (data?.createdBy != null) heightBox(),
+              if (data?.createdBy != null)
+                tile(
+                  title: "Created By :",
+                  desc: data?.createdBy ?? "",
+                  // subject: subject,
+                ),
               if (showSubTask == true)
                 StreamBuilder<Object>(
                     stream: kHomeController.taskDetailModel.stream,
@@ -799,7 +800,6 @@ Widget todoCard({
                     }),
 
               if (data?.late == true) heightBox(),
-
               if (data?.late == true)
                 tile(
                   title: "Over Due",
@@ -830,6 +830,16 @@ Widget todoCard({
               style: white14w500.copyWith(color: Colors.greenAccent),
             ),
           ),
+        // if (data?.isAddedByTeacher ?? false)
+        //   Positioned(
+        //     top: 15,
+        //     right: 15,
+        //     // child: Image.asset(Assets.iconsTeacherIcon, scale: 2),
+        //     child: Text(
+        //       "Added by Teacher",
+        //       style: white14w500.copyWith(color: Colors.greenAccent),
+        //     ),
+        //   ),
       ],
     ),
   );

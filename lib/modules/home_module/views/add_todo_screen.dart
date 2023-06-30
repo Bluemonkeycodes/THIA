@@ -406,9 +406,7 @@ class _AddTodoScreenState extends State<AddTodoScreen> {
                                   outlineInputBorder: border,
                                 ),
                               ),
-                              const SizedBox(
-                                width: 16.0,
-                              ),
+                              const SizedBox(width: 16.0),
                               IconButton(
                                   onPressed: () {
                                     if (kHomeController.subTodoTaskList[index].iscomplete != true) {
@@ -441,7 +439,7 @@ class _AddTodoScreenState extends State<AddTodoScreen> {
             GetButton(
               ontap: () {
                 hideKeyBoard(context);
-
+                showLog(!(kHomeController.selectedCourse.value.teacherFolder == null));
                 if (formKey.currentState?.validate() == true) {
                   if (selectedTime.value == Duration.zero) {
                     showSnackBar(title: ApiConfig.error, message: "Select Estimated Time ");
@@ -460,6 +458,7 @@ class _AddTodoScreenState extends State<AddTodoScreen> {
                       "time": selectedTime.value.toString(),
                       "subTasks": kHomeController.subTodoTaskList.map((element) => element.toJson()).toList(),
                       "isSubtask": kHomeController.subTodoTaskList.isNotEmpty ? true : false,
+                      "isAddedByTeacher": !(kHomeController.selectedCourse.value.teacherFolder == null)
                     };
 
                     if (widget.isFromEdit == true) {
