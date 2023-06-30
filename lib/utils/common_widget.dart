@@ -350,39 +350,46 @@ commonAlertDialog({
                       const SizedBox(height: 50.0),
                       Text(title ?? appName, style: primary16w600.copyWith(fontSize: titleFontSize ?? 28, decoration: TextDecoration.none)),
                       const SizedBox(height: 20.0),
-                      Text(message ?? "", style: grey16w500.copyWith(height: 1.5, decoration: TextDecoration.none)).paddingSymmetric(horizontal: 10.0),
+                      Text(
+                        message ?? "",
+                        style: grey16w500.copyWith(height: 1.5, decoration: TextDecoration.none),
+                        textAlign: TextAlign.center,
+                      ).paddingSymmetric(horizontal: 10.0),
                       const SizedBox(height: 20.0),
                       Row(
                         children: [
                           if (showCancelButton ?? true)
                             Expanded(
-                                child: GetButton(
-                              text: noText ?? "No",
-                              ontap: () {
-                                if (cancelCall != null) {
-                                  cancelCall();
-                                }
-                                Get.back();
-                              },
-                              isBorder: true,
-                              backGroundColor: AppColors.grey,
-                              textStyle: white18w600,
-                            )),
+                              child: GetButton(
+                                text: noText ?? "No",
+                                ontap: () {
+                                  if (cancelCall != null) {
+                                    cancelCall();
+                                  }
+                                  Get.back();
+                                },
+                                isBorder: true,
+                                backGroundColor: AppColors.grey,
+                                textStyle: white18w600,
+                                gradient: AppColors.purpleGradient,
+                              ),
+                            ),
                           const SizedBox(width: 10.0),
                           if (showOkButton ?? true)
                             Expanded(
-                                child: GetButton(
-                              text: yesText ?? "Yes",
-                              textStyle: white18w600,
-                              // fontColor: colorFFFFFF,
-                              isBorder: false,
-                              ontap: () {
-                                Get.back();
-                                if (okCall != null) {
-                                  okCall();
-                                }
-                              },
-                            )),
+                              child: GetButton(
+                                text: yesText ?? "Yes",
+                                textStyle: white18w600,
+                                gradient: AppColors.purpleGradient,
+                                isBorder: false,
+                                ontap: () {
+                                  Get.back();
+                                  if (okCall != null) {
+                                    okCall();
+                                  }
+                                },
+                              ),
+                            ),
                         ],
                       ),
                       const SizedBox(height: 20.0),
@@ -402,8 +409,7 @@ commonAlertDialog({
                       shape: BoxShape.circle,
                       border: Border.all(color: AppColors.primaryColor.withOpacity(0.2)),
                     ),
-                    //TODO: uncomment below
-                    // child: Image.asset(Assets.iconsBlueLogo, fit: BoxFit.scaleDown, color: AppColors.white, height: 75, width: 75),
+                    child: Image.asset(Assets.imagesLogo, fit: BoxFit.scaleDown, color: AppColors.white, height: 80, width: 80),
                   ),
                 ),
               ],

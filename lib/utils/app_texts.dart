@@ -61,4 +61,5 @@ class AppTexts {
   static const String leaveGroup = "Leave Group";
   static const String accept = "Accept";
   static const String decline = "Decline";
+  static const String sorryThisApIsNot = 'Sorry, this app is not yet available with your email. Kindly use email that ends with "myabcusd.org"';
 }

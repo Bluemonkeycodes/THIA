@@ -52,50 +52,19 @@ Future<String> refreshToken(Function() callback) async {
   );
   await auth.signInWithCredential(credential);
 
-  await auth.currentUser?.getIdToken(true).then((value) {
-    // showLog("token ===> $value");
-    // showLog("authTime ===> ${value.authTime}");
-    // showLog("expirationTime ===> ${value.expirationTime}");
-    // showLog("signInProvider ===> ${value.signInProvider}");
-  });
+  await auth.currentUser?.getIdToken(true).then((value) {});
   kHomeController.credentials = getAuthJsonData();
 
   kHomeController.httpClient = g_apis.authenticatedClient(http.Client(), kHomeController.credentials);
 
   kHomeController.classroomApi = ClassroomApi(kHomeController.httpClient);
   await googleSignIn.authenticatedClient().then((value) {
-    // AccessCredentials accessCredentials = AccessCredentials(
-    //   AccessToken(
-    //     value?.credentials.accessToken.type ?? "",
-    //     value?.credentials.accessToken.data ?? "",
-    //     DateTime.now().add(const Duration(days: 1000)).toUtc(),
-    //   ),
-    //   value?.credentials.refreshToken,
-    //   value?.credentials.scopes ?? [],
-    //   idToken: value?.credentials.idToken,
-    // );
     AccessCredentials accessCredentials = value?.credentials ?? AccessCredentials(AccessToken("", "", DateTime.now()), "refreshToken", []);
     setAuthJsonData(accessCredentials);
   });
   callback();
-  return googleSignInAuthentication?.accessToken ?? ""; //new token
+  return googleSignInAuthentication?.accessToken ?? "";
 }
-
-// void getEventsPastAuth() async {
-//   var client = http.Client();
-//   g_apis.AccessCredentials credentials = getAuthJsonData();
-//   g_apis.AccessCredentials refreshedCred = await refreshCredentials(_credentialsID, credentials, client);
-//
-//   client = autoRefreshingClient(_credentialsID, credentials, client);
-// var calendar = CalendarApi(client);
-// var now = DateTime.now();
-// var calEvents = calendar.events.list('primary', maxResults: 100, timeMin: now, timeMax: DateTime(now.year, now.month + 1, now.day));
-// calEvents.then((Events events) {
-//   events.items!.forEach((Event event) {
-//     debugPrint(event.summary);
-//   });
-// });
-// }
 
 googleAuth(BuildContext context) async {
   try {
@@ -122,51 +91,59 @@ googleAuth(BuildContext context) async {
       try {
         final f_auth.UserCredential userCredential = await auth.signInWithCredential(credential);
         user = userCredential.user;
-
+        showLog("user.email.endsWith ===> ${(userCredential.user?.email ?? "").endsWith("myabcusd.org")}");
         if (user != null) {
-          showProgressDialog(loaderColor: AppColors.white);
-          // loginSuccess();
-          Api().call(
-            params: {
-              "firstname": user?.displayName ?? "",
-              "lastname": "",
-              "email": user?.email ?? "",
-              "phonenumber": user?.phoneNumber ?? "",
-              "profileUrl": user?.photoURL ?? "",
-              "usertypeid": 1,
-              "googleID": user?.uid ?? "",
-              "active": 1,
-              "fcmtoken": getFcmToken(),
-            },
-            loaderColor: AppColors.white,
-            url: ApiConfig.login,
-            success: (Map<String, dynamic> response) async {
-              hideProgressDialog();
-              LoginModel loginModel = LoginModel.fromJson(response);
-              kHomeController.userData.value = LoginModelDataData.fromJson(loginModel.data?.data?.toJson() ?? {});
-              setObject(PrefConstants.userDetails, loginModel.data?.data ?? {});
-              getPreference.write(PrefConstants.loginToken, loginModel.data?.token ?? "");
-              // if (false) {
-              //   Get.offAll(() => const DemoScreen());
-              // } else {
-              await googleSignIn.authenticatedClient().then((value) {
-                AccessCredentials accessCredentials = value?.credentials ?? AccessCredentials(AccessToken("", "", DateTime.now()), "refreshToken", []);
-                setAuthJsonData(accessCredentials);
-                showLog("1111 ===> ${getPreference.read(PrefConstants.httpClient)}");
-                setIsLogin(isLogin: true);
-                refreshToken(() {});
-                Get.offAll(() => const HomeScreen());
-              });
-              // }
-            },
-            error: (Map<String, dynamic> response) {
-              hideProgressDialog();
-              showSnackBar(title: ApiConfig.error, message: response["message"] ?? "");
-            },
-            isProgressShow: true,
-            methodType: MethodType.post,
-          );
-          hideProgressDialog();
+          if ((user?.email ?? "").endsWith("myabcusd.org")) {
+            showProgressDialog(loaderColor: AppColors.white);
+            // loginSuccess();
+            Api().call(
+              params: {
+                "firstname": user?.displayName ?? "",
+                "lastname": "",
+                "email": user?.email ?? "",
+                "phonenumber": user?.phoneNumber ?? "",
+                "profileUrl": user?.photoURL ?? "",
+                "usertypeid": 1,
+                "googleID": user?.uid ?? "",
+                "active": 1,
+                "fcmtoken": getFcmToken(),
+              },
+              loaderColor: AppColors.white,
+              success: (Map<String, dynamic> response) async {
+                hideProgressDialog();
+                LoginModel loginModel = LoginModel.fromJson(response);
+                kHomeController.userData.value = LoginModelDataData.fromJson(loginModel.data?.data?.toJson() ?? {});
+                setObject(PrefConstants.userDetails, loginModel.data?.data ?? {});
+                getPreference.write(PrefConstants.loginToken, loginModel.data?.token ?? "");
+                // if (false) {
+                //   Get.offAll(() => const DemoScreen());
+                // } else {
+                await googleSignIn.authenticatedClient().then((value) {
+                  AccessCredentials accessCredentials = value?.credentials ?? AccessCredentials(AccessToken("", "", DateTime.now()), "refreshToken", []);
+                  setAuthJsonData(accessCredentials);
+                  showLog("1111 ===> ${getPreference.read(PrefConstants.httpClient)}");
+                  setIsLogin(isLogin: true);
+                  refreshToken(() {});
+                  Get.offAll(() => const HomeScreen());
+                });
+                // }
+              },
+              url: ApiConfig.login,
+              error: (Map<String, dynamic> response) {
+                hideProgressDialog();
+                showSnackBar(title: ApiConfig.error, message: response["message"] ?? "");
+              },
+              isProgressShow: true,
+              methodType: MethodType.post,
+            );
+            hideProgressDialog();
+          } else {
+            return commonAlertDialog(
+              message: AppTexts.sorryThisApIsNot,
+              showCancelButton: false,
+              yesText: "Got it!",
+            );
+          }
         }
       } on f_auth.FirebaseAuthException catch (e) {
         if (e.code == 'account-exists-with-different-credential') {
