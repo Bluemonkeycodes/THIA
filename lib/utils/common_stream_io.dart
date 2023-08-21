@@ -26,7 +26,11 @@ class StreamApi {
     );
     await client.disconnectUser();
     await client.connectUser(user, token).onError((error, stackTrace) {
-      showSnackBar(title: ApiConfig.error, message: "Kindly switch your internet connection. And try again.");
+      showSnackBar(
+        title: ApiConfig.error,
+        message: "Your admin has blocked some of the features of the app. Try again with different internet connection.",
+        // message: "Kindly switch your internet connection. And try again.",
+      );
       return OwnUser(id: id);
     });
   }
