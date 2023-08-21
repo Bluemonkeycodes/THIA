@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:stream_chat_flutter/stream_chat_flutter.dart';
+import 'package:thia/services/api_config.dart';
+import 'package:thia/utils/common_widget.dart';
 
 class StreamConfig {
   // static const String apikey = "4jwj4zgux2fp";
@@ -23,7 +25,10 @@ class StreamApi {
       },
     );
     await client.disconnectUser();
-    await client.connectUser(user, token);
+    await client.connectUser(user, token).onError((error, stackTrace) {
+      showSnackBar(title: ApiConfig.error, message: "Kindly switch your internet connection. And try again.");
+      return OwnUser(id: id);
+    });
   }
 
   static Future<Channel> createChannel(

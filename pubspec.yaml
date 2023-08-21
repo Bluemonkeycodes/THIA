@@ -14,7 +14,7 @@ dependencies:
   flutter:
     sdk: flutter
   cached_network_image: ^3.2.3
-  connectivity_plus: ^3.0.2
+  connectivity_plus: ^4.0.2
   dio: ^5.1.2
   cupertino_icons: ^1.0.5
   get: ^4.6.5
@@ -27,7 +27,7 @@ dependencies:
   readmore: ^2.2.0
   syncfusion_flutter_datepicker: ^21.2.8
   lottie: ^2.3.2
-  share_plus: ^6.3.4
+  share_plus: ^7.1.0
 #  share_plus: ^7.0.2
   upgrader: ^6.2.0
 #  upgrader: ^7.0.1
@@ -36,7 +36,7 @@ dependencies:
   flutter_phoenix: ^1.1.1
 
   #  google_sign_in: ^5.4.3
-  stream_chat_flutter: ^6.1.0
+  stream_chat_flutter: ^6.9.0
   #  dart_jsonwebtoken: ^2.6.4
 
   googleapis: ^11.2.0
