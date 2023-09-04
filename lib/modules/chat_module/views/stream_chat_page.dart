@@ -89,6 +89,28 @@ class _ChannelListPageState extends State<ChannelListPage> {
           //     ),
           //   );
           // },
+          ///
+          errorBuilder: (p0, p1) {
+            showLog("error ===> ${p1.message}");
+            if (p1.message.contains("without an active connection")) {
+              showLog("error 111 ===> ${p1.message}");
+            }
+            // return commonAlertDialog(
+            //   message: "Your admin has blocked some of the features of the app. Try again with different internet connection.",
+            //   showCancelButton: false,
+            //   yesText: "Got it!",
+            // );
+            return Center(
+              child: Padding(
+                padding: const EdgeInsets.all(10),
+                child: Text(
+                  "Your admin has blocked some of the features of the app. Try again with different internet connection.",
+                  style: black20w600.copyWith(fontWeight: FontWeight.w500),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            );
+          },
           controller: _listController,
           onChannelTap: (channel) async {
             Navigator.of(context).push(MaterialPageRoute(
@@ -149,7 +171,22 @@ class _ChannelPageState extends State<ChannelPage> {
       ),
       body: Column(
         children: <Widget>[
-          const Expanded(child: StreamMessageListView()),
+          Expanded(
+            child: StreamMessageListView(
+              errorBuilder: (context, error) {
+                return Center(
+                  child: Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: Text(
+                      "Your admin has blocked some of the features of the app. Try again with different internet connection.",
+                      style: black20w600.copyWith(fontWeight: FontWeight.w500),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
           StreamMessageInput(
             idleSendButton: sendButtonWidget(),
             activeSendButton: sendButtonWidget(),
